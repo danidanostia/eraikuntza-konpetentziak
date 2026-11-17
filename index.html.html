@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FP-Eval Cloud | Departamento Edificación (Sincronizado Google Sheets)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .tab-active { border-bottom: 2px solid #0f172a; color: #0f172a; font-weight: 600; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white; }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.sticky{position:sticky}.inset-0{inset:0px}.left-0{left:0px}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-3{margin-bottom:0.75rem}.mb-6{margin-bottom:1.5rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-6{margin-top:1.5rem}.mr-2{margin-right:0.5rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-3{height:0.75rem}.w-20{width:5rem}.w-24{width:6rem}.w-3{width:0.75rem}.w-32{width:8rem}.w-44{width:11rem}.w-56{width:14rem}.w-full{width:100%}.w-16{width:4rem}.max-w-7xl{max-width:80rem}.max-w-lg{max-width:32rem}.border-collapse{border-collapse:collapse}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-1{gap:0.25rem}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-slate-200 > :not([hidden]) ~ :not([hidden]){--tw-divide-opacity:1;border-color:rgb(226 232 240 / var(--tw-divide-opacity, 1))}.self-start{align-self:flex-start}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-slate-600{--tw-border-opacity:1;border-color:rgb(71 85 105 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-amber-300{--tw-border-opacity:1;border-color:rgb(252 211 77 / var(--tw-border-opacity, 1))}.border-amber-500\/40{border-color:rgb(245 158 11 / 0.4)}.border-emerald-300{--tw-border-opacity:1;border-color:rgb(110 231 183 / var(--tw-border-opacity, 1))}.border-rose-300{--tw-border-opacity:1;border-color:rgb(253 164 175 / var(--tw-border-opacity, 1))}.border-slate-200\/70{border-color:rgb(226 232 240 / 0.7)}.border-emerald-500\/40{border-color:rgb(16 185 129 / 0.4)}.bg-amber-400{--tw-bg-opacity:1;background-color:rgb(251 191 36 / var(--tw-bg-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-emerald-100{--tw-bg-opacity:1;background-color:rgb(209 250 229 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-rose-500{--tw-bg-opacity:1;background-color:rgb(244 63 94 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/60{background-color:rgb(15 23 42 / 0.6)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-amber-50\/40{background-color:rgb(255 251 235 / 0.4)}.bg-amber-500\/20{background-color:rgb(245 158 11 / 0.2)}.bg-emerald-50\/40{background-color:rgb(236 253 245 / 0.4)}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-rose-100{--tw-bg-opacity:1;background-color:rgb(255 228 230 / var(--tw-bg-opacity, 1))}.bg-sky-100{--tw-bg-opacity:1;background-color:rgb(224 242 254 / var(--tw-bg-opacity, 1))}.bg-emerald-500\/20{background-color:rgb(16 185 129 / 0.2)}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.p-5{padding:1.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.pb-3{padding-bottom:0.75rem}.pb-5{padding-bottom:1.25rem}.pt-2{padding-top:0.5rem}.text-left{text-align:left}.text-center{text-align:center}.align-top{vertical-align:top}.text-\[11px\]{font-size:11px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-base{font-size:1rem;line-height:1.5rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.font-normal{font-weight:400}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.text-amber-900{--tw-text-opacity:1;color:rgb(120 53 15 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-rose-600{--tw-text-opacity:1;color:rgb(225 29 72 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-slate-950{--tw-text-opacity:1;color:rgb(2 6 23 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-purple-800{--tw-text-opacity:1;color:rgb(107 33 168 / var(--tw-text-opacity, 1))}.text-rose-800{--tw-text-opacity:1;color:rgb(159 18 57 / var(--tw-text-opacity, 1))}.text-sky-800{--tw-text-opacity:1;color:rgb(7 89 133 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-blue-500:hover{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-500:hover{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-200:hover{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.hover\:text-slate-700:hover{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.hover\:text-rose-800:hover{--tw-text-opacity:1;color:rgb(159 18 57 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-amber-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(245 158 11 / var(--tw-ring-opacity, 1))}.focus\:ring-blue-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(59 130 246 / var(--tw-ring-opacity, 1))}@media (min-width: 640px){.sm\:flex-row{flex-direction:row}.sm\:items-center{align-items:center}.sm\:self-auto{align-self:auto}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:items-center{align-items:center}.md\:text-right{text-align:right}}@media (min-width: 1024px){.lg\:flex-row{flex-direction:row}.lg\:items-center{align-items:center}.lg\:justify-between{justify-content:space-between}}</style></head>
+<body class="text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-md no-print">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="bg-amber-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider">Departamento Edificación</span>
+                    <h1 class="text-xl font-bold tracking-tight">FP-Eval · Cuaderno Compartido de Competencias</h1>
+                    <span id="syncStatusBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold">● Conectado a Google Sheets</span>
+                </div>
+                <p class="text-slate-400 text-xs mt-1">CFGS Proyectos de Edificación · Sincronizado en la nube para todo el equipo docente</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5">
+                <select id="moduloSelect" onchange="cambiarModulo()" class="bg-slate-800 border border-slate-700 text-white text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <option value="0562">0562 · Estructuras de construcción (1º)</option><option value="0563">0563 · Representaciones de construcción (1º)</option><option value="0564">0564 · Mediciones y valoraciones de construcción (1º)</option><option value="0565">0565 · Replanteos de construcción (1º)</option><option value="0566">0566 · Planificación de construcción (2º)</option><option value="0567">0567 · Diseño y construcción de edificios (1º)</option><option value="0568">0568 · Instalaciones en edificación (2º)</option><option value="0569">0569 · Eficiencia energética en edificación (2º)</option><option value="0570">0570 · Desarrollo de proyectos de edificación residencial (2º)</option><option value="0571">0571 · Desarrollo de proyectos de edificación no residencial (2º)</option><option value="0572">0572 · Proyecto en edificación (2º)</option><option value="1665">1665 · Digitalización aplicada a los sectores productivos (GS) (2º)</option><option value="1708">1708 · Sostenibilidad aplicada al sistema productivo (2º)</option></select>
+                <button onclick="sincronizarDesdeNube()" id="btnRefresh" title="Descargar últimos cambios de otros profesores" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
+                    ↻ Actualizar
+                </button>
+                <button onclick="abrirModalCloud()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow">
+                    ☁ Conectar Google Sheets
+                </button>
+                <button onclick="exportarDatos()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow">
+                    Exportar CSV
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white border-b border-slate-200 no-print">
+        <div class="max-w-7xl mx-auto px-4 flex flex-wrap gap-6 text-sm text-slate-500">
+            <button onclick="switchTab('semaforo')" id="tab-semaforo" class="py-3.5 tab-active transition">1. Semáforo de Competencias (Grupo)</button>
+            <button onclick="switchTab('pasaporte')" id="tab-pasaporte" class="py-3.5 hover:text-slate-800 transition">2. Perfil Competencial Individual (Ficha Alumno)</button>
+            <button onclick="switchTab('calificaciones')" id="tab-calificaciones" class="py-3.5 hover:text-slate-800 transition">3. Cuaderno de Notas (Examen + Trabajos)</button>
+            <button onclick="switchTab('configuracion')" id="tab-configuracion" class="py-3.5 hover:text-slate-800 transition">4. Configurar RAs, Competencias y Pruebas</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- Info Banner del Módulo -->
+        <div id="moduloInfo" class="bg-white border border-slate-200 rounded-xl p-4 mb-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 no-print">
+            <div>
+                <h2 id="tituloModulo" class="text-lg font-bold text-slate-900">0565. Replanteos de construcción</h2>
+                <p id="subtituloModulo" class="text-xs text-slate-500 mt-0.5">Técnico Superior en Proyectos de Edificación · 5 Competencias Profesionales vinculadas a RAs</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 text-xs">
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> <span>Competencia Adquirida (≥ 5,0 y mínimos OK)</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span> <span>En proceso (Falta mínimo en Examen o Trabajo)</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span> <span>Competencia No Adquirida</span></div>
+            </div>
+        </div>
+
+        <!-- TAB 1: SEMÁFORO DE COMPETENCIAS -->
+        <section id="view-semaforo" class="space-y-6">
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50">
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Matriz de Adquisición de Competencias por Alumno</h3>
+                        <p class="text-xs text-slate-500">Cada columna muestra el RA y la competencia técnica real asociada. Los cambios se sincronizan con el departamento.</p>
+                    </div>
+                    <button onclick="agregarAlumno()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition self-start sm:self-auto">
+                        + Añadir Alumno/a
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr id="semaforoHeader" class="bg-slate-100 text-slate-600 text-xs border-b border-slate-200"><th class="py-3 px-4">Alumno/a</th>
+                    <th class="py-3 px-3 text-center align-top" title="Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.">
+                        <span class="block font-bold text-slate-800">RA1 · Bases replanteo</span>
+                        <span class="block text-[10px] font-normal text-slate-500 mt-0.5">Peso: 15%</span>
+                    </th>
+                    <th class="py-3 px-3 text-center align-top" title="Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.">
+                        <span class="block font-bold text-slate-800">RA2 · Planos/Archivos campo</span>
+                        <span class="block text-[10px] font-normal text-slate-500 mt-0.5">Peso: 20%</span>
+                    </th>
+                    <th class="py-3 px-3 text-center align-top" title="Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.">
+                        <span class="block font-bold text-slate-800">RA3 · Planificación marcaje</span>
+                        <span class="block text-[10px] font-normal text-slate-500 mt-0.5">Peso: 15%</span>
+                    </th>
+                    <th class="py-3 px-3 text-center align-top" title="Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.">
+                        <span class="block font-bold text-slate-800">RA4 · Cálculo topográfico</span>
+                        <span class="block text-[10px] font-normal text-slate-500 mt-0.5">Peso: 25%</span>
+                    </th>
+                    <th class="py-3 px-3 text-center align-top" title="Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.">
+                        <span class="block font-bold text-slate-800">RA5 · Replanteo en campo</span>
+                        <span class="block text-[10px] font-normal text-slate-500 mt-0.5">Peso: 25%</span>
+                    </th><th class="py-3 px-3 text-center">Competencias<br>Logradas</th>
+                 <th class="py-3 px-3 text-center">Nota<br>Módulo</th>
+                 <th class="py-3 px-4 text-center">Ficha Individual</th></tr>
+                        </thead>
+                        <tbody id="semaforoBody" class="divide-y divide-slate-200 text-sm"><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">Aitor Mendizabal</td>
+                    <td class="py-3 px-3 text-center" title="Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 7.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 7.5
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 6.5
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 8.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 8.5
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">5 / 5</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-bold text-slate-900">7.65</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="abrirFichaDesdeSemaforo('al_1')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-3 py-1 rounded-md transition">
+                            Ver Competencias
+                        </button>
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">Nerea Etxebarria</td>
+                    <td class="py-3 px-3 text-center" title="Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 7.8
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 7.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 6.5
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-amber-100 text-amber-800 border-amber-300">
+                            <span>!</span> 5.3
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 7.8
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">4 / 5</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-bold text-slate-900">6.81</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="abrirFichaDesdeSemaforo('al_2')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-3 py-1 rounded-md transition">
+                            Ver Competencias
+                        </button>
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">Unai Zubizarreta</td>
+                    <td class="py-3 px-3 text-center" title="Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 5.8
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 4.5
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-emerald-100 text-emerald-800 border-emerald-300">
+                            <span>✓</span> 6.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 3.8
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 4.3
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">2 / 5</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-bold text-slate-900">4.66</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="abrirFichaDesdeSemaforo('al_3')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-3 py-1 rounded-md transition">
+                            Ver Competencias
+                        </button>
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">Maialen Agirre</td>
+                    <td class="py-3 px-3 text-center" title="Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 0.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 0.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 0.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 0.0
+                        </span>
+                    </td><td class="py-3 px-3 text-center" title="Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border bg-rose-100 text-rose-800 border-rose-300">
+                            <span>✕</span> 0.0
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">0 / 5</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-bold text-slate-900">0.00</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="abrirFichaDesdeSemaforo('al_4')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-3 py-1 rounded-md transition">
+                            Ver Competencias
+                        </button>
+                    </td>
+                </tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Leyenda explícita de competencias del módulo activo -->
+            <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Mapa de Competencias Evaluadas en este Módulo</h4>
+                <div id="leyendaCompetencias" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="font-bold text-slate-900">RA1 · Bases replanteo:</span>
+                    <span class="text-slate-700">Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.</span>
+                </div>
+            
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="font-bold text-slate-900">RA2 · Planos/Archivos campo:</span>
+                    <span class="text-slate-700">Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.</span>
+                </div>
+            
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="font-bold text-slate-900">RA3 · Planificación marcaje:</span>
+                    <span class="text-slate-700">Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.</span>
+                </div>
+            
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="font-bold text-slate-900">RA4 · Cálculo topográfico:</span>
+                    <span class="text-slate-700">Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.</span>
+                </div>
+            
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="font-bold text-slate-900">RA5 · Replanteo en campo:</span>
+                    <span class="text-slate-700">Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.</span>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: PERFIL COMPETENCIAL INDIVIDUAL (FICHA ALUMNO) -->
+        <section id="view-pasaporte" class="hidden space-y-6">
+            <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200 no-print">
+                    <div class="flex items-center gap-3">
+                        <label class="text-sm font-semibold text-slate-700">Seleccionar Alumno/a:</label>
+                        <select id="alumnoFichaSelect" onchange="renderFichaAlumno()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium bg-slate-50"><option value="al_1" selected="">Aitor Mendizabal</option><option value="al_2">Nerea Etxebarria</option><option value="al_3">Unai Zubizarreta</option><option value="al_4">Maialen Agirre</option></select>
+                    </div>
+                    <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
+                        Imprimir / Guardar PDF Ficha
+                    </button>
+                </div>
+
+                <div id="fichaAlumnoContenido" class="mt-6 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900 text-white p-5 rounded-xl">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-amber-400 font-bold">Informe Competencial del Alumno/a</span>
+                        <h3 class="text-2xl font-bold mt-1">Aitor Mendizabal</h3>
+                        <p class="text-xs text-slate-300 mt-1">Módulo 0565: Replanteos de construcción · Técnico Superior en Proyectos de Edificación</p>
+                    </div>
+                    <div class="text-left md:text-right">
+                        <div class="text-xs text-slate-400">Competencias Logradas</div>
+                        <div class="text-2xl font-bold text-emerald-400">5 de 5</div>
+                        <div class="text-xs mt-1">Nota Módulo: <strong>7.65</strong> · <span class="text-emerald-400 font-bold">APTO</span></div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    
+                <div class="border border-emerald-300 bg-emerald-50/40 rounded-xl p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">RA1 · Bases replanteo (Peso: 15%)</span>
+                            <h4 class="text-base font-bold text-slate-900 mt-0.5">Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.</h4>
+                        </div>
+                        <div><span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">COMPETENCIA ADQUIRIDA (7.0)</span></div>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2"><strong>Referente curricular:</strong> Extrae bases de replanteo y coordenadas georreferenciadas directamente desde modelos BIM y cartografía digital GIS.</p>
+                    <div class="mt-3 pt-2 border-t border-slate-200/70">
+                        <span class="text-[11px] font-semibold text-slate-500 uppercase block mb-1">Evidencias evaluadas:</span>
+                        <span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Trabajo:</strong> Trabajo: Bases replanteo → <strong>7.5</strong>
+                    </span><span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Examen:</strong> Examen: Bases replanteo → <strong>6.5</strong>
+                    </span>
+                    </div>
+                </div>
+                <div class="border border-emerald-300 bg-emerald-50/40 rounded-xl p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">RA2 · Planos/Archivos campo (Peso: 20%)</span>
+                            <h4 class="text-base font-bold text-slate-900 mt-0.5">Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.</h4>
+                        </div>
+                        <div><span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">COMPETENCIA ADQUIRIDA (7.5)</span></div>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2"><strong>Referente curricular:</strong> Genera planos y archivos digitales de replanteo exportables directamente a colectores de datos de campo (DXF, CSV, LandXML).</p>
+                    <div class="mt-3 pt-2 border-t border-slate-200/70">
+                        <span class="text-[11px] font-semibold text-slate-500 uppercase block mb-1">Evidencias evaluadas:</span>
+                        <span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Trabajo:</strong> Trabajo: Planos/Archivos campo → <strong>8.0</strong>
+                    </span><span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Examen:</strong> Examen: Planos/Archivos campo → <strong>7.0</strong>
+                    </span>
+                    </div>
+                </div>
+                <div class="border border-emerald-300 bg-emerald-50/40 rounded-xl p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">RA3 · Planificación marcaje (Peso: 15%)</span>
+                            <h4 class="text-base font-bold text-slate-900 mt-0.5">Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.</h4>
+                        </div>
+                        <div><span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">COMPETENCIA ADQUIRIDA (6.5)</span></div>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2"><strong>Referente curricular:</strong> Planifica las campañas de replanteo y auscultación coordinando equipos topográficos y fases de ejecución en obra.</p>
+                    <div class="mt-3 pt-2 border-t border-slate-200/70">
+                        <span class="text-[11px] font-semibold text-slate-500 uppercase block mb-1">Evidencias evaluadas:</span>
+                        <span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Trabajo:</strong> Trabajo: Planificación marcaje → <strong>7.0</strong>
+                    </span><span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Examen:</strong> Examen: Planificación marcaje → <strong>6.0</strong>
+                    </span>
+                    </div>
+                </div>
+                <div class="border border-emerald-300 bg-emerald-50/40 rounded-xl p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">RA4 · Cálculo topográfico (Peso: 25%)</span>
+                            <h4 class="text-base font-bold text-slate-900 mt-0.5">Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.</h4>
+                        </div>
+                        <div><span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">COMPETENCIA ADQUIRIDA (8.0)</span></div>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2"><strong>Referente curricular:</strong> Procesa datos geométricos, superficies y movimientos de tierras mediante software topográfico (Civil 3D, MDT).</p>
+                    <div class="mt-3 pt-2 border-t border-slate-200/70">
+                        <span class="text-[11px] font-semibold text-slate-500 uppercase block mb-1">Evidencias evaluadas:</span>
+                        <span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Trabajo:</strong> Trabajo: Cálculo topográfico → <strong>8.5</strong>
+                    </span><span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Examen:</strong> Examen: Cálculo topográfico → <strong>7.5</strong>
+                    </span>
+                    </div>
+                </div>
+                <div class="border border-emerald-300 bg-emerald-50/40 rounded-xl p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">RA5 · Replanteo en campo (Peso: 25%)</span>
+                            <h4 class="text-base font-bold text-slate-900 mt-0.5">Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.</h4>
+                        </div>
+                        <div><span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">COMPETENCIA ADQUIRIDA (8.5)</span></div>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2"><strong>Referente curricular:</strong> Replantea en obra mediante estación total robótica y receptores GNSS RTK, y verifica la ejecución mediante escaneo láser.</p>
+                    <div class="mt-3 pt-2 border-t border-slate-200/70">
+                        <span class="text-[11px] font-semibold text-slate-500 uppercase block mb-1">Evidencias evaluadas:</span>
+                        <span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Trabajo:</strong> Trabajo: Replanteo en campo → <strong>9.0</strong>
+                    </span><span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>Examen:</strong> Examen: Replanteo en campo → <strong>8.0</strong>
+                    </span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: CUADERNO DE NOTAS -->
+        <section id="view-calificaciones" class="hidden space-y-6">
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Registro de Calificaciones (Exámenes y Trabajos)</h3>
+                        <p class="text-xs text-slate-500">Introduce las notas del 0 al 10. Se guardan localmente y se envían automáticamente a Google Sheets si está conectado.</p>
+                    </div>
+                    <span id="guardadoInfo" class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-md font-medium">Actualizado desde Sheets (19:55)</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr id="notasHeader" class="bg-slate-100 text-slate-600 text-xs border-b border-slate-200"><th class="py-3 px-4 sticky left-0 bg-slate-100">Alumno/a</th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Trabajo: Bases replanteo</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-sky-100 text-sky-800">
+                            Trabajo · RA1 (Bases replanteo) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Examen: Bases replanteo</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-purple-100 text-purple-800">
+                            Examen · RA1 (Bases replanteo) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Trabajo: Planos/Archivos campo</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-sky-100 text-sky-800">
+                            Trabajo · RA2 (Planos/Archivos campo) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Examen: Planos/Archivos campo</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-purple-100 text-purple-800">
+                            Examen · RA2 (Planos/Archivos campo) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Trabajo: Planificación marcaje</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-sky-100 text-sky-800">
+                            Trabajo · RA3 (Planificación marcaje) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Examen: Planificación marcaje</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-purple-100 text-purple-800">
+                            Examen · RA3 (Planificación marcaje) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Trabajo: Cálculo topográfico</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-sky-100 text-sky-800">
+                            Trabajo · RA4 (Cálculo topográfico) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Examen: Cálculo topográfico</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-purple-100 text-purple-800">
+                            Examen · RA4 (Cálculo topográfico) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Trabajo: Replanteo en campo</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-sky-100 text-sky-800">
+                            Trabajo · RA5 (Replanteo en campo) · 50%
+                        </span>
+                    </th><th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">Examen: Replanteo en campo</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded bg-purple-100 text-purple-800">
+                            Examen · RA5 (Replanteo en campo) · 50%
+                        </span>
+                    </th></tr>
+                        </thead>
+                        <tbody id="notasBody" class="divide-y divide-slate-200 text-sm"><tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4 font-medium text-slate-900 sticky left-0 bg-white">Aitor Mendizabal</td>
+                    <td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7.5" onchange="actualizarNota('al_1', 'inst_0565_RA1_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="6.5" onchange="actualizarNota('al_1', 'inst_0565_RA1_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="8" onchange="actualizarNota('al_1', 'inst_0565_RA2_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7" onchange="actualizarNota('al_1', 'inst_0565_RA2_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7" onchange="actualizarNota('al_1', 'inst_0565_RA3_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="6" onchange="actualizarNota('al_1', 'inst_0565_RA3_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="8.5" onchange="actualizarNota('al_1', 'inst_0565_RA4_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7.5" onchange="actualizarNota('al_1', 'inst_0565_RA4_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="9" onchange="actualizarNota('al_1', 'inst_0565_RA5_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="8" onchange="actualizarNota('al_1', 'inst_0565_RA5_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4 font-medium text-slate-900 sticky left-0 bg-white">Nerea Etxebarria</td>
+                    <td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="8" onchange="actualizarNota('al_2', 'inst_0565_RA1_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7.5" onchange="actualizarNota('al_2', 'inst_0565_RA1_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7.5" onchange="actualizarNota('al_2', 'inst_0565_RA2_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="6.5" onchange="actualizarNota('al_2', 'inst_0565_RA2_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7" onchange="actualizarNota('al_2', 'inst_0565_RA3_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="6" onchange="actualizarNota('al_2', 'inst_0565_RA3_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7.5" onchange="actualizarNota('al_2', 'inst_0565_RA4_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="3.2" onchange="actualizarNota('al_2', 'inst_0565_RA4_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="8" onchange="actualizarNota('al_2', 'inst_0565_RA5_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="7.5" onchange="actualizarNota('al_2', 'inst_0565_RA5_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4 font-medium text-slate-900 sticky left-0 bg-white">Unai Zubizarreta</td>
+                    <td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="6" onchange="actualizarNota('al_3', 'inst_0565_RA1_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="5.5" onchange="actualizarNota('al_3', 'inst_0565_RA1_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="5" onchange="actualizarNota('al_3', 'inst_0565_RA2_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="4" onchange="actualizarNota('al_3', 'inst_0565_RA2_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="6.5" onchange="actualizarNota('al_3', 'inst_0565_RA3_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="5.5" onchange="actualizarNota('al_3', 'inst_0565_RA3_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="4" onchange="actualizarNota('al_3', 'inst_0565_RA4_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="3.5" onchange="actualizarNota('al_3', 'inst_0565_RA4_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="4.5" onchange="actualizarNota('al_3', 'inst_0565_RA5_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="4" onchange="actualizarNota('al_3', 'inst_0565_RA5_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4 font-medium text-slate-900 sticky left-0 bg-white">Maialen Agirre</td>
+                    <td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA1_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA1_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA2_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA2_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA3_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA3_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA4_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA4_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA5_T', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td><td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="" onchange="actualizarNota('al_4', 'inst_0565_RA5_E', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>
+                </tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: CONFIGURACIÓN DE RAs E INSTRUMENTOS -->
+        <section id="view-configuracion" class="hidden space-y-6">
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Resultados de Aprendizaje y Competencias Profesionales</h3>
+                        <p class="text-xs text-slate-500">Define el peso (%) de cada bloque competencial en la calificación final del módulo.</p>
+                    </div>
+                    <span id="sumaPesosBadge" class="text-xs font-bold px-2.5 py-1 rounded bg-emerald-100 text-emerald-800">Total: 100%</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3 px-4 w-24">Código</th>
+                                <th class="py-3 px-4 w-44">Etiqueta Corta</th>
+                                <th class="py-3 px-4">Competencia Profesional Real (Qué sabe hacer)</th>
+                                <th class="py-3 px-4">Resultado de Aprendizaje Curricular</th>
+                                <th class="py-3 px-4 w-24 text-center">Peso (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rasConfigBody" class="divide-y divide-slate-200 text-sm"><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-bold text-slate-900">RA1</td>
+                    <td class="py-3 px-4 font-semibold text-amber-800 text-xs">Bases replanteo</td>
+                    <td class="py-3 px-4 text-slate-900 font-medium text-xs leading-relaxed bg-amber-50/40">Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.</td>
+                    <td class="py-3 px-4 text-slate-600 text-xs leading-relaxed">Extrae bases de replanteo y coordenadas georreferenciadas directamente desde modelos BIM y cartografía digital GIS.</td>
+                    <td class="py-3 px-4 text-center">
+                        <input type="number" min="0" max="100" value="15" onchange="actualizarPesoRa('RA1', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm font-semibold">
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-bold text-slate-900">RA2</td>
+                    <td class="py-3 px-4 font-semibold text-amber-800 text-xs">Planos/Archivos campo</td>
+                    <td class="py-3 px-4 text-slate-900 font-medium text-xs leading-relaxed bg-amber-50/40">Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.</td>
+                    <td class="py-3 px-4 text-slate-600 text-xs leading-relaxed">Genera planos y archivos digitales de replanteo exportables directamente a colectores de datos de campo (DXF, CSV, LandXML).</td>
+                    <td class="py-3 px-4 text-center">
+                        <input type="number" min="0" max="100" value="20" onchange="actualizarPesoRa('RA2', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm font-semibold">
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-bold text-slate-900">RA3</td>
+                    <td class="py-3 px-4 font-semibold text-amber-800 text-xs">Planificación marcaje</td>
+                    <td class="py-3 px-4 text-slate-900 font-medium text-xs leading-relaxed bg-amber-50/40">Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.</td>
+                    <td class="py-3 px-4 text-slate-600 text-xs leading-relaxed">Planifica las campañas de replanteo y auscultación coordinando equipos topográficos y fases de ejecución en obra.</td>
+                    <td class="py-3 px-4 text-center">
+                        <input type="number" min="0" max="100" value="15" onchange="actualizarPesoRa('RA3', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm font-semibold">
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-bold text-slate-900">RA4</td>
+                    <td class="py-3 px-4 font-semibold text-amber-800 text-xs">Cálculo topográfico</td>
+                    <td class="py-3 px-4 text-slate-900 font-medium text-xs leading-relaxed bg-amber-50/40">Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.</td>
+                    <td class="py-3 px-4 text-slate-600 text-xs leading-relaxed">Procesa datos geométricos, superficies y movimientos de tierras mediante software topográfico (Civil 3D, MDT).</td>
+                    <td class="py-3 px-4 text-center">
+                        <input type="number" min="0" max="100" value="25" onchange="actualizarPesoRa('RA4', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm font-semibold">
+                    </td>
+                </tr><tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-bold text-slate-900">RA5</td>
+                    <td class="py-3 px-4 font-semibold text-amber-800 text-xs">Replanteo en campo</td>
+                    <td class="py-3 px-4 text-slate-900 font-medium text-xs leading-relaxed bg-amber-50/40">Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.</td>
+                    <td class="py-3 px-4 text-slate-600 text-xs leading-relaxed">Replantea en obra mediante estación total robótica y receptores GNSS RTK, y verifica la ejecución mediante escaneo láser.</td>
+                    <td class="py-3 px-4 text-center">
+                        <input type="number" min="0" max="100" value="25" onchange="actualizarPesoRa('RA5', this.value)" class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm font-semibold">
+                    </td>
+                </tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Pruebas de Evaluación (Exámenes y Trabajos)</h3>
+                        <p class="text-xs text-slate-500">Vincula cada examen o trabajo con el RA y la competencia que demuestra.</p>
+                    </div>
+                    <button onclick="agregarInstrumento()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition">
+                        + Añadir Examen / Trabajo
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3 px-4">Nombre del Examen / Trabajo</th>
+                                <th class="py-3 px-4 w-32">Tipo</th>
+                                <th class="py-3 px-4 w-56">Competencia / RA Evaluado</th>
+                                <th class="py-3 px-4 w-32 text-center">Peso en RA (%)</th>
+                                <th class="py-3 px-4 w-20 text-center">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="instrumentosBody" class="divide-y divide-slate-200 text-sm">
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Trabajo: Bases replanteo" onchange="editarInstrumento(0, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(0, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen">Examen</option>
+                            <option value="Trabajo" selected="">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(0, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1" selected="">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(0, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(0)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Examen: Bases replanteo" onchange="editarInstrumento(1, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(1, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen" selected="">Examen</option>
+                            <option value="Trabajo">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(1, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1" selected="">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(1, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(1)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Trabajo: Planos/Archivos campo" onchange="editarInstrumento(2, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(2, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen">Examen</option>
+                            <option value="Trabajo" selected="">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(2, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2" selected="">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(2, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(2)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Examen: Planos/Archivos campo" onchange="editarInstrumento(3, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(3, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen" selected="">Examen</option>
+                            <option value="Trabajo">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(3, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2" selected="">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(3, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(3)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Trabajo: Planificación marcaje" onchange="editarInstrumento(4, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(4, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen">Examen</option>
+                            <option value="Trabajo" selected="">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(4, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3" selected="">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(4, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(4)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Examen: Planificación marcaje" onchange="editarInstrumento(5, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(5, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen" selected="">Examen</option>
+                            <option value="Trabajo">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(5, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3" selected="">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(5, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(5)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Trabajo: Cálculo topográfico" onchange="editarInstrumento(6, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(6, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen">Examen</option>
+                            <option value="Trabajo" selected="">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(6, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4" selected="">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(6, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(6)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Examen: Cálculo topográfico" onchange="editarInstrumento(7, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(7, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen" selected="">Examen</option>
+                            <option value="Trabajo">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(7, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4" selected="">RA4 · Cálculo topográfico</option><option value="RA5">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(7, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(7)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Trabajo: Replanteo en campo" onchange="editarInstrumento(8, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(8, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen">Examen</option>
+                            <option value="Trabajo" selected="">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(8, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5" selected="">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(8, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(8)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="Examen: Replanteo en campo" onchange="editarInstrumento(9, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(9, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen" selected="">Examen</option>
+                            <option value="Trabajo">Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(9, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="RA1">RA1 · Bases replanteo</option><option value="RA2">RA2 · Planos/Archivos campo</option><option value="RA3">RA3 · Planificación marcaje</option><option value="RA4">RA4 · Cálculo topográfico</option><option value="RA5" selected="">RA5 · Replanteo en campo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="50" onchange="editarInstrumento(9, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(9)" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL CONFIGURACIÓN GOOGLE SHEETS -->
+    <div id="modalCloud" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-3">
+                <h3 class="text-lg font-bold text-slate-900">Conectar Base de Datos Compartida (Google Sheets)</h3>
+                <button onclick="cerrarModalCloud()" class="text-slate-400 hover:text-slate-700 font-bold">✕</button>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Pega aquí la <strong>URL de la Aplicación Web</strong> obtenida al implementar el script en Google Sheets. Todos los profesores que peguen esta misma URL trabajarán sobre la misma base de datos compartida.
+            </p>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">URL de Google Apps Script (Web App):</label>
+                <input type="url" id="inputScriptUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-[11px] text-amber-900 space-y-1">
+                <p><strong>Consejo para compartir con el departamento:</strong></p>
+                <p>Una vez conectada la URL, puedes pulsar <strong>"Descargar HTML ya configurado"</strong> para enviar a tus compañeros el archivo con la URL ya grabada dentro, y así no tendrán ni que pegarla.</p>
+            </div>
+            <div class="flex flex-wrap justify-between items-center gap-2 pt-2">
+                <button onclick="descargarHtmlPreconfigurado()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-300 transition">
+                    ⬇ Descargar HTML ya configurado
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="desconectarCloud()" class="text-rose-600 hover:underline text-xs font-medium px-2 py-2">Desconectar</button>
+                    <button onclick="guardarUrlCloud()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+                        Guardar y Sincronizar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CURRICULO = {"ciclo": "Técnico Superior en Proyectos de Edificación", "normativa_base": "RD 690/2010, Decreto 119/2011 (CAPV) y actualización LO 3/2022 / RD 659/2023", "enfoque": "Oficina Técnica, BIM, Coordinación Multidisciplinar, Control de Costes, Obra y Sostenibilidad", "modulos": [{"codigo": "0562", "nombre": "Estructuras de construcción", "curso": 1, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Analiza acciones y solicitaciones sobre el edificio según el Código Estructural y el CTE utilizando software de cálculo matricial/elementos finitos.", "competencia_profesional": "Interpretar listados y modelos de cálculo estructural (CYPECAD/Robot) identificando cimentaciones, soportes, vigas y forjados.", "peso_sugerido": 20, "etiqueta_corta": "Lectura cálculo"}, {"codigo": "RA2", "descripcion": "Verifica y predimensiona cimentaciones y estructuras de hormigón, acero y madera contralaminada (CLT), exportando/importando modelos analíticos (IFC).", "competencia_profesional": "Modelar estructuras en BIM garantizando la coherencia geométrica con el modelo arquitectónico sin interferencias espaciales.", "peso_sugerido": 30, "etiqueta_corta": "Modelado estructural"}, {"codigo": "RA3", "descripcion": "Define detalles constructivos de uniones, armados y soluciones prefabricadas/industrializadas directamente en el modelo estructural BIM.", "competencia_profesional": "Elaborar planos de replanteo de cimentación, cuadros de pilares, despieces de armaduras y detalles de uniones metálicas/madera.", "peso_sugerido": 30, "etiqueta_corta": "Planos y despieces"}, {"codigo": "RA4", "descripcion": "Establece protocolos de control de calidad de materiales y ejecución en obra (trazabilidad de acero y hormigón, ensayos no destructivos).", "competencia_profesional": "Preparar especificaciones de control de ejecución estructural y tolerancias para la documentación de obra.", "peso_sugerido": 20, "etiqueta_corta": "Control ejecución"}]}, {"codigo": "0563", "nombre": "Representaciones de construcción", "curso": 1, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Realiza levantamientos rápidos mediante croquis digitales o nubes de puntos procedentes de escáner láser 3D y fotogrametría.", "competencia_profesional": "Importar y limpiar nubes de puntos o calcos CAD para levantar el estado actual de un edificio o solar.", "peso_sugerido": 20, "etiqueta_corta": "Nubes puntos/CAD"}, {"codigo": "RA2", "descripcion": "Modela elementos arquitectónicos y constructivos en entornos BIM (Revit/Archicad) aplicando estándares de modelado (LOD) y normativa gráfica.", "competencia_profesional": "Levantar modelos BIM arquitectónicos limpios y parametrizados respetando plantillas de estudio y niveles de detalle (LOD 200-350).", "peso_sugerido": 35, "etiqueta_corta": "Modelado BIM"}, {"codigo": "RA3", "descripcion": "Extrae documentación gráfica directamente del modelo federado y gestiona entregas en entornos comunes de datos (CDE).", "competencia_profesional": "Maquetar juegos completos de planos de proyecto básico y de ejecución (plantas, secciones, carpinterías) listos para visado y obra.", "peso_sugerido": 30, "etiqueta_corta": "Planos ejecución"}, {"codigo": "RA4", "descripcion": "Genera visualizaciones fotorrealistas en tiempo real (renders), recorridos virtuales (VR) y vistas axonométricas explotadas.", "competencia_profesional": "Producir infografías de trabajo y recorridos virtuales para reuniones de coordinación con clientes o dirección facultativa.", "peso_sugerido": 15, "etiqueta_corta": "Infografías/VR"}]}, {"codigo": "0564", "nombre": "Mediciones y valoraciones de construcción", "curso": 1, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Estructura el presupuesto mediante sistemas de clasificación estandarizados vinculados a bancos de precios paramétricos.", "competencia_profesional": "Organizar capítulos y partidas de obra siguiendo la estructura real de ejecución de una constructora.", "peso_sugerido": 15, "etiqueta_corta": "Estructura obra"}, {"codigo": "RA2", "descripcion": "Extrae mediciones automatizadas directamente desde las propiedades y parámetros de los modelos BIM (BIM 5D), auditando criterios.", "competencia_profesional": "Obtener mediciones vinculadas desde modelos BIM y verificar manualmente partidas no modeladas (ayudas, medios auxiliares).", "peso_sugerido": 25, "etiqueta_corta": "Medición BIM 5D"}, {"codigo": "RA3", "descripcion": "Analiza precios descompuestos incorporando costes reales de mercado, logística y huella de carbono asociada.", "competencia_profesional": "Solicitar y comparar ofertas de subcontratas y proveedores para confeccionar precios descompuestos reales.", "peso_sugerido": 20, "etiqueta_corta": "Precios reales"}, {"codigo": "RA4", "descripcion": "Redacta presupuestos completos interoperables (formato BC3) y compara ofertas de licitación.", "competencia_profesional": "Montar presupuestos completos en Presto/Arquímedes y elaborar comparativos técnicos de ofertas para adjudicación.", "peso_sugerido": 20, "etiqueta_corta": "Presupuestos BC3"}, {"codigo": "RA5", "descripcion": "Gestiona certificaciones de obra digitales, control de costes en tiempo real y análisis de desviaciones económicas.", "competencia_profesional": "Elaborar certificaciones mensuales de obra ejecutada y controlar precios contradictorios.", "peso_sugerido": 20, "etiqueta_corta": "Certificaciones"}]}, {"codigo": "0565", "nombre": "Replanteos de construcción", "curso": 1, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Extrae bases de replanteo y coordenadas georreferenciadas directamente desde modelos BIM y cartografía digital GIS.", "competencia_profesional": "Extraer puntos de replanteo (ejes estructurales, esquinas de parcela, rasantes) desde el proyecto digital.", "peso_sugerido": 15, "etiqueta_corta": "Bases replanteo"}, {"codigo": "RA2", "descripcion": "Genera planos y archivos digitales de replanteo exportables directamente a colectores de datos de campo (DXF, CSV, LandXML).", "competencia_profesional": "Dibujar planos claros de replanteo acotados a ejes reales de obra y preparar archivos de coordenadas para estación total/GNSS.", "peso_sugerido": 20, "etiqueta_corta": "Planos/Archivos campo"}, {"codigo": "RA3", "descripcion": "Planifica las campañas de replanteo y auscultación coordinando equipos topográficos y fases de ejecución en obra.", "competencia_profesional": "Organizar los trabajos previos de marcaje en solar o planta antes de la entrada de maquinaria o cuadrillas.", "peso_sugerido": 15, "etiqueta_corta": "Planificación marcaje"}, {"codigo": "RA4", "descripcion": "Procesa datos geométricos, superficies y movimientos de tierras mediante software topográfico (Civil 3D, MDT).", "competencia_profesional": "Calcular coordenadas, pendientes de saneamiento/rampas y volúmenes de excavación o relleno.", "peso_sugerido": 25, "etiqueta_corta": "Cálculo topográfico"}, {"codigo": "RA5", "descripcion": "Replantea en obra mediante estación total robótica y receptores GNSS RTK, y verifica la ejecución mediante escaneo láser.", "competencia_profesional": "Manejar en campo estación total, nivel láser y equipo GNSS para marcar ejes, cotas de referencia (+1,00 m) y comprobar aplomados.", "peso_sugerido": 25, "etiqueta_corta": "Replanteo en campo"}]}, {"codigo": "0566", "nombre": "Planificación de construcción", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Descompone la obra aplicando metodologías Lean Construction (Last Planner System) para eliminar tiempos muertos.", "competencia_profesional": "Secuenciar actividades de obra identificando dependencias reales entre gremios (estructura, albañilería, instalaciones, acabados).", "peso_sugerido": 25, "etiqueta_corta": "Secuencia gremios"}, {"codigo": "RA2", "descripcion": "Vincula el cronograma de obra con los elementos del modelo digital para generar simulaciones constructivas (BIM 4D).", "competencia_profesional": "Elaborar cronogramas reales (MS Project/Presto) y vincularlos al modelo 3D para analizar fases críticas de ejecución.", "peso_sugerido": 25, "etiqueta_corta": "Cronograma BIM 4D"}, {"codigo": "RA3", "descripcion": "Diseña la implantación dinámica de obra (grúas, acopios, circulaciones, seguridad) modelada en 3D según fases.", "competencia_profesional": "Dibujar planos de implantación de obra (vallado, accesos, grúa, zonas de acopio y gestión de residuos) por fases.", "peso_sugerido": 25, "etiqueta_corta": "Implantación obra"}, {"codigo": "RA4", "descripcion": "Monitoriza el avance real de obra mediante plataformas móviles en campo (Dalux, PlanRadar) para corregir desviaciones.", "competencia_profesional": "Realizar seguimiento semanal en obra con tablet registrando avances, no conformidades y listas de repasos (snag lists).", "peso_sugerido": 25, "etiqueta_corta": "Seguimiento campo"}]}, {"codigo": "0567", "nombre": "Diseño y construcción de edificios", "curso": 1, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Analiza parámetros urbanísticos (GIS municipal) y exigencias normativas del CTE (salubridad, incendios, accesibilidad).", "competencia_profesional": "Comprobar parámetros urbanísticos básicos (retranqueos, alturas, edificabilidad) y cumplimiento geométrico del CTE.", "peso_sugerido": 25, "etiqueta_corta": "Urbanismo y CTE"}, {"codigo": "RA2", "descripcion": "Desarrolla propuestas arquitectónicas optimizadas mediante criterios funcionales y bioclimáticos pasivos.", "competencia_profesional": "Desarrollar distribuciones interiores funcionales adaptando el programa de necesidades a la estructura y patinillos.", "peso_sugerido": 25, "etiqueta_corta": "Distribución funcional"}, {"codigo": "RA3", "descripcion": "Prescribe sistemas constructivos industrializados (fachadas ventiladas, SATE, tabiquería seca, construcción off-site).", "competencia_profesional": "Resolver detalles constructivos reales integrando sistemas comerciales a partir de fichas técnicas de fabricantes.", "peso_sugerido": 30, "etiqueta_corta": "Detalles constructivos"}, {"codigo": "RA4", "descripcion": "Redacta memorias técnicas automatizadas y libros del edificio digitales vinculados a la base de datos del proyecto.", "competencia_profesional": "Compilar y actualizar la documentación escrita del proyecto (memorias, cuadros de superficies, justificación CTE).", "peso_sugerido": 20, "etiqueta_corta": "Memorias técnicas"}]}, {"codigo": "0568", "nombre": "Instalaciones en edificación", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Caracteriza sistemas de climatización de alta eficiencia (aerotermia, geotermia), VMC con recuperación de calor y domótica.", "competencia_profesional": "Identificar equipos y redes de cada instalación (aerotermia, VMC, saneamiento, fontanería, electricidad, PCI) y sus espacios técnicos.", "peso_sugerido": 20, "etiqueta_corta": "Equipos instalaciones"}, {"codigo": "RA2", "descripcion": "Dimensiona redes de instalaciones mediante software específico (CYPECAD MEP) cumpliendo RITE, REBT y CTE.", "competencia_profesional": "Dimensionar redes básicas en viviendas o locales pequeños mediante software asistido y seleccionar equipos comerciales.", "peso_sugerido": 25, "etiqueta_corta": "Dimensionado básico"}, {"codigo": "RA3", "descripcion": "Modela los trazados reales de tuberías, conductos y bandejas en entornos BIM MEP con dimensiones reales de fabricación.", "competencia_profesional": "Modelar en 3D trazados de instalaciones respetando pendientes, radios de giro y alturas libres de falso techo.", "peso_sugerido": 30, "etiqueta_corta": "Trazado BIM MEP"}, {"codigo": "RA4", "descripcion": "Realiza detección automática de interferencias (Clash Detection) entre estructura, arquitectura e instalaciones.", "competencia_profesional": "Ejecutar auditorías de colisiones (Navisworks/Solibri) y generar informes de incidencias (BCF) para resolverlas antes de obra.", "peso_sugerido": 25, "etiqueta_corta": "Detección colisiones"}]}, {"codigo": "0569", "nombre": "Eficiencia energética en edificación", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Diseña envolventes térmicas de alta estanqueidad y libres de puentes térmicos bajo estándares ECCN / Passivhaus.", "competencia_profesional": "Definir espesores de aislamiento, carpinterías y soluciones de puentes térmicos en planos de detalle.", "peso_sugerido": 25, "etiqueta_corta": "Envolvente térmica"}, {"codigo": "RA2", "descripcion": "Integra instalaciones de autoconsumo fotovoltaico, almacenamiento energético y gestión activa de la demanda.", "competencia_profesional": "Incorporar datos de equipos térmicos, ACS y placas fotovoltaicas en la evaluación energética del edificio.", "peso_sugerido": 25, "etiqueta_corta": "Equipos y renovables"}, {"codigo": "RA3", "descripcion": "Realiza simulaciones energéticas dinámicas y certificaciones oficiales mediante herramientas reconocidas (CE3X, CYPETHERM, HULC).", "competencia_profesional": "Calcular demanda y consumo energético y emitir etiquetas de calificación energética con herramientas oficiales.", "peso_sugerido": 30, "etiqueta_corta": "Certificación CEE"}, {"codigo": "RA4", "descripcion": "Elabora proyectos de rehabilitación energética integral evaluando retorno de inversión y ayudas públicas.", "competencia_profesional": "Proponer paquetes de mejora en rehabilitación de envolventes calculando ahorro energético y coste estimado.", "peso_sugerido": 20, "etiqueta_corta": "Rehabilitación"}]}, {"codigo": "0570", "nombre": "Desarrollo de proyectos de edificación residencial", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Recopila datos previos, normativa urbanística y condicionantes del solar para abordar un proyecto residencial.", "competencia_profesional": "Analizar condicionantes normativos y del entorno para iniciar un proyecto residencial plurifamiliar.", "peso_sugerido": 20, "etiqueta_corta": "Datos y normativa"}, {"codigo": "RA2", "descripcion": "Desarrolla el diseño arquitectónico y estructural de un edificio de viviendas cumpliendo habitabilidad y accesibilidad.", "competencia_profesional": "Desarrollar modelos y planos completos de distribución y estructura de edificios residenciales.", "peso_sugerido": 30, "etiqueta_corta": "Modelo residencial"}, {"codigo": "RA3", "descripcion": "Define sistemas constructivos e instalaciones del proyecto residencial elaborando documentación gráfica y escrita.", "competencia_profesional": "Coordinar arquitectura, estructura e instalaciones en un entorno colaborativo BIM (BEP/BCF).", "peso_sugerido": 30, "etiqueta_corta": "Coordinación BIM"}, {"codigo": "RA4", "descripcion": "Integra presupuesto, estudio de seguridad y salud y control de calidad en el proyecto de ejecución.", "competencia_profesional": "Ensamblar el paquete documental completo del proyecto de ejecución listo para visado telemático y licitación.", "peso_sugerido": 20, "etiqueta_corta": "Proyecto ejecución"}]}, {"codigo": "0571", "nombre": "Desarrollo de proyectos de edificación no residencial", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Analiza requerimientos funcionales y normativos específicos de edificios de uso terciario, dotacional o industrial.", "competencia_profesional": "Verificar normativa específica de actividad, accesibilidad y seguridad contra incendios en locales y naves.", "peso_sugerido": 25, "etiqueta_corta": "Normativa terciaria"}, {"codigo": "RA2", "descripcion": "Diseña soluciones espaciales y estructurales adaptadas a grandes luces, cargas o usos singulares.", "competencia_profesional": "Desarrollar planos de implantación y sistemas constructivos secos/industrializados en edificación terciaria.", "peso_sugerido": 25, "etiqueta_corta": "Sistemas industrializados"}, {"codigo": "RA3", "descripcion": "Integra instalaciones especiales (PCI, ventilación industrial, climatización centralizada) en el proyecto.", "competencia_profesional": "Modelar y coordinar instalaciones complejas en falsos techos y cubiertas evitando colisiones.", "peso_sugerido": 30, "etiqueta_corta": "Instalaciones especiales"}, {"codigo": "RA4", "descripcion": "Elabora la documentación técnica completa del proyecto de ejecución siguiendo estándares profesionales.", "competencia_profesional": "Generar planos de detalle, mediciones y memorias técnicas de reforma o adecuación de locales/naves.", "peso_sugerido": 20, "etiqueta_corta": "Documentación obra"}]}, {"codigo": "0572", "nombre": "Proyecto en edificación", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Identifica necesidades del sector productivo relacionándolas con proyectos tipo de edificación.", "competencia_profesional": "Definir el alcance, objetivos y plan de ejecución (BEP) de un proyecto técnico real.", "peso_sugerido": 20, "etiqueta_corta": "Alcance y BEP"}, {"codigo": "RA2", "descripcion": "Diseña proyectos completos relacionados con las competencias del título integrando todos los módulos.", "competencia_profesional": "Desarrollar de forma autónoma y colaborativa el modelo BIM, planos, instalaciones y mediciones del proyecto.", "peso_sugerido": 40, "etiqueta_corta": "Desarrollo integral"}, {"codigo": "RA3", "descripcion": "Planifica la ejecución del proyecto determinando fases, recursos, plazos y documentación necesaria.", "competencia_profesional": "Elaborar el cronograma de obra, implantación y presupuesto completo del proyecto.", "peso_sugerido": 20, "etiqueta_corta": "Plazos y presupuesto"}, {"codigo": "RA4", "descripcion": "Realiza seguimiento y control de calidad aplicando criterios de sostenibilidad y prevención de riesgos.", "competencia_profesional": "Auditar la calidad documental del proyecto, justificar sostenibilidad/residuos y defenderlo técnicamente.", "peso_sugerido": 20, "etiqueta_corta": "Auditoría y defensa"}]}, {"codigo": "1665", "nombre": "Digitalización aplicada a los sectores productivos (GS)", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Analiza el concepto de digitalización y su repercusión en los sectores productivos identificando entornos IT y OT.", "competencia_profesional": "Comprender la conexión digital entre oficina técnica (IT) y obra conectada (OT) en el sector AECO.", "peso_sugerido": 10, "etiqueta_corta": "Entornos IT/OT"}, {"codigo": "RA2", "descripcion": "Caracteriza las tecnologías habilitadoras digitales necesarias para la transformación de empresas a entornos digitales.", "competencia_profesional": "Aplicar tecnologías habilitadoras del sector: escáner láser 3D, fotogrametría con drones y visores en obra.", "peso_sugerido": 20, "etiqueta_corta": "Escáner/Drones"}, {"codigo": "RA3", "descripcion": "Identifica sistemas basados en cloud/nube y su influencia en el desarrollo de los sistemas digitales.", "competencia_profesional": "Trabajar en Entornos Comunes de Datos (CDE) gestionando versiones, estados de archivo y trazabilidad.", "peso_sugerido": 20, "etiqueta_corta": "Entorno nube CDE"}, {"codigo": "RA4", "descripcion": "Identifica aplicaciones de la Inteligencia Artificial (IA) en entornos del sector describiendo las mejoras implícitas.", "competencia_profesional": "Utilizar herramientas de IA generativa para redacción de memorias, consulta normativa y automatización básica.", "peso_sugerido": 20, "etiqueta_corta": "IA en oficina técnica"}, {"codigo": "RA5", "descripcion": "Evalúa la importancia de los datos y su protección en una economía digital globalizada, definiendo ciberseguridad.", "competencia_profesional": "Aplicar protocolos de copias de seguridad, protección de propiedad intelectual de modelos BIM y datos de obra.", "peso_sugerido": 10, "etiqueta_corta": "Ciberseguridad BIM"}, {"codigo": "RA6", "descripcion": "Desarrolla un proyecto de transformación digital de una empresa del sector teniendo en cuenta sus objetivos.", "competencia_profesional": "Proponer un plan práctico de transición de flujo CAD tradicional a flujo BIM/colaborativo para un estudio técnico.", "peso_sugerido": 20, "etiqueta_corta": "Plan digitalización"}]}, {"codigo": "1708", "nombre": "Sostenibilidad aplicada al sistema productivo", "curso": 2, "resultados_aprendizaje": [{"codigo": "RA1", "descripcion": "Identifica aspectos ambientales, sociales y de gobernanza (ASG) relativos a la sostenibilidad y marcos internacionales.", "competencia_profesional": "Interpretar criterios ASG y requisitos de sostenibilidad aplicables a promociones y obras de edificación.", "peso_sugerido": 15, "etiqueta_corta": "Criterios ASG"}, {"codigo": "RA2", "descripcion": "Caracteriza los retos ambientales y sociales describiendo impactos sobre sectores productivos y acciones de mejora.", "competencia_profesional": "Evaluar el impacto ambiental de la construcción y proponer medidas de descarbonización en proyecto.", "peso_sugerido": 15, "etiqueta_corta": "Descarbonización"}, {"codigo": "RA3", "descripcion": "Establece la aplicación de criterios de sostenibilidad en el desempeño profesional y personal.", "competencia_profesional": "Calcular indicadores básicos de huella de carbono de materiales del proyecto mediante bases de datos (BEDEC/CYPE).", "peso_sugerido": 20, "etiqueta_corta": "Huella de carbono"}, {"codigo": "RA4", "descripcion": "Propone productos y servicios responsables teniendo en cuenta los principios de la economía circular.", "competencia_profesional": "Seleccionar materiales con Declaraciones Ambientales de Producto (DAP) y criterios de economía circular.", "peso_sugerido": 15, "etiqueta_corta": "Economía circular"}, {"codigo": "RA5", "descripcion": "Realiza actividades sostenibles minimizando el impacto de las mismas en el medio ambiente.", "competencia_profesional": "Redactar el Estudio de Gestión de Residuos (EGRCD) estimando toneladas por código LER y coste de gestión.", "peso_sugerido": 20, "etiqueta_corta": "Gestión residuos"}, {"codigo": "RA6", "descripcion": "Analiza un plan de sostenibilidad de una empresa del sector, identificando grupos de interés y aspectos ASG.", "competencia_profesional": "Recopilar evidencias técnicas y certificados de materiales exigidos en obras con sello BREEAM, LEED o VERDE.", "peso_sugerido": 15, "etiqueta_corta": "Sellos BREEAM/LEED"}]}]};
+        // Si descargas el HTML preconfigurado, esta constante guardará la URL para todo el departamento
+        const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_xLUh5rDR-IH5UsnEMi8HfAUPBxsZnih2eA9dg7I0tu4UWxdJCJgqy08WAItFBR4/exec";
+
+        let scriptUrl = localStorage.getItem('fp_eval_script_url') || DEFAULT_SCRIPT_URL;
+
+        let state = JSON.parse(localStorage.getItem('fp_eval_state_v3')) || {
+            moduloActual: "0565",
+            alumnoSeleccionado: "al_1",
+            alumnos: [
+                { id: "al_1", nombre: "Aitor Mendizabal" },
+                { id: "al_2", nombre: "Nerea Etxebarria" },
+                { id: "al_3", nombre: "Unai Zubizarreta" },
+                { id: "al_4", nombre: "Maialen Agirre" }
+            ],
+            configModulos: {},
+            notas: {}
+        };
+
+        let syncTimeout = null;
+
+        function inicializarConfigModulo(codigo) {
+            if (!state.configModulos[codigo]) {
+                const mod = CURRICULO.modulos.find(m => m.codigo === codigo);
+                const instrumentosDefault = [];
+                mod.resultados_aprendizaje.forEach(ra => {
+                    instrumentosDefault.push({
+                        id: `inst_${codigo}_${ra.codigo}_T`,
+                        nombre: `Trabajo: ${ra.etiqueta_corta}`,
+                        tipo: "Trabajo",
+                        ra: ra.codigo,
+                        pesoEnRa: 50
+                    });
+                    instrumentosDefault.push({
+                        id: `inst_${codigo}_${ra.codigo}_E`,
+                        nombre: `Examen: ${ra.etiqueta_corta}`,
+                        tipo: "Examen",
+                        ra: ra.codigo,
+                        pesoEnRa: 50
+                    });
+                });
+
+                state.configModulos[codigo] = {
+                    pesosRa: Object.fromEntries(mod.resultados_aprendizaje.map(r => [r.codigo, r.peso_sugerido])),
+                    instrumentos: instrumentosDefault
+                };
+
+                if (codigo === "0565" && Object.keys(state.notas).length === 0) {
+                    Object.assign(state.notas, {
+                        "0565_al_1_inst_0565_RA1_T": 7.5, "0565_al_1_inst_0565_RA1_E": 6.5,
+                        "0565_al_1_inst_0565_RA2_T": 8.0, "0565_al_1_inst_0565_RA2_E": 7.0,
+                        "0565_al_1_inst_0565_RA3_T": 7.0, "0565_al_1_inst_0565_RA3_E": 6.0,
+                        "0565_al_1_inst_0565_RA4_T": 8.5, "0565_al_1_inst_0565_RA4_E": 7.5,
+                        "0565_al_1_inst_0565_RA5_T": 9.0, "0565_al_1_inst_0565_RA5_E": 8.0,
+
+                        "0565_al_2_inst_0565_RA1_T": 8.0, "0565_al_2_inst_0565_RA1_E": 7.5,
+                        "0565_al_2_inst_0565_RA2_T": 7.5, "0565_al_2_inst_0565_RA2_E": 6.5,
+                        "0565_al_2_inst_0565_RA3_T": 7.0, "0565_al_2_inst_0565_RA3_E": 6.0,
+                        "0565_al_2_inst_0565_RA4_T": 7.5, "0565_al_2_inst_0565_RA4_E": 3.2,
+                        "0565_al_2_inst_0565_RA5_T": 8.0, "0565_al_2_inst_0565_RA5_E": 7.5,
+
+                        "0565_al_3_inst_0565_RA1_T": 6.0, "0565_al_3_inst_0565_RA1_E": 5.5,
+                        "0565_al_3_inst_0565_RA2_T": 5.0, "0565_al_3_inst_0565_RA2_E": 4.0,
+                        "0565_al_3_inst_0565_RA3_T": 6.5, "0565_al_3_inst_0565_RA3_E": 5.5,
+                        "0565_al_3_inst_0565_RA4_T": 4.0, "0565_al_3_inst_0565_RA4_E": 3.5,
+                        "0565_al_3_inst_0565_RA5_T": 4.5, "0565_al_3_inst_0565_RA5_E": 4.0
+                    });
+                }
+            }
+        }
+
+        function actualizarBadgeSync(estado, texto) {
+            const badge = document.getElementById('syncStatusBadge');
+            const info = document.getElementById('guardadoInfo');
+            if (estado === 'cloud_ok') {
+                badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold";
+                badge.textContent = "● Conectado a Google Sheets";
+                if (info) info.textContent = texto || "Sincronizado en la nube";
+            } else if (estado === 'syncing') {
+                badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold";
+                badge.textContent = "↻ Sincronizando...";
+                if (info) info.textContent = "Guardando en Google Sheets...";
+            } else if (estado === 'error') {
+                badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-semibold";
+                badge.textContent = "✕ Error de conexión";
+                if (info) info.textContent = "Error al conectar con Sheets (guardado en local)";
+            } else {
+                badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700";
+                badge.textContent = "Modo Local (Sin nube)";
+                if (info) info.textContent = "Guardado solo en este navegador";
+            }
+        }
+
+        function guardarEstado(enviarANube = true) {
+            localStorage.setItem('fp_eval_state_v3', JSON.stringify(state));
+            if (scriptUrl && enviarANube) {
+                actualizarBadgeSync('syncing');
+                clearTimeout(syncTimeout);
+                syncTimeout = setTimeout(() => {
+                    enviarDatosANube();
+                }, 800);
+            }
+        }
+
+        async function enviarDatosANube() {
+            if (!scriptUrl) return;
+            try {
+                await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(state)
+                });
+                const hora = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                actualizarBadgeSync('cloud_ok', `Sincronizado (${hora})`);
+            } catch (err) {
+                console.error(err);
+                actualizarBadgeSync('error');
+            }
+        }
+
+        async function sincronizarDesdeNube() {
+            if (!scriptUrl) {
+                abrirModalCloud();
+                return;
+            }
+            actualizarBadgeSync('syncing');
+            try {
+                const res = await fetch(scriptUrl);
+                const data = await res.json();
+                if (data && !data.empty && data.alumnos) {
+                    const modActual = state.moduloActual;
+                    state = data;
+                    state.moduloActual = modActual;
+                    inicializarConfigModulo(state.moduloActual);
+                    localStorage.setItem('fp_eval_state_v3', JSON.stringify(state));
+                    renderTodo();
+                    const hora = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                    actualizarBadgeSync('cloud_ok', `Actualizado desde Sheets (${hora})`);
+                } else {
+                    // Si la hoja está vacía, subimos el estado inicial actual
+                    await enviarDatosANube();
+                }
+            } catch (err) {
+                console.error(err);
+                actualizarBadgeSync('error');
+                alert("No se pudo leer de Google Sheets. Verifica que la URL del script sea correcta y tenga permisos para 'Cualquier usuario'.");
+            }
+        }
+
+        function abrirModalCloud() {
+            document.getElementById('inputScriptUrl').value = scriptUrl || "";
+            document.getElementById('modalCloud').classList.remove('hidden');
+        }
+
+        function cerrarModalCloud() {
+            document.getElementById('modalCloud').classList.add('hidden');
+        }
+
+        function guardarUrlCloud() {
+            const url = document.getElementById('inputScriptUrl').value.trim();
+            if (!url.startsWith("https://script.google.com/")) {
+                alert("Por favor, introduce una URL válida de Google Apps Script (empieza por https://script.google.com/...)");
+                return;
+            }
+            scriptUrl = url;
+            localStorage.setItem('fp_eval_script_url', scriptUrl);
+            cerrarModalCloud();
+            sincronizarDesdeNube();
+        }
+
+        function desconectarCloud() {
+            scriptUrl = "";
+            localStorage.removeItem('fp_eval_script_url');
+            actualizarBadgeSync('local');
+            cerrarModalCloud();
+        }
+
+        function descargarHtmlPreconfigurado() {
+            const url = document.getElementById('inputScriptUrl').value.trim();
+            if (!url) {
+                alert("Primero pega la URL de Google Apps Script en el cuadro.");
+                return;
+            }
+            // Cerramos el modal antes de exportar para que el archivo descargado abra directamente en el semáforo
+            cerrarModalCloud();
+            let htmlActual = document.documentElement.outerHTML;
+            htmlActual = htmlActual.replace(/const DEFAULT_SCRIPT_URL = ".*?";/, `const DEFAULT_SCRIPT_URL = "${url}";`);
+            const blob = new Blob(["<!DOCTYPE html>\n" + htmlActual], { type: 'text/html;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "FP_Eval_Departamento_Compartido.html";
+            link.click();
+        }
+
+        async function init() {
+            const select = document.getElementById('moduloSelect');
+            CURRICULO.modulos.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.codigo;
+                opt.textContent = `${m.codigo} · ${m.nombre} (${m.curso}º)`;
+                if (m.codigo === state.moduloActual) opt.selected = true;
+                select.appendChild(opt);
+            });
+            inicializarConfigModulo(state.moduloActual);
+            renderTodo();
+
+            if (scriptUrl) {
+                await sincronizarDesdeNube();
+            } else {
+                actualizarBadgeSync('local');
+            }
+        }
+
+        function cambiarModulo() {
+            state.moduloActual = document.getElementById('moduloSelect').value;
+            inicializarConfigModulo(state.moduloActual);
+            guardarEstado(false);
+            renderTodo();
+        }
+
+        function switchTab(tab) {
+            ['semaforo', 'pasaporte', 'calificaciones', 'configuracion'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('tab-active');
+            });
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active');
+            renderTodo();
+        }
+
+        function calcularResultadosAlumno(alumnoId) {
+            const mod = CURRICULO.modulos.find(m => m.codigo === state.moduloActual);
+            const cfg = state.configModulos[state.moduloActual];
+            const resRAs = {};
+            let notaPonderadaTotal = 0;
+            let todosSuperados = true;
+            let adquiridasCount = 0;
+
+            mod.resultados_aprendizaje.forEach(ra => {
+                const insts = cfg.instrumentos.filter(i => i.ra === ra.codigo);
+                let sumaPonderada = 0;
+                let sumaPesos = 0;
+                let falloMinimo = false;
+                let detalleFallo = [];
+                let pruebasDetalle = [];
+
+                insts.forEach(inst => {
+                    const key = `${state.moduloActual}_${alumnoId}_${inst.id}`;
+                    const val = parseFloat(state.notas[key]);
+                    if (!isNaN(val)) {
+                        sumaPonderada += val * (inst.pesoEnRa / 100);
+                        sumaPesos += (inst.pesoEnRa / 100);
+                        pruebasDetalle.push({ nombre: inst.nombre, tipo: inst.tipo, nota: val, peso: inst.pesoEnRa });
+                        if (val < 4.0) {
+                            falloMinimo = true;
+                            detalleFallo.push(`${inst.nombre} (${val.toFixed(1)})`);
+                        }
+                    } else {
+                        falloMinimo = true;
+                        pruebasDetalle.push({ nombre: inst.nombre, tipo: inst.tipo, nota: null, peso: inst.pesoEnRa });
+                        detalleFallo.push(`${inst.nombre} (Pendiente)`);
+                    }
+                });
+
+                const notaRa = sumaPesos > 0 ? (sumaPonderada / sumaPesos) : 0;
+                let estado = "verde";
+
+                if (notaRa < 5.0) {
+                    estado = "rojo";
+                    todosSuperados = false;
+                } else if (falloMinimo) {
+                    estado = "ambar";
+                    todosSuperados = false;
+                } else {
+                    adquiridasCount++;
+                }
+
+                resRAs[ra.codigo] = {
+                    nota: notaRa,
+                    estado: estado,
+                    detalleFallo: detalleFallo,
+                    pruebasDetalle: pruebasDetalle,
+                    competencia: ra.competencia_profesional,
+                    etiqueta: ra.etiqueta_corta,
+                    pesoModulo: cfg.pesosRa[ra.codigo] || 0
+                };
+
+                notaPonderadaTotal += notaRa * ((cfg.pesosRa[ra.codigo] || 0) / 100);
+            });
+
+            return {
+                ras: resRAs,
+                notaFinal: notaPonderadaTotal,
+                aprobado: todosSuperados && notaPonderadaTotal >= 5.0,
+                adquiridasCount: adquiridasCount,
+                totalRAs: mod.resultados_aprendizaje.length
+            };
+        }
+
+        function abrirFichaDesdeSemaforo(alumnoId) {
+            state.alumnoSeleccionado = alumnoId;
+            guardarEstado(false);
+            switchTab('pasaporte');
+        }
+
+        function renderTodo() {
+            const mod = CURRICULO.modulos.find(m => m.codigo === state.moduloActual);
+            const cfg = state.configModulos[state.moduloActual];
+
+            document.getElementById('tituloModulo').textContent = `${mod.codigo}. ${mod.nombre}`;
+            document.getElementById('subtituloModulo').textContent = `${CURRICULO.ciclo} · ${mod.resultados_aprendizaje.length} Competencias Profesionales vinculadas a RAs`;
+
+            // 1. RENDER SEMÁFORO
+            const semHead = document.getElementById('semaforoHeader');
+            semHead.innerHTML = `<th class="py-3 px-4">Alumno/a</th>` +
+                mod.resultados_aprendizaje.map(r => `
+                    <th class="py-3 px-3 text-center align-top" title="${r.competencia_profesional}">
+                        <span class="block font-bold text-slate-800">${r.codigo} · ${r.etiqueta_corta}</span>
+                        <span class="block text-[10px] font-normal text-slate-500 mt-0.5">Peso: ${cfg.pesosRa[r.codigo]}%</span>
+                    </th>`).join('') +
+                `<th class="py-3 px-3 text-center">Competencias<br>Logradas</th>
+                 <th class="py-3 px-3 text-center">Nota<br>Módulo</th>
+                 <th class="py-3 px-4 text-center">Ficha Individual</th>`;
+
+            const semBody = document.getElementById('semaforoBody');
+            semBody.innerHTML = state.alumnos.map(al => {
+                const evalAl = calcularResultadosAlumno(al.id);
+                const celdasRa = mod.resultados_aprendizaje.map(r => {
+                    const d = evalAl.ras[r.codigo];
+                    const colorClass = d.estado === 'verde' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
+                                       d.estado === 'ambar' ? 'bg-amber-100 text-amber-800 border-amber-300' :
+                                       'bg-rose-100 text-rose-800 border-rose-300';
+                    const icono = d.estado === 'verde' ? '✓' : d.estado === 'ambar' ? '!' : '✕';
+                    return `<td class="py-3 px-3 text-center" title="${d.competencia}">
+                        <span class="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md border ${colorClass}">
+                            <span>${icono}</span> ${d.nota.toFixed(1)}
+                        </span>
+                    </td>`;
+                }).join('');
+
+                return `<tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">${al.nombre}</td>
+                    ${celdasRa}
+                    <td class="py-3 px-3 text-center">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${evalAl.adquiridasCount} / ${evalAl.totalRAs}</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-bold text-slate-900">${evalAl.notaFinal.toFixed(2)}</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="abrirFichaDesdeSemaforo('${al.id}')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium px-3 py-1 rounded-md transition">
+                            Ver Competencias
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            const leyenda = document.getElementById('leyendaCompetencias');
+            leyenda.innerHTML = mod.resultados_aprendizaje.map(r => `
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+                    <span class="font-bold text-slate-900">${r.codigo} · ${r.etiqueta_corta}:</span>
+                    <span class="text-slate-700">${r.competencia_profesional}</span>
+                </div>
+            `).join('');
+
+            // 2. RENDER FICHA INDIVIDUAL
+            const selFicha = document.getElementById('alumnoFichaSelect');
+            selFicha.innerHTML = state.alumnos.map(al =>
+                `<option value="${al.id}" ${al.id === state.alumnoSeleccionado ? 'selected' : ''}>${al.nombre}</option>`
+            ).join('');
+            renderFichaAlumno();
+
+            // 3. RENDER CUADERNO DE NOTAS
+            const notasHead = document.getElementById('notasHeader');
+            notasHead.innerHTML = `<th class="py-3 px-4 sticky left-0 bg-slate-100">Alumno/a</th>` +
+                cfg.instrumentos.map(i => {
+                    const raObj = mod.resultados_aprendizaje.find(r => r.codigo === i.ra);
+                    return `<th class="py-3 px-3 text-center">
+                        <span class="block text-slate-800 font-semibold">${i.nombre}</span>
+                        <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded ${i.tipo === 'Examen' ? 'bg-purple-100 text-purple-800' : 'bg-sky-100 text-sky-800'}">
+                            ${i.tipo} · ${i.ra} (${raObj ? raObj.etiqueta_corta : ''}) · ${i.pesoEnRa}%
+                        </span>
+                    </th>`;
+                }).join('');
+
+            const notasBody = document.getElementById('notasBody');
+            notasBody.innerHTML = state.alumnos.map(al => {
+                const inputs = cfg.instrumentos.map(i => {
+                    const key = `${state.moduloActual}_${al.id}_${i.id}`;
+                    const val = state.notas[key] !== undefined ? state.notas[key] : '';
+                    return `<td class="py-2.5 px-3 text-center">
+                        <input type="number" step="0.1" min="0" max="10" value="${val}"
+                            onchange="actualizarNota('${al.id}', '${i.id}', this.value)"
+                            class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                    </td>`;
+                }).join('');
+                return `<tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4 font-medium text-slate-900 sticky left-0 bg-white">${al.nombre}</td>
+                    ${inputs}
+                </tr>`;
+            }).join('');
+
+            // 4. RENDER CONFIGURACIÓN RAs
+            let sumaPesos = 0;
+            const rasBody = document.getElementById('rasConfigBody');
+            rasBody.innerHTML = mod.resultados_aprendizaje.map(r => {
+                const peso = cfg.pesosRa[r.codigo] || 0;
+                sumaPesos += Number(peso);
+                return `<tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-bold text-slate-900">${r.codigo}</td>
+                    <td class="py-3 px-4 font-semibold text-amber-800 text-xs">${r.etiqueta_corta}</td>
+                    <td class="py-3 px-4 text-slate-900 font-medium text-xs leading-relaxed bg-amber-50/40">${r.competencia_profesional}</td>
+                    <td class="py-3 px-4 text-slate-600 text-xs leading-relaxed">${r.descripcion}</td>
+                    <td class="py-3 px-4 text-center">
+                        <input type="number" min="0" max="100" value="${peso}"
+                            onchange="actualizarPesoRa('${r.codigo}', this.value)"
+                            class="w-16 text-center border border-slate-300 rounded-md py-1 text-sm font-semibold">
+                    </td>
+                </tr>`;
+            }).join('');
+
+            const badgeSuma = document.getElementById('sumaPesosBadge');
+            badgeSuma.textContent = `Total: ${sumaPesos}%`;
+            badgeSuma.className = sumaPesos === 100
+                ? "text-xs font-bold px-2.5 py-1 rounded bg-emerald-100 text-emerald-800"
+                : "text-xs font-bold px-2.5 py-1 rounded bg-rose-100 text-rose-800";
+
+            // 5. RENDER INSTRUMENTOS
+            const instBody = document.getElementById('instrumentosBody');
+            instBody.innerHTML = cfg.instrumentos.map((i, index) => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-4">
+                        <input type="text" value="${i.nombre}" onchange="editarInstrumento(${index}, 'nombre', this.value)" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(${index}, 'tipo', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            <option value="Examen" ${i.tipo === 'Examen' ? 'selected' : ''}>Examen</option>
+                            <option value="Trabajo" ${i.tipo === 'Trabajo' ? 'selected' : ''}>Trabajo</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4">
+                        <select onchange="editarInstrumento(${index}, 'ra', this.value)" class="border border-slate-300 rounded px-2 py-1 text-sm w-full">
+                            ${mod.resultados_aprendizaje.map(r => `<option value="${r.codigo}" ${i.ra === r.codigo ? 'selected' : ''}>${r.codigo} · ${r.etiqueta_corta}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <input type="number" min="0" max="100" value="${i.pesoEnRa}" onchange="editarInstrumento(${index}, 'pesoEnRa', Number(this.value))" class="w-16 text-center border border-slate-300 rounded px-2 py-1 text-sm">
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                        <button onclick="eliminarInstrumento(${index})" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderFichaAlumno() {
+            const sel = document.getElementById('alumnoFichaSelect');
+            if (!sel.value) return;
+            state.alumnoSeleccionado = sel.value;
+
+            const al = state.alumnos.find(a => a.id === state.alumnoSeleccionado);
+            const mod = CURRICULO.modulos.find(m => m.codigo === state.moduloActual);
+            const evalAl = calcularResultadosAlumno(al.id);
+
+            const cont = document.getElementById('fichaAlumnoContenido');
+
+            let tarjetasHtml = mod.resultados_aprendizaje.map(r => {
+                const d = evalAl.ras[r.codigo];
+                const borderColor = d.estado === 'verde' ? 'border-emerald-300 bg-emerald-50/40' :
+                                    d.estado === 'ambar' ? 'border-amber-300 bg-amber-50/40' :
+                                    'border-rose-300 bg-rose-50/40';
+                const badge = d.estado === 'verde'
+                    ? `<span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">COMPETENCIA ADQUIRIDA (${d.nota.toFixed(1)})</span>`
+                    : d.estado === 'ambar'
+                    ? `<span class="bg-amber-500 text-slate-950 text-xs font-bold px-2.5 py-1 rounded-full">EN PROCESO - REVISAR MÍNIMO (${d.nota.toFixed(1)})</span>`
+                    : `<span class="bg-rose-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">NO ADQUIRIDA - RECUPERAR (${d.nota.toFixed(1)})</span>`;
+
+                const pruebasLista = d.pruebasDetalle.map(p =>
+                    `<span class="inline-block text-xs bg-white border border-slate-200 rounded px-2 py-1 mr-2 mt-1">
+                        <strong>${p.tipo}:</strong> ${p.nombre} → <strong>${p.nota !== null ? p.nota.toFixed(1) : 'Sin nota'}</strong>
+                    </span>`
+                ).join('');
+
+                return `
+                <div class="border ${borderColor} rounded-xl p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">${r.codigo} · ${r.etiqueta_corta} (Peso: ${d.pesoModulo}%)</span>
+                            <h4 class="text-base font-bold text-slate-900 mt-0.5">${r.competencia_profesional}</h4>
+                        </div>
+                        <div>${badge}</div>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2"><strong>Referente curricular:</strong> ${r.descripcion}</p>
+                    <div class="mt-3 pt-2 border-t border-slate-200/70">
+                        <span class="text-[11px] font-semibold text-slate-500 uppercase block mb-1">Evidencias evaluadas:</span>
+                        ${pruebasLista}
+                    </div>
+                </div>`;
+            }).join('');
+
+            cont.innerHTML = `
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900 text-white p-5 rounded-xl">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-amber-400 font-bold">Informe Competencial del Alumno/a</span>
+                        <h3 class="text-2xl font-bold mt-1">${al.nombre}</h3>
+                        <p class="text-xs text-slate-300 mt-1">Módulo ${mod.codigo}: ${mod.nombre} · ${CURRICULO.ciclo}</p>
+                    </div>
+                    <div class="text-left md:text-right">
+                        <div class="text-xs text-slate-400">Competencias Logradas</div>
+                        <div class="text-2xl font-bold text-emerald-400">${evalAl.adquiridasCount} de ${evalAl.totalRAs}</div>
+                        <div class="text-xs mt-1">Nota Módulo: <strong>${evalAl.notaFinal.toFixed(2)}</strong> · ${evalAl.aprobado ? '<span class="text-emerald-400 font-bold">APTO</span>' : '<span class="text-rose-400 font-bold">PENDIENTE</span>'}</div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    ${tarjetasHtml}
+                </div>
+            `;
+        }
+
+        function actualizarNota(alumnoId, instId, valor) {
+            const key = `${state.moduloActual}_${alumnoId}_${instId}`;
+            if (valor === '') {
+                delete state.notas[key];
+            } else {
+                state.notas[key] = Math.min(10, Math.max(0, parseFloat(valor)));
+            }
+            guardarEstado(true);
+            renderTodo();
+        }
+
+        function actualizarPesoRa(codigoRa, valor) {
+            state.configModulos[state.moduloActual].pesosRa[codigoRa] = Number(valor);
+            guardarEstado(true);
+            renderTodo();
+        }
+
+        function editarInstrumento(index, campo, valor) {
+            state.configModulos[state.moduloActual].instrumentos[index][campo] = valor;
+            guardarEstado(true);
+            renderTodo();
+        }
+
+        function agregarInstrumento() {
+            const mod = CURRICULO.modulos.find(m => m.codigo === state.moduloActual);
+            state.configModulos[state.moduloActual].instrumentos.push({
+                id: `inst_${Date.now()}`,
+                nombre: "Nueva Prueba / Práctica",
+                tipo: "Trabajo",
+                ra: mod.resultados_aprendizaje[0].codigo,
+                pesoEnRa: 50
+            });
+            guardarEstado(true);
+            renderTodo();
+        }
+
+        function eliminarInstrumento(index) {
+            state.configModulos[state.moduloActual].instrumentos.splice(index, 1);
+            guardarEstado(true);
+            renderTodo();
+        }
+
+        function agregarAlumno() {
+            const nombre = prompt("Nombre y apellidos del alumno/a:");
+            if (nombre && nombre.trim()) {
+                state.alumnos.push({ id: `al_${Date.now()}`, nombre: nombre.trim() });
+                guardarEstado(true);
+                renderTodo();
+            }
+        }
+
+        function exportarDatos() {
+            const mod = CURRICULO.modulos.find(m => m.codigo === state.moduloActual);
+            let csv = "Alumno;" +
+                mod.resultados_aprendizaje.map(r => `${r.codigo}_${r.etiqueta_corta}`).join(";") +
+                ";Competencias_Adquiridas;Competencias_Pendientes;Nota_Final;Estado\n";
+
+            state.alumnos.forEach(al => {
+                const ev = calcularResultadosAlumno(al.id);
+                const notasRa = mod.resultados_aprendizaje.map(r => ev.ras[r.codigo].nota.toFixed(2).replace('.', ',')).join(";");
+                const adquiridas = mod.resultados_aprendizaje.filter(r => ev.ras[r.codigo].estado === 'verde').map(r => r.competencia_profesional).join(" | ");
+                const pendientes = mod.resultados_aprendizaje.filter(r => ev.ras[r.codigo].estado !== 'verde').map(r => r.competencia_profesional).join(" | ");
+
+                csv += `${al.nombre};${notasRa};"${adquiridas || 'Ninguna'}";"${pendientes || 'Ninguna'}";${ev.notaFinal.toFixed(2).replace('.', ',')};${ev.aprobado ? 'APTO' : 'PENDIENTE'}\n`;
+            });
+
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Acta_Competencias_Profesionales_${mod.codigo}.csv`;
+            a.click();
+        }
+
+        init();
+    </script>
+
+
+</body></html>

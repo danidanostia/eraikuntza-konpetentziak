@@ -156,6 +156,8 @@
   .help summary { cursor: pointer; font-weight: 700; color: var(--navy); }
   .help ol { margin: 8px 0 2px 20px; display: flex; flex-direction: column; gap: 6px; }
   .qr-box { display: flex; justify-content: center; }
+  .secret { -webkit-text-security: disc; text-security: disc; }
+  input[type="search"]::-webkit-search-cancel-button { cursor: pointer; }
   .qr-box svg { width: 240px; height: 240px; max-width: 70vw; max-height: 70vw; border: 1px solid var(--border); border-radius: 10px; padding: 6px; background: #fff; }
   .pr-warn { border: 1px solid #f59e0b; background: #fef3c7; padding: 6px 8px; font-size: 9.5pt; margin: 6px 0; }
 
@@ -379,7 +381,7 @@
   <section id="view-semaphore">
     <div class="toolbar toolbar-semaphore">
       <div class="toolbar-left">
-        <input type="text" id="searchStudent" class="search-box" data-in="search" data-i18n-ph="search" autocomplete="off">
+        <input type="search" id="searchStudent" name="buscar-alumnado" class="search-box" data-in="search" data-i18n-ph="search" autocomplete="off" spellcheck="false" data-lpignore="true" data-1p-ignore>
         <select id="filterStatus" data-ch="statusFilter" style="width:auto;min-width:150px;"></select>
         <select id="selPeriod" data-ch="period" style="width:auto;min-width:190px;"></select>
       </div>
@@ -583,10 +585,10 @@
       <p class="small muted" id="connDesc" data-i18n="connDesc"></p>
       <div class="field"><label for="connTeacher" data-i18n="teacherLbl"></label><input type="text" id="connTeacher" maxlength="40" data-i18n-ph="teacherPh" autocomplete="name"></div>
       <div id="connFields">
-        <div class="field"><label for="connUrl" data-i18n="urlLbl"></label><input type="url" id="connUrl" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false"></div>
+        <div class="field"><label for="connUrl" data-i18n="urlLbl"></label><input type="url" id="connUrl" name="url-script" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false" data-lpignore="true" data-1p-ignore></div>
         <div class="field" style="margin-top:14px;">
           <label for="connKey" data-i18n="keyLbl"></label>
-          <div style="display:flex;gap:6px;"><input type="password" id="connKey" autocomplete="off" spellcheck="false"><button type="button" class="btn btn-sm" data-act="toggleKey" data-i18n="showKey"></button></div>
+          <div style="display:flex;gap:6px;"><input type="text" id="connKey" name="clave-departamento" class="secret" autocomplete="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore><button type="button" class="btn btn-sm" data-act="toggleKey" data-i18n="showKey"></button></div>
         </div>
       </div>
       <p class="status-line" id="connStatus"></p>
@@ -1059,6 +1061,7 @@ const I18N = {
     invWarn: "El enlace lleva la clave dentro: compártelo solo con el profesorado del departamento.",
     invShareTitle: "Cuaderno de evaluación · Edificación", invShareText: "Te invito al cuaderno de evaluación del departamento. Abre el enlace y escribe tu nombre:",
     invPasted: "✓ Invitación reconocida: URL y clave rellenadas.",
+    noMatchSearch: "Ningún alumno/a coincide con «{q}».", clearSearch: "✕ Borrar búsqueda", noMatchFilter: "Ningún alumno/a con el estado «{s}» en este periodo.", showAll: "Ver todos",
     actIntro: "Rellena por orden: título → evaluación → peso (% dentro de esa evaluación; entre todas deben sumar 100 %) → competencias que evalúa.",
     weightPct: "{w} %", weightRec: "peso {w}",
     realShort: "cuenta ≈ {n} %", realTitle: "Peso real en la nota de la evaluación: depende de las competencias que evalúa la actividad y del peso de cada competencia (Ajustes).",
@@ -1210,6 +1213,7 @@ const I18N = {
     invWarn: "Estekak gakoa darama barruan: partekatu sailaren irakasleekin bakarrik.",
     invShareTitle: "Ebaluazio-koadernoa · Eraikuntza", invShareText: "Sailaren ebaluazio-koadernora gonbidatzen zaitut. Ireki esteka eta idatzi zure izena:",
     invPasted: "✓ Gonbidapena ezagututa: URLa eta gakoa beteta.",
+    noMatchSearch: "Bilaketa honekin ez dago ikaslerik: «{q}».", clearSearch: "✕ Bilaketa garbitu", noMatchFilter: "Ez dago ikaslerik egoera honekin aldi honetan: «{s}».", showAll: "Guztiak ikusi",
     actIntro: "Bete ordenan: izenburua → ebaluazioa → pisua (% ebaluazio horren barruan; guztiek % 100 egin behar dute) → ebaluatzen dituen konpetentziak.",
     weightPct: "% {w}", weightRec: "pisua {w}",
     realShort: "≈ % {n} kontatzen du", realTitle: "Ebaluazioaren notan duen benetako pisua: jarduerak ebaluatzen dituen konpetentzien eta haien pisuen araberakoa da (Ezarpenak).",
@@ -1642,7 +1646,9 @@ function cardHtml(s, r, p) {
 }
 function renderSemaphore() {
   const p = curPeriod(), c = cfg(), as = acts(), st = students();
-  const q = norm($("searchStudent").value);
+  const sb = $("searchStudent");
+  if (/:\/\/|script\.google/i.test(sb.value)) sb.value = "";   // texto pegado o autorrellenado por el navegador: no es un nombre
+  const q = norm(sb.value);
   const counts = { ok: 0, prog: 0, ko: 0, none: 0 };
   const enriched = st.map(s => { const r = calcFor(s.id, p, c, as); counts[r.status]++; return { s, r }; });
   const keys = isFinal(p) ? ["ok", "prog", "ko", "none"] : ["ok", "ko", "none"];
@@ -1652,7 +1658,9 @@ function renderSemaphore() {
   if (!st.length) { grid.innerHTML = onboardingHtml(); return; }
   const list = enriched.filter(({ s, r }) => (!q || norm(s.n).includes(q)) && (statusFilter === "all" || r.status === statusFilter));
   grid.innerHTML = list.length ? list.map(({ s, r }) => cardHtml(s, r, p)).join("")
-    : `<div class="panel muted" style="grid-column:1/-1;text-align:center;">${esc(t("noStudentsFilter"))}</div>`;
+    : `<div class="panel muted" style="grid-column:1/-1;text-align:center;">${q
+        ? `${esc(t("noMatchSearch", { q: sb.value.trim() }))} <button type="button" class="btn btn-sm" data-act="clearSearch">${esc(t("clearSearch"))}</button>`
+        : `${esc(t("noMatchFilter", { s: statusLabel(statusFilter, p) }))} <button type="button" class="btn btn-sm" data-act="showAll">${esc(t("showAll"))}</button>`}</div>`;
 }
 
 /* ---------- pesos de actividades ---------- */
@@ -2092,7 +2100,7 @@ function openConn(inv) {
   $("connTeacher").value = S.conn.teacher;
   $("connUrl").value = join ? inv.u : S.conn.url;
   $("connKey").value = join ? inv.k : S.conn.key;
-  $("connKey").type = "password"; setConnStatus(""); renderConnInfo();
+  $("connKey").classList.add("secret"); setConnStatus(""); renderConnInfo();
   $("connModalTitle").textContent = t(join ? "joinTitle" : "connTitle");
   $("joinText").hidden = !join; $("joinText").textContent = join ? t("joinText") : "";
   $("connDesc").hidden = join; $("connFields").hidden = join;
@@ -2378,7 +2386,9 @@ const ACTIONS = {
   },
 
   /* conexión */
-  toggleKey: () => { const k = $("connKey"); k.type = k.type === "password" ? "text" : "password"; },
+  toggleKey: () => { $("connKey").classList.toggle("secret"); },
+  clearSearch: () => { $("searchStudent").value = ""; renderSemaphore(); },
+  showAll: () => { statusFilter = "all"; renderFilters(); renderSemaphore(); },
   testConn: async () => {
     const url = $("connUrl").value.trim(), key = $("connKey").value.trim();
     if (!url || !key) return setConnStatus(t("needUrlKey"), true);
@@ -2637,6 +2647,7 @@ async function init() {
   lang = S.ui.lang === "eu" ? "eu" : "es";
   if (!CURRICULUM[S.ui.course]) S.ui.course = "1";
   applyStatic();
+  $("searchStudent").value = "";
   bindGlobal();
   switchTab(["semaphore", "gradebook", "config"].includes(S.ui.tab) ? S.ui.tab : "semaphore");
   registerSW();

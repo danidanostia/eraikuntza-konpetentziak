@@ -139,6 +139,23 @@
   .progress-fill { height: 100%; background: var(--navy); border-radius: 999px; transition: width 0.25s; }
   .tag { font-size: 0.66rem; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: var(--navy-soft); color: var(--navy); margin-left: 4px; white-space: nowrap; }
   .tag-rec { background: var(--amber-bg); color: var(--amber); }
+  .tag-prov { background: var(--amber-bg); color: var(--amber); margin-left: 0; }
+  .tag-cap { background: var(--red-bg); color: var(--red); margin-left: 0; cursor: help; }
+  .sum-th { min-width: 120px; }
+  .ev-w-row { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 8px; align-items: center; padding: 8px 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; max-width: 420px; font-size: 0.88rem; font-weight: 600; }
+  .comp-on { font-size: 0.8rem; white-space: nowrap; }
+  .prov-text { color: var(--amber); font-weight: 700; }
+  .real-w { color: var(--amber); font-weight: 700; cursor: help; }
+  .wh-ok { color: var(--green); font-weight: 600; }
+  .wh-warn { color: var(--amber); font-weight: 600; }
+  .wh-err { color: var(--red); font-weight: 600; }
+  .sum-cell { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .sum-cell.sum-right { align-items: flex-end; }
+  .ev-bars { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .help { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 12px; font-size: 0.84rem; box-shadow: var(--shadow); }
+  .help summary { cursor: pointer; font-weight: 700; color: var(--navy); }
+  .help ol { margin: 8px 0 2px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .pr-warn { border: 1px solid #f59e0b; background: #fef3c7; padding: 6px 8px; font-size: 9.5pt; margin: 6px 0; }
 
   /* CUADERNO */
   .desktop-gradebook { display: block; }
@@ -179,7 +196,7 @@
   .onboard .row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
   .weight-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 10px; background: #f8fafc; border: 1px solid var(--border); margin-bottom: 12px; }
   .comp-cfg { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: #f8fafc; }
-  .comp-cfg-grid { display: grid; grid-template-columns: 74px minmax(0, 1fr) 100px auto; gap: 8px; align-items: center; }
+  .comp-cfg-grid { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
   .ra-cfg-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 100px auto; gap: 8px; align-items: center; padding: 8px 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
   .pct { display: flex; align-items: center; gap: 4px; }
   .pct span { font-size: 0.8rem; font-weight: 700; color: var(--muted); }
@@ -392,6 +409,17 @@
     <div class="panel">
       <div class="panel-head">
         <div>
+          <h2 data-i18n="cfgEvTitle"></h2>
+          <p class="desc" data-i18n="cfgEvDesc"></p>
+        </div>
+      </div>
+      <div class="weight-bar" id="evWeightBar"></div>
+      <div id="evWeightList" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
           <h2 data-i18n="cfgCompTitle"></h2>
           <p class="desc" data-i18n="cfgCompDesc"></p>
         </div>
@@ -517,13 +545,15 @@
   <div class="modal">
     <div class="modal-header"><strong id="actModalTitle"></strong><button type="button" class="btn-hdr" data-act="closeModal" data-modal="activityModal">✕</button></div>
     <div class="modal-body">
+      <p class="small muted" data-i18n="actIntro"></p>
       <div class="field"><label for="actTitle" data-i18n="actTitleLbl"></label><input type="text" id="actTitle" maxlength="160" data-i18n-ph="actTitlePh"></div>
       <div class="grid2">
         <div class="field"><label for="actEval" data-i18n="actEvalLbl"></label><select id="actEval" data-ch="actEval"></select></div>
-        <div class="field"><label for="actWeight" data-i18n="actWeightLbl"></label><input type="text" inputmode="decimal" id="actWeight" value="1"></div>
+        <div class="field"><label for="actWeight" data-i18n="actWeightLbl"></label><div class="pct"><input type="text" inputmode="decimal" id="actWeight" autocomplete="off"><span>%</span></div></div>
       </div>
+      <p class="small muted" id="actWeightHelp" style="margin-top:-6px;"></p>
       <div class="field"><span class="lbl" data-i18n="actCompsLbl"></span><div class="ra-pills" id="actCompPills"></div></div>
-      <label class="check"><input type="checkbox" id="actRec"><span><span data-i18n="actRecLbl"></span><br><span class="small muted" id="actRecHint"></span></span></label>
+      <label class="check"><input type="checkbox" id="actRec" data-ch="actRec"><span><span data-i18n="actRecLbl"></span><br><span class="small muted" id="actRecHint"></span></span></label>
       <label class="check"><input type="checkbox" id="actRub" data-ch="actRub"><span data-i18n="actRubLbl"></span></label>
       <div id="actRubBox" hidden>
         <span class="lbl" data-i18n="rubValues"></span>
@@ -795,16 +825,27 @@ const CURRICULUM = {
 
 /* =====================================================================
    MOTOR DE CÁLCULO — idéntico en la app (index.html) y en Code.gs
-   - Casillas vacías: no cuentan (ni en numerador ni en denominador).
-   - Periodos acumulativos: 1EV ⊂ 2EV ⊂ ORD ⊂ EXT.
-   - Recuperación: solo sustituye competencias por debajo de 5; se usa la
+   NOTA:
+   - Nota de cada evaluación (1ª, 2ª y, si tiene actividades normales, la
+     ordinaria) = media ponderada de sus actividades con los pesos (%) que
+     pone el profesor. Las casillas vacías no cuentan (nota provisional).
+   - Nota final (ordinaria / extraordinaria) = media de las evaluaciones con
+     los pesos de evaluación del módulo (por defecto 1ª 50 %, 2ª 50 %).
+   COMPETENCIAS (semáforo y condición de aprobado):
+   - Cada competencia = media ponderada (mismos pesos de actividad) de las
+     actividades que la evalúan, acumulando periodos: 1EV ⊂ 2EV ⊂ ORD ⊂ EXT.
+   - Recuperación: solo sustituye competencias por debajo de 5; se queda la
      mayor de (original, recuperación) y se conserva la original.
-   - Competencia con peso 0 %: no cuenta ni en la nota ni en el estado.
-   - Nota del módulo = media ponderada por peso de las competencias.
-   - Control por RA = cada RA toma sus competencias vinculadas; la nota de
-     control es la media ponderada por el peso de cada RA.
+   - En la final, el módulo se supera solo si TODAS las competencias que se
+     evalúan están en 5 o más y la nota final llega a 5. Con alguna
+     competencia suspendida la nota queda en 4 como máximo. Si se superan
+     todas gracias a recuperaciones y la media no llega a 5, sube a 5.
+   - Control por RA = media de sus competencias; nota de control con el
+     peso de cada RA.
    ===================================================================== */
 var PERIODS = ["1EV", "2EV", "ORD", "EXT"];
+var EVALS = ["1EV", "2EV", "ORD"];
+var EV_W_DEFAULT = { "1EV": 50, "2EV": 50, "ORD": 0 };
 var RUB_DEFAULT = [2.5, 5, 7.5, 10];
 
 function engNum(v, d) {
@@ -816,7 +857,13 @@ function engPeriodsUpTo(p) {
   var i = PERIODS.indexOf(p);
   return PERIODS.slice(0, i < 0 ? PERIODS.length : i + 1);
 }
+function engIsFinal(p) { return p === "ORD" || p === "EXT"; }
 function engIsRec(a) { return !!a.rec || a.ev === "EXT"; }
+function engEvalWeights(cfg) {
+  var e = (cfg && cfg.ev) || {}, out = {};
+  EVALS.forEach(function (k) { out[k] = engNum(e[k], EV_W_DEFAULT[k]); });
+  return out;
+}
 function engScore(a, g) {
   if (!g) return null;
   var rv = (Array.isArray(a.rv) && a.rv.length === 4) ? a.rv : RUB_DEFAULT;
@@ -827,15 +874,16 @@ function engScore(a, g) {
 }
 
 /**
- * cfg:     { comps:[{id, code, weight, ras:[]}], ras:[{code, weight}] }
+ * cfg:     { comps:[{id, code, weight(>0 = se evalúa), ras:[]}], ras:[{code, weight}], ev:{1EV,2EV,ORD} }
  * acts:    [{ id, ev, w, comps:[], rec, rub, rv }]
  * gradeOf: function(aid) -> {v:number} | {l:1..4} | undefined
  * period:  "1EV" | "2EV" | "ORD" | "EXT"
  */
 function engCalc(cfg, acts, gradeOf, period) {
-  var inc = engPeriodsUpTo(period);
+  var inc = engPeriodsUpTo(period), fin = engIsFinal(period);
   var used = acts.filter(function (a) { return inc.indexOf(a.ev) >= 0; });
 
+  /* 1) competencias */
   var comps = (cfg.comps || []).map(function (c) {
     var ns = 0, nw = 0, rs = 0, rw = 0;
     used.forEach(function (a) {
@@ -848,43 +896,85 @@ function engCalc(cfg, acts, gradeOf, period) {
     });
     var orig = nw > 0 ? engR2(ns / nw) : null;
     var rec = rw > 0 ? engR2(rs / rw) : null;
-    var fin = orig;
-    if (rec !== null && (orig === null || orig < 5)) fin = orig === null ? rec : Math.max(orig, rec);
+    var f = orig;
+    if (rec !== null && (orig === null || orig < 5)) f = orig === null ? rec : Math.max(orig, rec);
     var weight = engNum(c.weight, 0);
     return {
-      c: c, orig: orig, rec: rec, fin: fin,
-      st: fin === null ? "none" : (fin >= 5 ? "ok" : "ko"),
-      recovered: fin !== null && fin !== orig,
+      c: c, orig: orig, rec: rec, fin: f,
+      st: f === null ? "none" : (f >= 5 ? "ok" : "ko"),
+      recovered: f !== null && f !== orig,
       active: weight > 0, weight: weight
     };
   });
-
-  var s = 0, w = 0, ok = 0, ko = 0, none = 0, activeN = 0;
+  var ok = 0, ko = 0, none = 0, activeN = 0, anyRec = false;
   comps.forEach(function (r) {
     if (!r.active) return;
     activeN++;
     if (r.st === "ok") ok++; else if (r.st === "ko") ko++; else none++;
-    if (r.fin !== null) { s += r.fin * r.weight; w += r.weight; }
+    if (r.recovered) anyRec = true;
   });
-  var grade = w > 0 ? engR2(s / w) : null;
-  var status = (ok + ko === 0) ? "none" : (ko > 0 ? "ko" : (none > 0 ? "prog" : "ok"));
 
+  /* 2) nota de cada evaluación con los pesos de las actividades */
+  var evGrade = {}, evCov = {};
+  EVALS.forEach(function (ev) {
+    if (inc.indexOf(ev) < 0) return;
+    var s = 0, w = 0, tw = 0;
+    acts.forEach(function (a) {
+      if (a.ev !== ev || engIsRec(a)) return;
+      var wa = engNum(a.w, 0);
+      if (!(wa > 0)) return;
+      tw += wa;
+      var sc = engScore(a, gradeOf(a.id));
+      if (sc === null) return;
+      s += sc * wa; w += wa;
+    });
+    evGrade[ev] = w > 0 ? engR2(s / w) : null;
+    evCov[ev] = tw > 0 ? w / tw : null;
+  });
+
+  /* 3) nota del periodo */
+  var grade = null, cov = null;
+  if (!fin) { grade = evGrade[period] === undefined ? null : evGrade[period]; cov = evCov[period] === undefined ? null : evCov[period]; }
+  else {
+    var ew = engEvalWeights(cfg), s2 = 0, w2 = 0, cs = 0, cw = 0;
+    EVALS.forEach(function (ev) {
+      var W = ew[ev];
+      if (!(W > 0)) return;
+      if (ev === "ORD" && evCov[ev] == null) return;   // sin actividades propias en la ordinaria: no cuenta
+      cw += W;
+      if (evCov[ev] == null) return;                   // evaluación aún sin actividades
+      cs += W * evCov[ev];
+      if (evGrade[ev] === null) return;
+      s2 += evGrade[ev] * W; w2 += W;
+    });
+    grade = w2 > 0 ? engR2(s2 / w2) : null;
+    cov = cw > 0 ? cs / cw : null;
+  }
+  var rawGrade = grade, capped = false, lifted = false, status;
+  if (!fin) status = grade === null ? "none" : (grade >= 5 ? "ok" : "ko");
+  else if (grade === null && ok + ko === 0) status = "none";
+  else if (ko > 0) { status = "ko"; if (grade !== null && grade > 4) { grade = 4; capped = true; } }
+  else if (activeN === 0 || none > 0) status = "prog";
+  else if (grade !== null && grade >= 5) status = "ok";
+  else if (anyRec) { status = "ok"; grade = 5; lifted = true; }
+  else status = "ko";
+
+  /* 4) control por RA */
   var ras = (cfg.ras || []).map(function (ra) {
     var a = 0, b = 0;
     comps.forEach(function (r) {
-      if ((r.c.ras || []).indexOf(ra.code) < 0 || r.fin === null) return;
-      var cw = r.weight > 0 ? r.weight : 1;
-      a += r.fin * cw; b += cw;
+      if (!r.active || (r.c.ras || []).indexOf(ra.code) < 0 || r.fin === null) return;
+      a += r.fin; b += 1;
     });
     return { ra: ra, score: b > 0 ? engR2(a / b) : null, weight: engNum(ra.weight, 0) };
   });
-  var rs2 = 0, rw2 = 0;
-  ras.forEach(function (x) { if (x.score !== null && x.weight > 0) { rs2 += x.score * x.weight; rw2 += x.weight; } });
+  var rs3 = 0, rw3 = 0;
+  ras.forEach(function (x) { if (x.score !== null && x.weight > 0) { rs3 += x.score * x.weight; rw3 += x.weight; } });
 
   return {
-    comps: comps, grade: grade, status: status,
-    ok: ok, ko: ko, none: none, activeN: activeN,
-    ras: ras, raGrade: rw2 > 0 ? engR2(rs2 / rw2) : null
+    comps: comps, grade: grade, rawGrade: rawGrade, capped: capped, lifted: lifted, status: status,
+    ok: ok, ko: ko, none: none, activeN: activeN, evGrade: evGrade, evCov: evCov, cov: cov,
+    ras: ras, raGrade: rw3 > 0 ? engR2(rs3 / rw3) : null
   };
 }
 
@@ -901,11 +991,11 @@ const I18N = {
     courseShort1: "1º PE", courseShort2: "2º PE", newYearBtn: "Nuevo curso y promoción",
     search: "Buscar alumno/a…", fAll: "Todos los estados",
     st_ok_final: "Superado", st_ko_final: "No superado", st_prog_final: "Incompleto",
-    st_ok_mid: "Adquiridas", st_ko_mid: "Con pendientes", st_prog_mid: "En proceso", st_none: "Sin evaluar",
-    c_ok: "Adquirida", c_ko: "No adquirida", c_none: "Sin evaluar", c_off: "No cuenta (0 %)",
+    st_ok_mid: "Aprobada", st_ko_mid: "Suspendida", st_prog_mid: "En proceso", st_none: "Sin evaluar",
+    c_ok: "Adquirida", c_ko: "No adquirida", c_none: "Sin evaluar", c_off: "No se evalúa",
     p_1EV: "1ª evaluación", p_2EV: "2ª evaluación", p_ORD: "Final ordinaria", p_EXT: "Final extraordinaria",
     ps_1EV: "1ª ev.", ps_2EV: "2ª ev.", ps_ORD: "Ord.", ps_EXT: "Extra.",
-    pv_1EV: "Ver: 1ª evaluación", pv_2EV: "Ver: 2ª evaluación (acumulada)", pv_ORD: "Ver: final ordinaria", pv_EXT: "Ver: final extraordinaria",
+    pv_1EV: "Ver: 1ª evaluación", pv_2EV: "Ver: 2ª evaluación", pv_ORD: "Ver: final ordinaria", pv_EXT: "Ver: final extraordinaria",
     allEvals: "Todas las evaluaciones",
     exportCsv: "Exportar CSV", printActa: "Imprimir acta", statStudents: "Alumnado",
     newAct: "+ Nueva actividad",
@@ -922,7 +1012,39 @@ const I18N = {
     noActsShort: "Sin actividades.", periodShown: "Periodo: {p}", recFrom: "orig. {o} → rec. {r}",
     printFicha: "🖨️ Imprimir ficha", close: "Cerrar", noteSaved: "✓ Observación guardada",
     actNewTitle: "Nueva actividad", actEditTitle: "Editar actividad", actTitleLbl: "Título de la actividad o entrega",
-    actTitlePh: "Ej. Levantamiento con dron y escáner del aula taller", actEvalLbl: "Evaluación", actWeightLbl: "Peso relativo",
+    evalGrade: "Nota de la evaluación", finalGrade: "Nota final",
+    cfgEvTitle: "Peso de cada evaluación en la nota final",
+    cfgEvDesc: "La nota final es la media de las evaluaciones con estos pesos. Dentro de cada evaluación mandan los pesos (%) de sus actividades.",
+    totalEvs: "Total evaluaciones: {s} %", compActive: "Se evalúa",
+    compRule: "Regla de aprobado: nota final ≥ 5 y todas las competencias que se evalúan ≥ 5.",
+    uncoveredWarn: "Sin ninguna actividad: {c}. Para aprobar a final de curso hay que evaluarlas (o desmarcar «Se evalúa» en Ajustes).",
+    cappedTag: "máx. 4", cappedTitle: "La media es {g}, pero hay competencias sin superar: el módulo no se supera y la nota queda en 4 como máximo.",
+    liftedTag: "recuperado", liftedTitle: "Ha superado todas las competencias tras recuperar: la nota final sube a 5.",
+    capLegend: "‡ Nota limitada a 4: hay competencias sin superar.", liftLegend: "§ Superado tras recuperación: la nota sube a 5.",
+    actIntro: "Rellena por orden: título → evaluación → peso (% dentro de esa evaluación; entre todas deben sumar 100 %) → competencias que evalúa.",
+    weightPct: "{w} %", weightRec: "peso {w}",
+    realShort: "cuenta ≈ {n} %", realTitle: "Peso real en la nota de la evaluación: depende de las competencias que evalúa la actividad y del peso de cada competencia (Ajustes).",
+    provTag: "{n} % corregido", provLong: "provisional: {n} % corregido",
+    provTitle: "Nota provisional: faltan actividades por calificar. Las casillas vacías no cuentan; un 0 sí.",
+    corrected: "% corregido",
+    actaProvWarn: "{n} alumno/a(s) con actividades sin calificar en este periodo: su nota es provisional.",
+    provLegend: "† nota provisional: hay actividades sin calificar (ver columna «% corregido»).",
+    evSumOk: "{p}: actividades al 100 % ✓", evSumUnder: "{p}: actividades al {s} % · faltan {d} %", evSumOver: "{p}: actividades al {s} % · sobran {d} %",
+    recNote: "Las recuperaciones no cuentan en el 100 %.",
+    whRec: "Recuperación: su peso solo se compara con otras recuperaciones y no entra en el 100 % de la evaluación.",
+    whUsed: "{p}: ya tienes asignado {u} %, quedan {r} %.", whOk: "✓ Con esta actividad, {p} queda al 100 %.",
+    whUnder: "{p} quedaría al {s} %: aún faltan {r} % por asignar.", whOver: "{p} quedaría al {s} %: te pasas {d} %. Ajusta los pesos.",
+    realHelp: "Por las competencias que evalúa, contará ≈ {n} % de la nota de la evaluación.",
+    realHelpDiff: "(Has puesto {w} %: la diferencia viene de los pesos de las competencias en Ajustes.)",
+    actSavedUnder: "✓ Guardada · {p} está al {s} %: faltan {d} %", actSavedOver: "✓ Guardada · {p} está al {s} %: sobran {d} %",
+    helpTitle: "Cómo se meten las actividades y sus pesos",
+    help1: "Crea cada práctica, entrega o examen con «+ Nueva actividad»: título, evaluación, peso y competencias que evalúa. Con ✎ la editas sin perder notas.",
+    help2: "El peso es el % de la nota de su evaluación. Las actividades de cada evaluación deben sumar 100 % (ej.: práctica 10 % + práctica 20 % + examen 40 % + proyecto 30 %). La barra de arriba te dice cuánto llevas.",
+    help3: "Las recuperaciones no entran en ese 100 %: solo sustituyen las competencias suspensas y se guarda la nota original.",
+    help4: "Notas: escribe y pulsa Enter para bajar al siguiente alumno/a; coma decimal (7,5). Casilla vacía = sin corregir: la nota del módulo sale como provisional con el % ya corregido. Un 0 = no presentado, y sí cuenta.",
+    help5: "Rúbrica: toca 1, 2, 3 o 4 (cada nivel equivale a la nota que fijes en la actividad).",
+    help6: "La nota de cada evaluación es la media de sus actividades con tus pesos. La nota final es la media de las evaluaciones (pesos en Ajustes; por defecto 50 % y 50 %). Para aprobar el módulo hay que tener además todas las competencias en 5 o más: si queda alguna suspendida, la nota final queda en 4 como máximo.",
+    actTitlePh: "Ej. Levantamiento con dron y escáner del aula taller", actEvalLbl: "Evaluación", actWeightLbl: "Peso en su evaluación (%)",
     actCompsLbl: "Competencias que evalúa",
     actRecLbl: "Actividad de recuperación: solo sustituye las competencias no superadas (se guarda la nota original)",
     actRecExt: "En la extraordinaria todas las actividades son de recuperación.",
@@ -932,9 +1054,9 @@ const I18N = {
     tagRec: "recup.", tagRub: "rúbrica", weightShort: "peso {w}",
     actSaved: "✓ Actividad guardada", actDeleted: "Actividad eliminada", undo: "Deshacer", undone: "↩️ Deshecho",
     needTitle: "Escribe un título", needComp: "Selecciona al menos una competencia", gradeRange: "La nota debe estar entre 0 y 10",
-    badWeight: "El peso debe ser mayor que 0", badRub: "Las notas de la rúbrica deben estar entre 0 y 10",
+    badWeight: "El peso debe estar entre 0 y 100 (sin contar el 0)", badPct: "Escribe un número entre 0 y 100 (por ejemplo 25 o 12,5)", badRub: "Las notas de la rúbrica deben estar entre 0 y 10",
     cfgCompTitle: "Competencias y su relación con los RA",
-    cfgCompDesc: "Peso (%) de cada competencia en la nota del módulo y RA a los que se vincula. Una competencia con 0 % no cuenta.",
+    cfgCompDesc: "Para superar el módulo en la final hay que tener todas las competencias que se evalúan en 5 o más, aunque la media dé más. La nota no depende de ellas: sale de los pesos de las actividades. Desmarca «Se evalúa» si una competencia no se trabaja este curso.",
     addComp: "+ Competencia", totalComps: "Total competencias: {s} %", mustBe100: "(debe sumar 100 %)",
     balance: "⚖️ Ajustar a 100 %", raLinked: "RA vinculados:",
     cfgRaTitle: "Resultados de aprendizaje (RA)",
@@ -1010,11 +1132,11 @@ const I18N = {
     courseShort1: "1. PE", courseShort2: "2. PE", newYearBtn: "Ikasturte berria eta promozioa",
     search: "Bilatu ikaslea…", fAll: "Egoera guztiak",
     st_ok_final: "Gainditua", st_ko_final: "Ez gainditua", st_prog_final: "Osatu gabe",
-    st_ok_mid: "Lortuak", st_ko_mid: "Gainditzeke", st_prog_mid: "Prozesuan", st_none: "Ebaluatu gabe",
-    c_ok: "Lortua", c_ko: "Ez lortua", c_none: "Ebaluatu gabe", c_off: "Ez du kontatzen (% 0)",
+    st_ok_mid: "Gaindituta", st_ko_mid: "Gainditu gabe", st_prog_mid: "Prozesuan", st_none: "Ebaluatu gabe",
+    c_ok: "Lortua", c_ko: "Ez lortua", c_none: "Ebaluatu gabe", c_off: "Ez da ebaluatzen",
     p_1EV: "1. ebaluazioa", p_2EV: "2. ebaluazioa", p_ORD: "Azken ohiko ebaluazioa", p_EXT: "Azken ezohiko ebaluazioa",
     ps_1EV: "1. eb.", ps_2EV: "2. eb.", ps_ORD: "Ohikoa", ps_EXT: "Ezohikoa",
-    pv_1EV: "Ikusi: 1. ebaluazioa", pv_2EV: "Ikusi: 2. ebaluazioa (metatua)", pv_ORD: "Ikusi: azken ohikoa", pv_EXT: "Ikusi: azken ezohikoa",
+    pv_1EV: "Ikusi: 1. ebaluazioa", pv_2EV: "Ikusi: 2. ebaluazioa", pv_ORD: "Ikusi: azken ohikoa", pv_EXT: "Ikusi: azken ezohikoa",
     allEvals: "Ebaluazio guztiak",
     exportCsv: "CSV esportatu", printActa: "Akta inprimatu", statStudents: "Ikasleak",
     newAct: "+ Jarduera berria",
@@ -1031,7 +1153,39 @@ const I18N = {
     noActsShort: "Jarduerarik ez.", periodShown: "Aldia: {p}", recFrom: "jat. {o} → berr. {r}",
     printFicha: "🖨️ Fitxa inprimatu", close: "Itxi", noteSaved: "✓ Oharra gordeta",
     actNewTitle: "Jarduera berria", actEditTitle: "Jarduera editatu", actTitleLbl: "Jardueraren edo entregaren izenburua",
-    actTitlePh: "Adib. Tailer-gelaren altxamendua dronearekin eta eskanerrarekin", actEvalLbl: "Ebaluazioa", actWeightLbl: "Pisu erlatiboa",
+    evalGrade: "Ebaluazioaren nota", finalGrade: "Azken nota",
+    cfgEvTitle: "Ebaluazio bakoitzaren pisua azken notan",
+    cfgEvDesc: "Azken nota ebaluazioen batez bestekoa da, pisu hauekin. Ebaluazio bakoitzaren barruan haren jardueren pisuak (%) dira nagusi.",
+    totalEvs: "Ebaluazioak guztira: % {s}", compActive: "Ebaluatzen da",
+    compRule: "Gainditzeko araua: azken nota ≥ 5 eta ebaluatzen diren konpetentzia guztiak ≥ 5.",
+    uncoveredWarn: "Jarduerarik gabe: {c}. Ikasturte amaieran gainditzeko ebaluatu egin behar dira (edo desmarkatu «Ebaluatzen da» Ezarpenetan).",
+    cappedTag: "geh. 4", cappedTitle: "Batez bestekoa {g} da, baina gainditu gabeko konpetentziak daude: modulua ez da gainditzen eta nota gehienez 4 da.",
+    liftedTag: "berreskuratua", liftedTitle: "Konpetentzia guztiak gainditu ditu berreskuratu ondoren: azken nota 5era igotzen da.",
+    capLegend: "‡ Nota 4ra mugatuta: gainditu gabeko konpetentziak daude.", liftLegend: "§ Berreskuratu ondoren gaindituta: nota 5era igotzen da.",
+    actIntro: "Bete ordenan: izenburua → ebaluazioa → pisua (% ebaluazio horren barruan; guztiek % 100 egin behar dute) → ebaluatzen dituen konpetentziak.",
+    weightPct: "% {w}", weightRec: "pisua {w}",
+    realShort: "≈ % {n} kontatzen du", realTitle: "Ebaluazioaren notan duen benetako pisua: jarduerak ebaluatzen dituen konpetentzien eta haien pisuen araberakoa da (Ezarpenak).",
+    provTag: "% {n} zuzenduta", provLong: "behin-behinekoa: % {n} zuzenduta",
+    provTitle: "Behin-behineko nota: jarduerak falta dira kalifikatzeko. Gelaxka hutsak ez dira kontatzen; 0 bat bai.",
+    corrected: "% zuzenduta",
+    actaProvWarn: "{n} ikaslek kalifikatu gabeko jarduerak dituzte aldi honetan: haien nota behin-behinekoa da.",
+    provLegend: "† behin-behineko nota: kalifikatu gabeko jarduerak daude (ikus «% zuzenduta» zutabea).",
+    evSumOk: "{p}: jarduerak % 100ean ✓", evSumUnder: "{p}: jarduerak % {s}ean · % {d} falta", evSumOver: "{p}: jarduerak % {s}ean · % {d} soberan",
+    recNote: "Berreskuratzeak ez dira % 100ean kontatzen.",
+    whRec: "Berreskuratzea: haren pisua beste berreskuratzeekin bakarrik alderatzen da eta ez da ebaluazioaren % 100ean sartzen.",
+    whUsed: "{p}: % {u} esleituta duzu, % {r} falta da.", whOk: "✓ Jarduera honekin, {p} % 100ean geratzen da.",
+    whUnder: "{p} % {s}ean geratuko litzateke: % {r} falta da esleitzeko.", whOver: "{p} % {s}ean geratuko litzateke: % {d} pasatzen zara. Doitu pisuak.",
+    realHelp: "Ebaluatzen dituen konpetentziengatik, ebaluazioaren notaren ≈ % {n} izango da.",
+    realHelpDiff: "(% {w} jarri duzu: aldea Ezarpenetako konpetentzien pisuetatik dator.)",
+    actSavedUnder: "✓ Gordeta · {p} % {s}ean dago: % {d} falta", actSavedOver: "✓ Gordeta · {p} % {s}ean dago: % {d} soberan",
+    helpTitle: "Nola sartu jarduerak eta haien pisuak",
+    help1: "Sortu praktika, entrega edo azterketa bakoitza «+ Jarduera berria» botoiarekin: izenburua, ebaluazioa, pisua eta ebaluatzen dituen konpetentziak. ✎ botoiarekin editatu notak galdu gabe.",
+    help2: "Pisua bere ebaluazioaren notaren % da. Ebaluazio bakoitzeko jarduerek % 100 egin behar dute (adib.: praktika % 10 + praktika % 20 + azterketa % 40 + proiektua % 30). Goiko barrak zenbat daramazun esaten dizu.",
+    help3: "Berreskuratzeak ez dira % 100 horretan sartzen: gainditu gabeko konpetentziak bakarrik ordezkatzen dituzte eta jatorrizko nota gordetzen da.",
+    help4: "Notak: idatzi eta sakatu Enter hurrengo ikaslera jaisteko; koma hamartarra (7,5). Gelaxka hutsa = zuzendu gabe: moduluaren nota behin-behinekoa da, zuzendutako %-arekin. 0 = aurkeztu gabe, eta kontatzen da.",
+    help5: "Errubrika: sakatu 1, 2, 3 edo 4 (maila bakoitzak jardueran finkatzen duzun nota balio du).",
+    help6: "Ebaluazio bakoitzaren nota haren jardueren batez bestekoa da, zure pisuekin. Azken nota ebaluazioen batez bestekoa da (pisuak Ezarpenetan; lehenetsita % 50 eta % 50). Modulua gainditzeko, gainera, konpetentzia guztiek 5 edo gehiago izan behar dute: bat gainditu gabe geratzen bada, azken nota gehienez 4 da.",
+    actTitlePh: "Adib. Tailer-gelaren altxamendua dronearekin eta eskanerrarekin", actEvalLbl: "Ebaluazioa", actWeightLbl: "Pisua bere ebaluazioan (%)",
     actCompsLbl: "Ebaluatzen dituen konpetentziak",
     actRecLbl: "Berreskuratze-jarduera: gainditu gabeko konpetentziak bakarrik ordezkatzen ditu (jatorrizko nota gordetzen da)",
     actRecExt: "Ezohikoan jarduera guztiak berreskuratzekoak dira.",
@@ -1041,9 +1195,9 @@ const I18N = {
     tagRec: "berr.", tagRub: "errubrika", weightShort: "pisua {w}",
     actSaved: "✓ Jarduera gordeta", actDeleted: "Jarduera ezabatuta", undo: "Desegin", undone: "↩️ Desegina",
     needTitle: "Idatzi izenburu bat", needComp: "Hautatu konpetentzia bat gutxienez", gradeRange: "Notak 0 eta 10 artean egon behar du",
-    badWeight: "Pisuak 0 baino handiagoa izan behar du", badRub: "Errubrikaren notek 0 eta 10 artean egon behar dute",
+    badWeight: "Pisuak 0 eta 100 artean egon behar du (0 kontatu gabe)", badPct: "Idatzi 0 eta 100 arteko zenbaki bat (adibidez 25 edo 12,5)", badRub: "Errubrikaren notek 0 eta 10 artean egon behar dute",
     cfgCompTitle: "Konpetentziak eta IErekin duten lotura",
-    cfgCompDesc: "Konpetentzia bakoitzaren pisua (%) moduluaren notan eta lotzen zaizkion IEak. % 0 duen konpetentziak ez du kontatzen.",
+    cfgCompDesc: "Azken ebaluazioan modulua gainditzeko, ebaluatzen diren konpetentzia guztiek 5 edo gehiago izan behar dute, batez bestekoa handiagoa izan arren. Nota ez dago haien menpe: jardueren pisuetatik ateratzen da. Desmarkatu «Ebaluatzen da» konpetentzia bat ikasturte honetan lantzen ez bada.",
     addComp: "+ Konpetentzia", totalComps: "Konpetentziak guztira: % {s}", mustBe100: "(% 100 izan behar du)",
     balance: "⚖️ % 100era doitu", raLinked: "Lotutako IEak:",
     cfgRaTitle: "Ikaskuntza-emaitzak (IE)",
@@ -1119,7 +1273,7 @@ const I18N = {
    actividad, alumno/a y configuración de módulo es un registro, de modo
    que varios profesores pueden sincronizar sin pisarse.
    ===================================================================== */
-const APP_VERSION = "2.0.0";
+const APP_VERSION = "2.1.0";
 const DB_NAME = "easo-competencias";
 const DB_STORE = "kv";
 const LS_FALLBACK = "easo_pe_v2_state";
@@ -1153,6 +1307,7 @@ function parseNum(raw) {
   if (!/^-?(\d+(\.\d*)?|\.\d+)$/.test(s)) return NaN;
   return parseFloat(s);
 }
+function parsePct(raw) { return parseNum(String(raw == null ? "" : raw).replace(/%/g, "").trim()); }
 function fmt(x) { return (x === null || x === undefined || !isFinite(x)) ? "—" : engR2(x).toLocaleString("es-ES", { maximumFractionDigits: 2 }); }
 function fmtIn(x) { return (x === null || x === undefined || !isFinite(x)) ? "" : String(engR2(x)).replace(".", ","); }
 function uid(p) { return p + Date.now().toString(36) + (uidCounter++).toString(36) + Math.random().toString(36).slice(2, 5); }
@@ -1408,14 +1563,30 @@ function compRowHtml(x, full) {
   const label = compLabel(x.c);
   const cls = !x.active ? "b-none" : (x.st === "ok" ? "b-ok" : x.st === "ko" ? "b-ko" : "b-none");
   const recTxt = x.recovered ? t("recFrom", { o: fmt(x.orig), r: fmt(x.rec) }) : "";
-  const sub = `${esc(t("linkedTo"))} ${esc((x.c.ras || []).join(", ") || "—")} · ${esc(fmt(x.weight))} %` + (x.active ? "" : ` · ${esc(t("c_off"))}`) + (recTxt ? ` · <span class="rec-mark">${esc(recTxt)}</span>` : "");
+  const sub = `${esc(t("linkedTo"))} ${esc((x.c.ras || []).join(", ") || "—")}` + (x.active ? "" : ` · ${esc(t("c_off"))}`) + (recTxt ? ` · <span class="rec-mark">${esc(recTxt)}</span>` : "");
   return `<div class="comp-row${x.active ? "" : " inactive"}"><div class="comp-info"><div class="comp-title"${full ? ' style="white-space:normal"' : ""} title="${esc(label)}"><strong>${esc(x.c.code)}</strong> · ${esc(label)}</div><div class="comp-ras">${sub}</div></div><span class="comp-score ${cls}">${fmt(x.fin)}${x.recovered ? ' <span class="rec-mark">↺</span>' : ""}</span></div>`;
 }
+/* ---------- nota provisional, límites y notas por evaluación ---------- */
+function covPct(r) { return (r.cov === null || r.cov === undefined) ? null : Math.round(r.cov * 100); }
+function isProv(pct) { return pct !== null && pct > 0 && pct < 100; }
+function provHtml(pct) { return isProv(pct) ? `<span class="tag tag-prov" title="${esc(t("provTitle"))}">${esc(t("provTag", { n: pct }))}</span>` : ""; }
+function gradeNoteHtml(r) {
+  if (r.capped) return `<span class="tag tag-cap" title="${esc(t("cappedTitle", { g: fmt(r.rawGrade) }))}">${esc(t("cappedTag"))}</span>`;
+  if (r.lifted) return `<span class="tag tag-rec" title="${esc(t("liftedTitle"))}">${esc(t("liftedTag"))}</span>`;
+  return "";
+}
+function evGradesLine(r) {
+  return EVALS.filter(ev => r.evGrade[ev] !== undefined && (ev !== "ORD" || r.evCov.ORD != null))
+    .map(ev => `${t("ps_" + ev)} ${fmt(r.evGrade[ev])}`).join(" · ");
+}
+function finalPeriod(all = acts()) { return all.some(a => a.ev === "EXT") ? "EXT" : "ORD"; }
 function cardHtml(s, r, p) {
   const badge = r.grade === null ? t("st_none") : `${fmt(r.grade)} · ${statusLabel(r.status, p)}`;
   const pct = r.activeN > 0 ? Math.round(r.ok / r.activeN * 100) : 0;
+  const cv = r.grade === null ? null : covPct(r);
+  const evl = isFinal(p) ? evGradesLine(r) : "";
   return `<article class="student-card">
-    <div class="card-head"><div><div class="student-name">${esc(s.n)}</div><div class="student-sub">${esc(t("compsAcquired", { a: r.ok, n: r.activeN }))}</div></div><span class="badge b-${r.status}">${esc(badge)}</span></div>
+    <div class="card-head"><div><div class="student-name">${esc(s.n)}</div><div class="student-sub">${esc(t("compsAcquired", { a: r.ok, n: r.activeN }))}${isProv(cv) ? ` · <span class="prov-text">${esc(t("provLong", { n: cv }))}</span>` : ""}${evl ? `<br>${esc(evl)}` : ""}</div></div><span class="sum-cell sum-right"><span class="badge b-${r.status}">${esc(badge)}</span>${r.grade === null ? "" : gradeNoteHtml(r)}</span></div>
     <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><span class="small" style="font-weight:700;color:var(--navy)">${pct}%</span></div>
     <div class="comp-list">${r.comps.map(x => compRowHtml(x, false)).join("")}</div>
     <div style="display:flex;justify-content:flex-end;"><button type="button" class="btn btn-sm" data-act="openStudent" data-sid="${esc(s.id)}">${esc(t("openFicha"))}</button></div>
@@ -1426,7 +1597,9 @@ function renderSemaphore() {
   const q = norm($("searchStudent").value);
   const counts = { ok: 0, prog: 0, ko: 0, none: 0 };
   const enriched = st.map(s => { const r = calcFor(s.id, p, c, as); counts[r.status]++; return { s, r }; });
-  $("statsStrip").innerHTML = ["ok", "prog", "ko", "none"].map(k => `<div class="stat-card s-${k}"><div class="stat-label">${esc(statusLabel(k, p))}</div><div class="stat-val">${counts[k]}</div></div>`).join("");
+  const keys = isFinal(p) ? ["ok", "prog", "ko", "none"] : ["ok", "ko", "none"];
+  $("statsStrip").style.gridTemplateColumns = `repeat(${keys.length}, minmax(0, 1fr))`;
+  $("statsStrip").innerHTML = keys.map(k => `<div class="stat-card s-${k}"><div class="stat-label">${esc(statusLabel(k, p))}</div><div class="stat-val">${counts[k]}</div></div>`).join("");
   const grid = $("cardsGrid");
   if (!st.length) { grid.innerHTML = onboardingHtml(); return; }
   const list = enriched.filter(({ s, r }) => (!q || norm(s.n).includes(q)) && (statusFilter === "all" || r.status === statusFilter));
@@ -1434,12 +1607,37 @@ function renderSemaphore() {
     : `<div class="panel muted" style="grid-column:1/-1;text-align:center;">${esc(t("noStudentsFilter"))}</div>`;
 }
 
+/* ---------- pesos de actividades ---------- */
+function normalActs(list, ev) { return list.filter(a => a.ev === ev && !engIsRec(a)); }
+function evalSum(list, ev, exceptId) { return engR2(normalActs(list, ev).filter(a => a.id !== exceptId).reduce((s, a) => s + engNum(a.w, 0), 0)); }
+function uncoveredComps(c, all) { return c.comps.filter(x => engNum(x.weight, 0) > 0 && !all.some(a => (a.comps || []).includes(x.id))); }
+function evalBarsHtml(all, filter, c) {
+  const evs = filter === "ALL" ? EVALS.filter(ev => normalActs(all, ev).length)
+    : (filter === "EXT" || (filter === "ORD" && !normalActs(all, "ORD").length) ? [] : [filter]);
+  const bars = evs.map(ev => {
+    const s = evalSum(all, ev), ok = Math.abs(s - 100) < 0.5;
+    const cls = ok ? "b-ok" : (s > 100 ? "b-ko" : "b-prog");
+    const txt = ok ? t("evSumOk", { p: t("p_" + ev) }) : t(s > 100 ? "evSumOver" : "evSumUnder", { p: t("p_" + ev), s: fmt(s), d: fmt(Math.abs(100 - s)) });
+    return `<span class="badge ${cls}">${esc(txt)}</span>`;
+  });
+  const unc = all.length ? uncoveredComps(c, all) : [];
+  if (unc.length) bars.push(`<span class="badge b-ko" style="white-space:normal">${esc(t("uncoveredWarn", { c: unc.map(x => x.code).join(", ") }))}</span>`);
+  const hasRec = all.some(a => engIsRec(a) && (filter === "ALL" || a.ev === filter));
+  if (!bars.length && !hasRec) return "";
+  return `<div class="ev-bars">${bars.join("")}${hasRec ? `<span class="small muted">${esc(t("recNote"))}</span>` : ""}</div>`;
+}
+let helpOpen = null;
+function helpHtml(open) {
+  const items = ["help1", "help2", "help3", "help4", "help5", "help6"].map(k => `<li>${esc(t(k))}</li>`).join("");
+  return `<details class="help" id="bookHelp"${open ? " open" : ""}><summary>ℹ️ ${esc(t("helpTitle"))}</summary><ol>${items}</ol></details>`;
+}
+
 /* ---------- vista 2: cuaderno ---------- */
 function actMetaHtml(a, c) {
   const codes = (a.comps || []).map(cid => (c.comps.find(x => x.id === cid) || {}).code).filter(Boolean).join(", ");
-  return `${esc(t("ps_" + a.ev))} · ${esc(t("weightShort", { w: fmt(engNum(a.w, 1)) }))} · [${esc(codes || "—")}]`
-    + (engIsRec(a) ? `<span class="tag tag-rec">${esc(t("tagRec"))}</span>` : "")
-    + (a.rub ? `<span class="tag">${esc(t("tagRub"))}</span>` : "");
+  const rec = engIsRec(a), w = engNum(a.w, rec ? 1 : 0);
+  return `${esc(t("ps_" + a.ev))} · ${esc(t(rec ? "weightRec" : "weightPct", { w: fmt(w) }))} · [${esc(codes || "—")}]`
+    + (rec ? `<span class="tag tag-rec">${esc(t("tagRec"))}</span>` : "") + (a.rub ? `<span class="tag">${esc(t("tagRub"))}</span>` : "");
 }
 function gradeCellHtml(a, sid, sname, g) {
   const aria = esc(t("gradeAria", { s: sname, a: a.ti }));
@@ -1450,23 +1648,37 @@ function gradeCellHtml(a, sid, sname, g) {
   const sc = engScore(a, g);
   return `<input type="text" inputmode="decimal" autocomplete="off" enterkeyhint="next" class="grade-input" placeholder="—" value="${esc(fmtIn(sc))}" data-sid="${esc(sid)}" data-aid="${esc(a.id)}" aria-label="${aria}">`;
 }
-function summaryBadge(sid, p) { const r = calcFor(sid, p); return { cls: "badge b-" + r.status, txt: fmt(r.grade) }; }
+function summaryHtml(sid, p, detail) {
+  const r = calcFor(sid, p);
+  let h = `<span class="badge b-${r.status}" title="${esc(statusLabel(r.status, p))}">${esc(fmt(r.grade))}</span>`;
+  if (r.grade !== null) h += provHtml(covPct(r)) + gradeNoteHtml(r);
+  if (detail && isFinal(p)) { const l = evGradesLine(r); if (l) h += `<span class="small muted">${esc(l)}</span>`; }
+  return h;
+}
+// Columnas de nota del cuaderno: cada evaluación con actividades y la final
+function gbPeriods(all) {
+  const f = S.ui.evalFilter, fp = finalPeriod(all);
+  if (f === "1EV" || f === "2EV") return [f];
+  if (f === "ORD" || f === "EXT") return [fp];
+  return EVALS.filter(ev => normalActs(all, ev).length).concat([fp]);
+}
 function renderGradebook() {
-  const st = students(), c = cfg(), p = curPeriod();
-  const as = acts().filter(a => S.ui.evalFilter === "ALL" || a.ev === S.ui.evalFilter);
+  const st = students(), c = cfg();
+  const all = acts(), as = all.filter(a => S.ui.evalFilter === "ALL" || a.ev === S.ui.evalFilter);
   const box = $("gradebookContainer");
   if (!st.length) { box.innerHTML = onboardingHtml(); return; }
-  if (!as.length) { box.innerHTML = `<div class="panel" style="text-align:center;"><p class="muted">${esc(t("noActs"))}</p></div>`; return; }
+  const help = helpHtml(helpOpen === null ? !all.length : helpOpen);
+  if (!as.length) { box.innerHTML = help + evalBarsHtml(all, S.ui.evalFilter, c) + `<div class="panel" style="text-align:center;"><p class="muted">${esc(t("noActs"))}</p></div>`; return; }
   const gm = gradeMap();
   const G = (aid, sid) => (gm[aid] || {})[sid];
+  const pps = gbPeriods(all), last = pps[pps.length - 1];
   const btns = a => `<button type="button" class="icon-btn" data-act="editAct" data-aid="${esc(a.id)}" title="${esc(t("edit"))}" aria-label="${esc(t("edit"))}">✎</button><button type="button" class="icon-btn danger" data-act="delAct" data-aid="${esc(a.id)}" title="${esc(t("del"))}" aria-label="${esc(t("del"))}">✕</button>`;
   const heads = as.map(a => `<th><div style="display:flex;justify-content:space-between;gap:6px;align-items:flex-start;"><span style="line-height:1.25;">${esc(a.ti)}</span><span class="th-actions">${btns(a)}</span></div><div class="small muted" style="font-weight:500;margin-top:3px;">${actMetaHtml(a, c)}</div></th>`).join("");
-  const sums = {};
-  st.forEach(s => { sums[s.id] = summaryBadge(s.id, p); });
-  const rows = st.map(s => `<tr><td class="sticky-col"><strong>${esc(s.n)}</strong></td>${as.map(a => `<td>${gradeCellHtml(a, s.id, s.n, G(a.id, s.id))}</td>`).join("")}<td><span class="${sums[s.id].cls}" data-sum="${esc(s.id)}">${esc(sums[s.id].txt)}</span></td></tr>`).join("");
-  const chips = `<div class="chips">${as.map(a => `<span class="chip"><span>${esc(a.ti)} <span class="muted">(${esc(t("ps_" + a.ev))})</span></span>${btns(a)}</span>`).join("")}</div>`;
-  const cards = st.map(s => `<div class="gb-mobile-card"><div class="gb-mobile-head"><strong style="font-size:0.96rem;">${esc(s.n)}</strong><span class="${sums[s.id].cls}" data-sum="${esc(s.id)}">${esc(sums[s.id].txt)}</span></div>${as.map(a => `<div class="gb-act-row"><div class="gb-act-info"><div class="gb-act-title">${esc(a.ti)}</div><div class="gb-act-meta">${actMetaHtml(a, c)}</div></div>${gradeCellHtml(a, s.id, s.n, G(a.id, s.id))}</div>`).join("")}</div>`).join("");
-  box.innerHTML = `<div class="desktop-gradebook table-wrap"><table><thead><tr><th class="sticky-col">${esc(t("student"))}</th>${heads}<th style="min-width:120px;">${esc(t("moduleGrade"))}<div class="small muted" style="font-weight:500">${esc(t("p_" + p))}</div></th></tr></thead><tbody>${rows}</tbody></table></div><div class="mobile-gradebook">${chips}${cards}</div>`;
+  const sumHeads = pps.map(pp => `<th class="sum-th">${esc(t(isFinal(pp) ? "finalGrade" : "evalGrade"))}<div class="small muted" style="font-weight:500">${esc(t("p_" + pp))}</div></th>`).join("");
+  const rows = st.map(s => `<tr><td class="sticky-col"><strong>${esc(s.n)}</strong></td>${as.map(a => `<td>${gradeCellHtml(a, s.id, s.n, G(a.id, s.id))}</td>`).join("")}${pps.map(pp => `<td><span class="sum-cell" data-sum="${esc(s.id)}" data-p="${pp}">${summaryHtml(s.id, pp)}</span></td>`).join("")}</tr>`).join("");
+  const chips = `<div class="chips">${as.map(a => `<span class="chip"><span>${esc(a.ti)} <span class="muted">(${esc(t("ps_" + a.ev))} · ${esc(engIsRec(a) ? t("tagRec") : t("weightPct", { w: fmt(engNum(a.w, 0)) }))})</span></span>${btns(a)}</span>`).join("")}</div>`;
+  const cards = st.map(s => `<div class="gb-mobile-card"><div class="gb-mobile-head"><strong style="font-size:0.96rem;">${esc(s.n)}</strong><span class="sum-cell sum-right" data-sum="${esc(s.id)}" data-p="${last}" data-detail="1">${summaryHtml(s.id, last, true)}</span></div>${as.map(a => `<div class="gb-act-row"><div class="gb-act-info"><div class="gb-act-title">${esc(a.ti)}</div><div class="gb-act-meta">${actMetaHtml(a, c)}</div></div>${gradeCellHtml(a, s.id, s.n, G(a.id, s.id))}</div>`).join("")}</div>`).join("");
+  box.innerHTML = help + evalBarsHtml(all, S.ui.evalFilter, c) + `<div class="desktop-gradebook table-wrap"><table><thead><tr><th class="sticky-col">${esc(t("student"))}</th>${heads}${sumHeads}</tr></thead><tbody>${rows}</tbody></table></div><div class="mobile-gradebook">${chips}${cards}</div>`;
 }
 function commitGradeInput(inp) {
   const sid = inp.dataset.sid, aid = inp.dataset.aid, k = K.grade(aid, sid);
@@ -1481,9 +1693,8 @@ function commitGradeInput(inp) {
   return true;
 }
 function afterGrade(sid, aid) {
-  const sb = summaryBadge(sid, curPeriod());
   const sidSel = CSS.escape(sid), aidSel = CSS.escape(aid);
-  document.querySelectorAll(`[data-sum="${sidSel}"]`).forEach(el => { el.className = sb.cls; el.textContent = sb.txt; });
+  document.querySelectorAll(`[data-sum="${sidSel}"]`).forEach(el => { el.innerHTML = summaryHtml(sid, el.dataset.p || curPeriod(), !!el.dataset.detail); });
   const a = acts().find(x => x.id === aid), g = gradeOf(aid, sid);
   document.querySelectorAll(`input.grade-input[data-sid="${sidSel}"][data-aid="${aidSel}"]`).forEach(el => {
     if (el !== document.activeElement) { el.value = a ? fmtIn(engScore(a, g)) : ""; el.classList.remove("invalid"); }
@@ -1521,7 +1732,9 @@ function scoreCls(x) { return x === null ? "b-none" : (x >= 5 ? "b-ok" : "b-ko")
 function renderFichaStatus() {
   if (!fichaSid || !$("fSec1")) return;
   const p = curPeriod(), r = calcFor(fichaSid, p);
-  $("fichaPeriod").innerHTML = `${esc(t("periodShown", { p: t("p_" + p) }))} · ${esc(t("moduleGrade"))}: <span class="badge b-${r.status}">${esc(fmt(r.grade))} · ${esc(statusLabel(r.status, p))}</span>`;
+  const rF = calcFor(fichaSid, finalPeriod());
+  $("fichaPeriod").innerHTML = `${esc(t("periodShown", { p: t("p_" + p) }))} · ${esc(t(isFinal(p) ? "finalGrade" : "evalGrade"))}: <span class="badge b-${r.status}">${esc(fmt(r.grade))} · ${esc(statusLabel(r.status, p))}</span>${r.grade === null ? "" : " " + provHtml(covPct(r)) + gradeNoteHtml(r)}`
+    + `<br><span class="muted">${esc(evGradesLine(rF))} · ${esc(t("finalGrade"))} ${esc(fmt(rF.grade))}</span>`;
   $("fSec1").innerHTML = r.comps.map(x => compRowHtml(x, true)).join("");
   $("fSec3").innerHTML = r.ras.map(x => `<div class="comp-row"><div class="comp-info"><div class="small" style="white-space:normal"><strong>${esc(x.ra.code)} (${fmt(x.weight)} %)</strong> · ${esc(raLabel(x.ra))}</div></div><span class="comp-score ${scoreCls(x.score)}">${fmt(x.score)}</span></div>`).join("")
     + `<div class="comp-row" style="background:#fff"><div class="comp-info"><strong class="small">${esc(t("raControl"))}</strong></div><span class="comp-score ${scoreCls(r.raGrade)}">${fmt(r.raGrade)}</span></div>`;
@@ -1535,7 +1748,8 @@ function openActModal(aid) {
   $("actTitle").value = a ? a.ti : "";
   $("actEval").innerHTML = PERIODS.map(x => `<option value="${x}">${esc(t("p_" + x))}</option>`).join("");
   $("actEval").value = a ? a.ev : (S.ui.evalFilter !== "ALL" ? S.ui.evalFilter : autoPeriod());
-  $("actWeight").value = a ? fmtIn(engNum(a.w, 1)) : "1";
+  if (a) { $("actWeight").value = fmtIn(engNum(a.w, 1)); $("actWeight").dataset.auto = ""; }
+  else { const rest = engR2(100 - evalSum(acts(), $("actEval").value)); $("actWeight").value = rest > 0 ? fmtIn(rest) : ""; $("actWeight").dataset.auto = "1"; }
   const sel = a ? (a.comps || []) : c.comps.filter(x => engNum(x.weight, 0) > 0).map(x => x.id);
   $("actCompPills").innerHTML = c.comps.map(x => `<button type="button" class="ra-pill${sel.includes(x.id) ? " selected" : ""}" data-act="pillToggle" data-cid="${esc(x.id)}">${esc(x.code)} · ${esc(compLabel(x))}</button>`).join("");
   const rec = $("actRec");
@@ -1553,6 +1767,20 @@ function syncActModal() {
   else if (rec.disabled) { rec.disabled = false; rec.checked = rec.dataset.prev === "1"; }
   $("actRecHint").textContent = ext ? t("actRecExt") : "";
   $("actRubBox").hidden = !$("actRub").checked;
+  updateActHelp();
+}
+function updateActHelp() {
+  const ev = $("actEval").value, rec = ev === "EXT" || $("actRec").checked;
+  const w = parsePct($("actWeight").value), all = acts();
+  const wh = $("actWeightHelp");
+  if (rec) { wh.className = "small muted"; wh.textContent = t("whRec"); return; }
+  const used = evalSum(all, ev, editingAid), tot = engR2(used + (isFinite(w) && w > 0 ? w : 0));
+  let cls = "ok", txt;
+  if (!isFinite(w) || w <= 0) { cls = "muted"; txt = t("whUsed", { p: t("p_" + ev), u: fmt(used), r: fmt(Math.max(0, 100 - used)) }); }
+  else if (Math.abs(tot - 100) < 0.5) txt = t("whOk", { p: t("p_" + ev) });
+  else if (tot < 100) { cls = "warn"; txt = t("whUnder", { p: t("p_" + ev), s: fmt(tot), r: fmt(100 - tot) }); }
+  else { cls = "err"; txt = t("whOver", { p: t("p_" + ev), s: fmt(tot), d: fmt(tot - 100) }); }
+  wh.className = "small " + (cls === "muted" ? "muted" : "wh-" + cls); wh.textContent = txt;
 }
 
 /* ---------- ajustes ---------- */
@@ -1568,13 +1796,17 @@ function weightBar(id, total, labelKey, actName) {
   const ok = Math.abs(total - 100) < 0.15;
   $(id).innerHTML = `<span class="badge ${ok ? "b-ok" : "b-prog"}">${esc(t(labelKey, { s: fmt(total) }))} ${ok ? "✓" : esc(t("mustBe100"))}</span><button type="button" class="btn btn-sm" data-act="${actName}">${esc(t("balance"))}</button>`;
 }
+function shownEvals(c, all = acts()) { const ew = engEvalWeights(c); return EVALS.filter(ev => ev !== "ORD" || normalActs(all, "ORD").length || ew.ORD > 0); }
 function renderConfig() {
-  const c = cfg();
-  weightBar("compWeightBar", engR2(c.comps.reduce((a, x) => a + engNum(x.weight, 0), 0)), "totalComps", "balanceComps");
+  const c = cfg(), ew = engEvalWeights(c), evs = shownEvals(c);
+  weightBar("evWeightBar", engR2(evs.reduce((a, ev) => a + ew[ev], 0)), "totalEvs", "balanceEvs");
+  $("evWeightList").innerHTML = evs.map(ev => `<div class="ev-w-row"><span>${esc(t("p_" + ev))}</span><div class="pct"><input type="text" inputmode="decimal" value="${esc(fmtIn(ew[ev]))}" data-ch="evW" data-ev="${ev}" data-fk="ev-${ev}" aria-label="${esc(t("p_" + ev))}"><span>%</span></div></div>`).join("");
+  const unc = uncoveredComps(c, acts());
+  $("compWeightBar").innerHTML = `<span class="small muted">${esc(t("compRule"))}</span>` + (acts().length && unc.length ? `<span class="badge b-ko" style="white-space:normal">${esc(t("uncoveredWarn", { c: unc.map(x => x.code).join(", ") }))}</span>` : "");
   $("compConfigList").innerHTML = c.comps.map(x => `<div class="comp-cfg"><div class="comp-cfg-grid">
       <input type="text" value="${esc(x.code)}" maxlength="10" data-ch="compField" data-cid="${esc(x.id)}" data-field="code" data-fk="cc-${esc(x.id)}" aria-label="${esc(t("code"))}">
       <input type="text" class="cfg-desc" value="${esc(compLabel(x))}" maxlength="240" data-ch="compField" data-cid="${esc(x.id)}" data-field="${lang}" data-fk="cd-${esc(x.id)}" aria-label="${esc(t("description"))}">
-      <div class="pct"><input type="text" inputmode="decimal" value="${esc(fmtIn(engNum(x.weight, 0)))}" data-ch="compField" data-cid="${esc(x.id)}" data-field="weight" data-fk="cw-${esc(x.id)}" aria-label="${esc(t("weight"))}"><span>%</span></div>
+      <label class="check comp-on"><input type="checkbox" data-ch="compActive" data-cid="${esc(x.id)}" data-fk="ca-${esc(x.id)}"${engNum(x.weight, 0) > 0 ? " checked" : ""}><span>${esc(t("compActive"))}</span></label>
       <button type="button" class="btn btn-danger btn-sm" data-act="delComp" data-cid="${esc(x.id)}" data-fk="cdel-${esc(x.id)}">${esc(t("del"))}</button>
     </div><div class="ra-pills"><span class="small muted">${esc(t("raLinked"))}</span>${c.ras.map(ra => { const on = (x.ras || []).includes(ra.code); return `<button type="button" class="ra-pill${on ? " selected" : ""}" data-act="toggleCompRa" data-cid="${esc(x.id)}" data-ra="${esc(ra.code)}" data-fk="cpill-${esc(x.id)}-${esc(ra.code)}">${on ? "✓ " : "+ "}${esc(ra.code)}</button>`; }).join("")}</div></div>`).join("");
   weightBar("raWeightBar", engR2(c.ras.reduce((a, x) => a + engNum(x.weight, 0), 0)), "totalRas", "balanceRas");
@@ -1666,10 +1898,10 @@ function makeDemo() {
       const d = defaultCfg(m.code); P(`m|${y}|${m.code}`, d);
       const ids = d.comps.map(x => x.id);
       const list = [
-        { id: "da1", ti: tt[0], ev: "1EV", w: 1, comps: ids.slice(0, Math.ceil(ids.length / 2)) },
-        { id: "da2", ti: tt[1], ev: "2EV", w: 2, comps: ids },
-        { id: "da3", ti: tt[2], ev: "2EV", w: 1, comps: ids.slice(-2), rub: true },
-        { id: "da4", ti: tt[3], ev: "ORD", w: 1, comps: ids, rec: true }
+        { id: "da1", ti: tt[0], ev: "1EV", w: 100, comps: ids },
+        { id: "da2", ti: tt[1], ev: "2EV", w: 70, comps: ids },
+        { id: "da3", ti: tt[2], ev: "2EV", w: 30, comps: ids, rub: true },
+        { id: "da4", ti: tt[3], ev: "ORD", w: 100, comps: ids, rec: true }
       ];
       list.forEach((a, i) => P(`a|${y}|${m.code}|${a.id}`, { ti: a.ti, ev: a.ev, w: a.w, comps: a.comps, rec: !!a.rec, rub: !!a.rub, rv: RUB_DEFAULT.slice(), o: i + 1 }));
       sids.forEach(sid => {
@@ -1857,12 +2089,12 @@ const ACTIONS = {
   /* actividades y notas */
   newAct: () => openActModal(null),
   editAct: el => openActModal(el.dataset.aid),
-  pillToggle: el => el.classList.toggle("selected"),
+  pillToggle: el => { el.classList.toggle("selected"); if (el.closest("#actCompPills")) updateActHelp(); },
   saveAct: () => {
     const ti = $("actTitle").value.trim().slice(0, 160);
     if (!ti) return showToast(t("needTitle"));
-    const w = parseNum($("actWeight").value);
-    if (!(w > 0)) return showToast(t("badWeight"));
+    const w = parsePct($("actWeight").value);
+    if (!(w > 0) || w > 100) return showToast(t("badWeight"));
     const comps = [...document.querySelectorAll("#actCompPills .ra-pill.selected")].map(el => el.dataset.cid);
     if (!comps.length) return showToast(t("needComp"));
     const ev = $("actEval").value, rub = $("actRub").checked;
@@ -1875,8 +2107,11 @@ const ACTIONS = {
     ensureCfg();
     const old = editingAid ? getRec(K.act(editingAid)) : null;
     const aid = editingAid || uid("a");
-    put(K.act(aid), { ti, ev, w: engR2(w), comps, rec: ev === "EXT" ? true : $("actRec").checked, rub, rv, o: old && old.o ? old.o : Date.now() });
-    closeModal("activityModal"); renderAll(); showToast(t("actSaved"));
+    const isRec = ev === "EXT" ? true : $("actRec").checked;
+    put(K.act(aid), { ti, ev, w: engR2(w), comps, rec: isRec, rub, rv, o: old && old.o ? old.o : Date.now() });
+    closeModal("activityModal"); renderAll();
+    const s = evalSum(acts(), ev);
+    showToast(isRec || Math.abs(s - 100) < 0.5 ? t("actSaved") : t(s > 100 ? "actSavedOver" : "actSavedUnder", { p: t("p_" + ev), s: fmt(s), d: fmt(Math.abs(100 - s)) }));
   },
   delAct: el => {
     const k = K.act(el.dataset.aid), sn = snap([k]);
@@ -1892,7 +2127,7 @@ const ACTIONS = {
   /* competencias y RA */
   addComp: () => {
     const c = ensureCfg(), nums = c.comps.map(x => parseInt(String(x.code).replace(/\D/g, ""), 10) || 0);
-    c.comps.push({ id: uid("c"), code: "C" + (Math.max(0, ...nums) + 1), es: I18N.es.newCompText, eu: I18N.eu.newCompText, weight: 0, ras: c.ras.length ? [c.ras[0].code] : [] });
+    c.comps.push({ id: uid("c"), code: "C" + (Math.max(0, ...nums) + 1), es: I18N.es.newCompText, eu: I18N.eu.newCompText, weight: 1, ras: c.ras.length ? [c.ras[0].code] : [] });
     saveCfg(c); renderAll(); showToast(t("compAdded"));
   },
   delComp: el => {
@@ -1911,6 +2146,13 @@ const ACTIONS = {
     saveCfg(c); preserveFocus(renderAll);
   },
   balanceComps: () => { const c = ensureCfg(); normalize100(c.comps); saveCfg(c); renderAll(); showToast(t("balanced")); },
+  balanceEvs: () => {
+    const c = ensureCfg(), ew = engEvalWeights(c), evs = shownEvals(c);
+    const items = evs.map(ev => ({ ev, weight: ew[ev] }));
+    normalize100(items);
+    c.ev = Object.assign({}, ew); items.forEach(x => { c.ev[x.ev] = x.weight; });
+    saveCfg(c); renderAll(); showToast(t("balanced"));
+  },
   addRa: () => {
     const c = ensureCfg(), nums = c.ras.map(x => parseInt(String(x.code).replace(/\D/g, ""), 10) || 0);
     c.ras.push({ code: "RA" + (Math.max(0, ...nums) + 1), weight: 0, es: I18N.es.newRaText, eu: I18N.eu.newRaText });
@@ -2000,42 +2242,54 @@ const ACTIONS = {
     const p = curPeriod(), c = cfg(), as = acts(), gm = gradeMap();
     const cell = v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
     const n = x => (x === null || x === undefined || !isFinite(x)) ? "" : String(engR2(x)).replace(".", ",");
+    const evCols = EVALS.filter(ev => ev !== "ORD" || normalActs(as, "ORD").length), fp = finalPeriod(as);
     const head = [t("year"), t("group"), t("module"), t("period"), t("student")]
-      .concat(as.map(a => `${a.ti} [${t("ps_" + a.ev)}]`))
-      .concat(c.comps.map(x => `${x.code} (${(x.ras || []).join("/")}) ${fmt(engNum(x.weight, 0))}%`))
+      .concat(as.map(a => `${a.ti} [${t("ps_" + a.ev)} · ${engIsRec(a) ? t("tagRec") : fmt(engNum(a.w, 0)) + "%"}]`))
+      .concat(c.comps.map(x => `${x.code} (${(x.ras || []).join("/")})`))
       .concat(c.ras.map(r => `${r.code} ${fmt(engNum(r.weight, 0))}%`))
-      .concat([t("moduleGrade"), t("raControl"), t("status"), t("notes")]);
+      .concat(evCols.map(ev => `${t("evalGrade")} ${t("ps_" + ev)}`))
+      .concat([t(isFinal(p) ? "finalGrade" : "evalGrade") + " (" + t("p_" + p) + ")", t("corrected"), t("raControl"), t("status"), t("notes")]);
     const rows = students().map(s => {
-      const r = calcFor(s.id, p, c, as);
+      const r = calcFor(s.id, p, c, as), rF = calcFor(s.id, fp, c, as);
       return [S.ui.year, t("course" + S.ui.course), modName(S.ui.module), t("p_" + p), s.n]
         .concat(as.map(a => n(engScore(a, (gm[a.id] || {})[s.id]))))
         .concat(r.comps.map(x => n(x.fin))).concat(r.ras.map(x => n(x.score)))
-        .concat([n(r.grade), n(r.raGrade), statusLabel(r.status, p), noteOf(s.id)]);
+        .concat(evCols.map(ev => n(rF.evGrade[ev])))
+        .concat([n(r.grade), r.grade === null ? "" : (covPct(r) ?? ""), n(r.raGrade), statusLabel(r.status, p) + (r.capped ? " (máx. 4)" : ""), noteOf(s.id)]);
     });
     download(`Easo_PE_${S.ui.course}_${S.ui.module}_${S.ui.year}_${p}.csv`, "﻿" + [head].concat(rows).map(r => r.map(cell).join(";")).join("\r\n"), "text/csv;charset=utf-8");
     showToast(t("csvDone"));
   },
   printActa: () => {
-    const p = curPeriod(), c = cfg(), as = acts();
-    let anyRec = false;
+    const p = curPeriod(), c = cfg(), as = acts(), fin = isFinal(p);
+    const evCols = fin ? EVALS.filter(ev => normalActs(as, ev).length) : [];
+    let anyRec = false, nProv = 0, anyCap = false, anyLift = false;
     const rows = students().map((s, i) => {
-      const r = calcFor(s.id, p, c, as);
-      return `<tr><td class="num">${i + 1}</td><td>${esc(s.n)}</td>${r.comps.map(x => { if (x.recovered) anyRec = true; return `<td class="num">${fmt(x.fin)}${x.recovered ? "*" : ""}</td>`; }).join("")}<td class="num"><b>${fmt(r.grade)}</b></td><td>${esc(statusLabel(r.status, p))}</td></tr>`;
+      const r = calcFor(s.id, p, c, as), cv = r.grade === null ? null : covPct(r);
+      if (isProv(cv)) nProv++;
+      if (r.capped) anyCap = true;
+      if (r.lifted) anyLift = true;
+      return `<tr><td class="num">${i + 1}</td><td>${esc(s.n)}</td>${r.comps.map(x => { if (x.recovered) anyRec = true; return `<td class="num">${x.active ? fmt(x.fin) + (x.recovered ? "*" : "") : "—"}</td>`; }).join("")}`
+        + evCols.map(ev => `<td class="num">${fmt(r.evGrade[ev])}</td>`).join("")
+        + `<td class="num"><b>${fmt(r.grade)}</b>${r.capped ? " ‡" : ""}${r.lifted ? " §" : ""}${isProv(cv) ? " †" : ""}</td><td class="num">${cv === null ? "—" : cv + " %"}</td><td>${esc(statusLabel(r.status, p))}</td></tr>`;
     }).join("");
-    const legend = c.comps.map(x => `<div><b>${esc(x.code)}</b> (${fmt(engNum(x.weight, 0))} % · ${esc((x.ras || []).join(", "))}): ${esc(compLabel(x))}</div>`).join("");
-    doPrint(printHeader(t("actaTitle")) + `<table class="pr-table"><thead><tr><th>Nº</th><th>${esc(t("student"))}</th>${c.comps.map(x => `<th>${esc(x.code)}</th>`).join("")}<th>${esc(t("moduleGrade"))}</th><th>${esc(t("status"))}</th></tr></thead><tbody>${rows}</tbody></table>`
-      + `<div class="pr-legend">${legend}${anyRec ? `<div style="margin-top:4px">${esc(t("recLegend"))}</div>` : ""}</div><div class="pr-sign"><div>${esc(t("signature"))}</div></div>`);
+    const legend = c.comps.map(x => `<div><b>${esc(x.code)}</b> (${esc((x.ras || []).join(", "))})${engNum(x.weight, 0) > 0 ? "" : " · " + esc(t("c_off"))}: ${esc(compLabel(x))}</div>`).join("");
+    const extra = [anyRec ? t("recLegend") : "", anyCap ? t("capLegend") : "", anyLift ? t("liftLegend") : "", nProv ? t("provLegend") : "", fin ? t("compRule") : ""].filter(Boolean).map(x => `<div style="margin-top:4px">${esc(x)}</div>`).join("");
+    doPrint(printHeader(t("actaTitle")) + (nProv ? `<div class="pr-warn">⚠️ ${esc(t("actaProvWarn", { n: nProv }))}</div>` : "")
+      + `<table class="pr-table"><thead><tr><th>Nº</th><th>${esc(t("student"))}</th>${c.comps.map(x => `<th>${esc(x.code)}</th>`).join("")}${evCols.map(ev => `<th>${esc(t("ps_" + ev))}</th>`).join("")}<th>${esc(t(fin ? "finalGrade" : "evalGrade"))}</th><th>${esc(t("corrected"))}</th><th>${esc(t("status"))}</th></tr></thead><tbody>${rows}</tbody></table>`
+      + `<div class="pr-legend">${legend}${extra}</div><div class="pr-sign"><div>${esc(t("signature"))}</div></div>`);
   },
   printFicha: () => {
     const s = students().find(x => x.id === fichaSid);
     if (!s) return;
     const p = curPeriod(), c = cfg(), as = acts(), gm = gradeMap(), r = calcFor(s.id, p, c, as);
-    const comps = r.comps.map(x => `<tr><td><b>${esc(x.c.code)}</b> · ${esc(compLabel(x.c))}</td><td class="num">${fmt(x.weight)} %</td><td class="num">${fmt(x.orig)}</td><td class="num">${fmt(x.rec)}</td><td class="num"><b>${fmt(x.fin)}</b></td><td>${esc(x.active ? t("c_" + x.st) : t("c_off"))}</td></tr>`).join("");
+    const rF = calcFor(s.id, finalPeriod(as), c, as);
+    const comps = r.comps.map(x => `<tr><td><b>${esc(x.c.code)}</b> · ${esc(compLabel(x.c))}</td><td class="num">${esc((x.c.ras || []).join(", "))}</td><td class="num">${fmt(x.orig)}</td><td class="num">${fmt(x.rec)}</td><td class="num"><b>${fmt(x.fin)}</b></td><td>${esc(x.active ? t("c_" + x.st) : t("c_off"))}</td></tr>`).join("");
     const actsT = as.map(a => `<tr><td>${esc(a.ti)}</td><td>${esc(t("p_" + a.ev))}${engIsRec(a) ? " · " + esc(t("tagRec")) : ""}</td><td class="num">${fmt(engScore(a, (gm[a.id] || {})[s.id]))}</td></tr>`).join("");
     const ras = r.ras.map(x => `<tr><td><b>${esc(x.ra.code)}</b> · ${esc(raLabel(x.ra))}</td><td class="num">${fmt(x.weight)} %</td><td class="num">${fmt(x.score)}</td></tr>`).join("");
     const note = noteOf(s.id);
-    doPrint(printHeader(t("fichaTitle"), `<div style="grid-column:1/-1"><b>${esc(t("student"))}:</b> ${esc(s.n)} · <b>${esc(t("moduleGrade"))}:</b> ${fmt(r.grade)} (${esc(statusLabel(r.status, p))}) · <b>${esc(t("raControl"))}:</b> ${fmt(r.raGrade)}</div>`)
-      + `<table class="pr-table"><thead><tr><th>${esc(t("fichaSec1").replace(/^1\.\s*/, ""))}</th><th>${esc(t("weight"))}</th><th>Orig.</th><th>Rec.</th><th>${esc(t("grade"))}</th><th>${esc(t("status"))}</th></tr></thead><tbody>${comps}</tbody></table>`
+    doPrint(printHeader(t("fichaTitle"), `<div style="grid-column:1/-1"><b>${esc(t("student"))}:</b> ${esc(s.n)} · <b>${esc(t(isFinal(p) ? "finalGrade" : "evalGrade"))}:</b> ${fmt(r.grade)} (${esc(statusLabel(r.status, p))}${r.capped ? " · " + esc(t("cappedTag")) : ""}) · ${esc(evGradesLine(rF))} · <b>${esc(t("finalGrade"))}:</b> ${fmt(rF.grade)} · <b>${esc(t("raControl"))}:</b> ${fmt(r.raGrade)}</div>`)
+      + `<table class="pr-table"><thead><tr><th>${esc(t("fichaSec1").replace(/^1\.\s*/, ""))}</th><th>RA</th><th>Orig.</th><th>Rec.</th><th>${esc(t("grade"))}</th><th>${esc(t("status"))}</th></tr></thead><tbody>${comps}</tbody></table>`
       + `<table class="pr-table"><thead><tr><th>${esc(t("activities"))}</th><th>${esc(t("period"))}</th><th>${esc(t("grade"))}</th></tr></thead><tbody>${actsT || `<tr><td colspan="3">${esc(t("noActsShort"))}</td></tr>`}</tbody></table>`
       + `<table class="pr-table"><thead><tr><th>RA</th><th>${esc(t("weight"))}</th><th>${esc(t("grade"))}</th></tr></thead><tbody>${ras}</tbody></table>`
       + (note ? `<div class="pr-legend"><b>${esc(t("notes"))}:</b> ${esc(note)}</div>` : "")
@@ -2135,11 +2389,24 @@ const CHANGES = {
   period: el => { S.ui.period = el.value; scheduleSave(); renderAll(); },
   statusFilter: el => { statusFilter = el.value; renderSemaphore(); },
   evalFilter: el => { S.ui.evalFilter = el.value; scheduleSave(); renderGradebook(); },
+  evW: el => {
+    const n = parsePct(el.value);
+    if (!isFinite(n) || n < 0 || n > 100) { showToast(t("badPct")); rerender(); return; }
+    const c = ensureCfg();
+    c.ev = Object.assign(engEvalWeights(c), { [el.dataset.ev]: engR2(n) });
+    saveCfg(c); rerender();
+  },
+  compActive: el => {
+    const c = ensureCfg(), x = c.comps.find(q => q.id === el.dataset.cid);
+    if (!x) return;
+    x.weight = el.checked ? (engNum(x.weight, 0) > 0 ? x.weight : 1) : 0;
+    saveCfg(c); rerender();
+  },
   compField: el => {
     const c = ensureCfg(), x = c.comps.find(q => q.id === el.dataset.cid);
     if (!x) return;
     const f = el.dataset.field, v = el.value.trim();
-    if (f === "weight") { const n = parseNum(v); x.weight = isFinite(n) && n >= 0 ? engR2(Math.min(n, 100)) : 0; }
+    if (f === "weight") { const n = parsePct(v); if (!isFinite(n) || n < 0 || n > 100) { showToast(t("badPct")); rerender(); return; } x.weight = engR2(n); }
     else if (f === "code") { if (v) x.code = v.slice(0, 10); }
     else if (v) x[f] = v.slice(0, 240);
     saveCfg(c); rerender();
@@ -2148,7 +2415,7 @@ const CHANGES = {
     const c = ensureCfg(), r = c.ras.find(q => q.code === el.dataset.ra);
     if (!r) return;
     const f = el.dataset.field, v = el.value.trim();
-    if (f === "weight") { const n = parseNum(v); r.weight = isFinite(n) && n >= 0 ? engR2(Math.min(n, 100)) : 0; }
+    if (f === "weight") { const n = parsePct(v); if (!isFinite(n) || n < 0 || n > 100) { showToast(t("badPct")); rerender(); return; } r.weight = engR2(n); }
     else if (v) r[f] = v.slice(0, 300);
     saveCfg(c); rerender();
   },
@@ -2163,7 +2430,12 @@ const CHANGES = {
     showToast(t("noteSaved"));
   },
   teacher: el => { S.conn.teacher = cleanName(el.value).slice(0, 40); scheduleSave(); updateSyncBadge(); },
-  actEval: () => syncActModal(),
+  actEval: () => {
+    const wi = $("actWeight");
+    if (wi.dataset.auto) { const rest = engR2(100 - evalSum(acts(), $("actEval").value, editingAid)); wi.value = rest > 0 ? fmtIn(rest) : ""; }
+    syncActModal();
+  },
+  actRec: () => updateActHelp(),
   actRub: () => syncActModal(),
   importFile: async el => {
     const f = el.files && el.files[0];
@@ -2205,7 +2477,11 @@ function bindGlobal() {
     const ch = el.dataset && el.dataset.ch;
     if (ch && CHANGES[ch]) CHANGES[ch](el, e);
   });
-  document.addEventListener("input", e => { if (e.target.dataset && e.target.dataset.in === "search") renderSemaphore(); });
+  document.addEventListener("input", e => {
+    if (e.target.dataset && e.target.dataset.in === "search") renderSemaphore();
+    if (e.target.id === "actWeight") { e.target.dataset.auto = ""; updateActHelp(); }
+  });
+  document.addEventListener("toggle", e => { if (e.target.id === "bookHelp") helpOpen = e.target.open; }, true);
   document.addEventListener("keydown", e => {
     const el = e.target;
     if (el.classList && el.classList.contains("grade-input")) {

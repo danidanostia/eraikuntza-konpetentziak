@@ -856,11 +856,13 @@ const CURRICULUM = {
 /* =====================================================================
    MOTOR DE CÁLCULO — idéntico en la app (index.html) y en Code.gs
    NOTA:
-   - Nota de cada evaluación (1ª, 2ª y, si tiene actividades normales, la
-     ordinaria) = media ponderada de sus actividades con los pesos (%) que
-     pone el profesor. Las casillas vacías no cuentan (nota provisional).
+   - Nota de cada evaluación (1ª, 2ª, 3ª en 1º y, si tiene actividades
+     normales, la ordinaria) = media ponderada de sus actividades con los
+     pesos (%) que pone el profesor. Las casillas vacías no cuentan (nota
+     provisional).
    - Nota final (ordinaria / extraordinaria) = media de las evaluaciones con
-     los pesos de evaluación del módulo (por defecto 1ª 50 %, 2ª 50 %).
+     los pesos de evaluación del módulo. Por defecto: 1º → 1ª, 2ª y 3ª a un
+     tercio; 2º → 1ª y 2ª al 50 % (la final es tras las prácticas).
    COMPETENCIAS (semáforo y condición de aprobado):
    - Cada competencia = media ponderada (mismos pesos de actividad) de las
      actividades que la evalúan, acumulando periodos: 1EV ⊂ 2EV ⊂ ORD ⊂ EXT.
@@ -873,9 +875,12 @@ const CURRICULUM = {
    - Control por RA = media de sus competencias; nota de control con el
      peso de cada RA.
    ===================================================================== */
-var PERIODS = ["1EV", "2EV", "ORD", "EXT"];
-var EVALS = ["1EV", "2EV", "ORD"];
-var EV_W_DEFAULT = { "1EV": 50, "2EV": 50, "ORD": 0 };
+var PERIODS = ["1EV", "2EV", "3EV", "ORD", "EXT"];
+var EVALS = ["1EV", "2EV", "3EV", "ORD"];
+var EV_W_DEFAULT = {
+  "1": { "1EV": 33.33, "2EV": 33.33, "3EV": 33.34, "ORD": 0 },
+  "2": { "1EV": 50, "2EV": 50, "3EV": 0, "ORD": 0 }
+};
 var RUB_DEFAULT = [2.5, 5, 7.5, 10];
 
 function engNum(v, d) {
@@ -890,8 +895,8 @@ function engPeriodsUpTo(p) {
 function engIsFinal(p) { return p === "ORD" || p === "EXT"; }
 function engIsRec(a) { return !!a.rec || a.ev === "EXT"; }
 function engEvalWeights(cfg) {
-  var e = (cfg && cfg.ev) || {}, out = {};
-  EVALS.forEach(function (k) { out[k] = engNum(e[k], EV_W_DEFAULT[k]); });
+  var e = (cfg && cfg.ev) || {}, d = EV_W_DEFAULT[String((cfg && cfg.course) || "1")] || EV_W_DEFAULT["1"], out = {};
+  EVALS.forEach(function (k) { out[k] = engNum(e[k], d[k]); });
   return out;
 }
 function engScore(a, g) {
@@ -963,10 +968,10 @@ function engCalc(cfg, acts, gradeOf, period) {
   });
 
   /* 3) nota del periodo */
-  var grade = null, cov = null;
+  var grade = null, cov = null, ew = engEvalWeights(cfg);
   if (!fin) { grade = evGrade[period] === undefined ? null : evGrade[period]; cov = evCov[period] === undefined ? null : evCov[period]; }
   else {
-    var ew = engEvalWeights(cfg), s2 = 0, w2 = 0, cs = 0, cw = 0;
+    var s2 = 0, w2 = 0, cs = 0, cw = 0;
     EVALS.forEach(function (ev) {
       var W = ew[ev];
       if (!(W > 0)) return;
@@ -1003,7 +1008,7 @@ function engCalc(cfg, acts, gradeOf, period) {
 
   return {
     comps: comps, grade: grade, rawGrade: rawGrade, capped: capped, lifted: lifted, status: status,
-    ok: ok, ko: ko, none: none, activeN: activeN, evGrade: evGrade, evCov: evCov, cov: cov,
+    ok: ok, ko: ko, none: none, activeN: activeN, evGrade: evGrade, evCov: evCov, evW: ew, cov: cov,
     ras: ras, raGrade: rw3 > 0 ? engR2(rs3 / rw3) : null
   };
 }
@@ -1044,7 +1049,7 @@ const I18N = {
     actNewTitle: "Nueva actividad", actEditTitle: "Editar actividad", actTitleLbl: "Título de la actividad o entrega",
     evalGrade: "Nota de la evaluación", finalGrade: "Nota final",
     cfgEvTitle: "Peso de cada evaluación en la nota final",
-    cfgEvDesc: "La nota final es la media de las evaluaciones con estos pesos. Dentro de cada evaluación mandan los pesos (%) de sus actividades.",
+    cfgEvDesc: "La nota final es la media de las evaluaciones con estos pesos (1º: 1ª, 2ª y 3ª; 2º: 1ª y 2ª, la final es tras las prácticas). Dentro de cada evaluación mandan los pesos (%) de sus actividades.",
     totalEvs: "Total evaluaciones: {s} %", compActive: "Se evalúa",
     compRule: "Regla de aprobado: nota final ≥ 5 y todas las competencias que se evalúan ≥ 5.",
     uncoveredWarn: "Sin ninguna actividad: {c}. Para aprobar a final de curso hay que evaluarlas (o desmarcar «Se evalúa» en Ajustes).",
@@ -1062,6 +1067,7 @@ const I18N = {
     invShareTitle: "Cuaderno de evaluación · Edificación", invShareText: "Te invito al cuaderno de evaluación del departamento. Abre el enlace y escribe tu nombre:",
     invPasted: "✓ Invitación reconocida: URL y clave rellenadas.",
     noMatchSearch: "Ningún alumno/a coincide con «{q}».", clearSearch: "✕ Borrar búsqueda", noMatchFilter: "Ningún alumno/a con el estado «{s}» en este periodo.", showAll: "Ver todos",
+    p_3EV: "3ª evaluación", ps_3EV: "3ª ev.", pv_3EV: "Ver: 3ª evaluación",
     actIntro: "Rellena por orden: título → evaluación → peso (% dentro de esa evaluación; entre todas deben sumar 100 %) → competencias que evalúa.",
     weightPct: "{w} %", weightRec: "peso {w}",
     realShort: "cuenta ≈ {n} %", realTitle: "Peso real en la nota de la evaluación: depende de las competencias que evalúa la actividad y del peso de cada competencia (Ajustes).",
@@ -1084,7 +1090,7 @@ const I18N = {
     help3: "Las recuperaciones no entran en ese 100 %: solo sustituyen las competencias suspensas y se guarda la nota original.",
     help4: "Notas: escribe y pulsa Enter para bajar al siguiente alumno/a; coma decimal (7,5). Casilla vacía = sin corregir: la nota del módulo sale como provisional con el % ya corregido. Un 0 = no presentado, y sí cuenta.",
     help5: "Rúbrica: toca 1, 2, 3 o 4 (cada nivel equivale a la nota que fijes en la actividad).",
-    help6: "La nota de cada evaluación es la media de sus actividades con tus pesos. La nota final es la media de las evaluaciones (pesos en Ajustes; por defecto 50 % y 50 %). Para aprobar el módulo hay que tener además todas las competencias en 5 o más: si queda alguna suspendida, la nota final queda en 4 como máximo.",
+    help6: "La nota de cada evaluación es la media de sus actividades con tus pesos. La nota final es la media de las evaluaciones: en 1º la 1ª, 2ª y 3ª; en 2º la 1ª y 2ª (pesos en Ajustes). Las actividades de la final ordinaria y la extraordinaria son recuperaciones. Para aprobar hay que tener además todas las competencias en 5 o más: si queda alguna suspendida, la nota final queda en 4 como máximo.",
     actTitlePh: "Ej. Levantamiento con dron y escáner del aula taller", actEvalLbl: "Evaluación", actWeightLbl: "Peso en su evaluación (%)",
     actCompsLbl: "Competencias que evalúa",
     actRecLbl: "Actividad de recuperación: solo sustituye las competencias no superadas (se guarda la nota original)",
@@ -1196,7 +1202,7 @@ const I18N = {
     actNewTitle: "Jarduera berria", actEditTitle: "Jarduera editatu", actTitleLbl: "Jardueraren edo entregaren izenburua",
     evalGrade: "Ebaluazioaren nota", finalGrade: "Azken nota",
     cfgEvTitle: "Ebaluazio bakoitzaren pisua azken notan",
-    cfgEvDesc: "Azken nota ebaluazioen batez bestekoa da, pisu hauekin. Ebaluazio bakoitzaren barruan haren jardueren pisuak (%) dira nagusi.",
+    cfgEvDesc: "Azken nota ebaluazioen batez bestekoa da, pisu hauekin (1. maila: 1., 2. eta 3.; 2. maila: 1. eta 2., azkena praktiken ondoren). Ebaluazio bakoitzaren barruan haren jardueren pisuak (%) dira nagusi.",
     totalEvs: "Ebaluazioak guztira: % {s}", compActive: "Ebaluatzen da",
     compRule: "Gainditzeko araua: azken nota ≥ 5 eta ebaluatzen diren konpetentzia guztiak ≥ 5.",
     uncoveredWarn: "Jarduerarik gabe: {c}. Ikasturte amaieran gainditzeko ebaluatu egin behar dira (edo desmarkatu «Ebaluatzen da» Ezarpenetan).",
@@ -1214,6 +1220,7 @@ const I18N = {
     invShareTitle: "Ebaluazio-koadernoa · Eraikuntza", invShareText: "Sailaren ebaluazio-koadernora gonbidatzen zaitut. Ireki esteka eta idatzi zure izena:",
     invPasted: "✓ Gonbidapena ezagututa: URLa eta gakoa beteta.",
     noMatchSearch: "Bilaketa honekin ez dago ikaslerik: «{q}».", clearSearch: "✕ Bilaketa garbitu", noMatchFilter: "Ez dago ikaslerik egoera honekin aldi honetan: «{s}».", showAll: "Guztiak ikusi",
+    p_3EV: "3. ebaluazioa", ps_3EV: "3. eb.", pv_3EV: "Ikusi: 3. ebaluazioa",
     actIntro: "Bete ordenan: izenburua → ebaluazioa → pisua (% ebaluazio horren barruan; guztiek % 100 egin behar dute) → ebaluatzen dituen konpetentziak.",
     weightPct: "% {w}", weightRec: "pisua {w}",
     realShort: "≈ % {n} kontatzen du", realTitle: "Ebaluazioaren notan duen benetako pisua: jarduerak ebaluatzen dituen konpetentzien eta haien pisuen araberakoa da (Ezarpenak).",
@@ -1236,7 +1243,7 @@ const I18N = {
     help3: "Berreskuratzeak ez dira % 100 horretan sartzen: gainditu gabeko konpetentziak bakarrik ordezkatzen dituzte eta jatorrizko nota gordetzen da.",
     help4: "Notak: idatzi eta sakatu Enter hurrengo ikaslera jaisteko; koma hamartarra (7,5). Gelaxka hutsa = zuzendu gabe: moduluaren nota behin-behinekoa da, zuzendutako %-arekin. 0 = aurkeztu gabe, eta kontatzen da.",
     help5: "Errubrika: sakatu 1, 2, 3 edo 4 (maila bakoitzak jardueran finkatzen duzun nota balio du).",
-    help6: "Ebaluazio bakoitzaren nota haren jardueren batez bestekoa da, zure pisuekin. Azken nota ebaluazioen batez bestekoa da (pisuak Ezarpenetan; lehenetsita % 50 eta % 50). Modulua gainditzeko, gainera, konpetentzia guztiek 5 edo gehiago izan behar dute: bat gainditu gabe geratzen bada, azken nota gehienez 4 da.",
+    help6: "Ebaluazio bakoitzaren nota haren jardueren batez bestekoa da, zure pisuekin. Azken nota ebaluazioen batez bestekoa da: 1. mailan 1., 2. eta 3.; 2. mailan 1. eta 2. (pisuak Ezarpenetan). Azken ohiko eta ezohiko ebaluazioetako jarduerak berreskuratzeak dira. Gainditzeko, gainera, konpetentzia guztiek 5 edo gehiago izan behar dute: bat gainditu gabe geratzen bada, azken nota gehienez 4 da.",
     actTitlePh: "Adib. Tailer-gelaren altxamendua dronearekin eta eskanerrarekin", actEvalLbl: "Ebaluazioa", actWeightLbl: "Pisua bere ebaluazioan (%)",
     actCompsLbl: "Ebaluatzen dituen konpetentziak",
     actRecLbl: "Berreskuratze-jarduera: gainditu gabeko konpetentziak bakarrik ordezkatzen ditu (jatorrizko nota gordetzen da)",
@@ -1325,7 +1332,7 @@ const I18N = {
    actividad, alumno/a y configuración de módulo es un registro, de modo
    que varios profesores pueden sincronizar sin pisarse.
    ===================================================================== */
-const APP_VERSION = "2.1.0";
+const APP_VERSION = "2.2.0";
 const DB_NAME = "easo-competencias";
 const DB_STORE = "kv";
 const LS_FALLBACK = "easo_pe_v2_state";
@@ -1540,8 +1547,11 @@ function acts(code = S.ui.module, y = S.ui.year) {
 function gradeMap(code = S.ui.module, y = S.ui.year) { return (model().g[y] || {})[code] || {}; }
 function gradeOf(aid, sid) { return (gradeMap()[aid] || {})[sid]; }
 function noteOf(sid) { return ((model().notes[S.ui.year] || {})[S.ui.module] || {})[sid] || ""; }
+// Periodos de cada curso: en 1º hay 3ª evaluación; en 2º la final es tras las prácticas
+function periodsFor(course = S.ui.course) { return course === "2" ? ["1EV", "2EV", "ORD", "EXT"] : PERIODS.slice(); }
+function evalsFor(course = S.ui.course) { return course === "2" ? ["1EV", "2EV"] : ["1EV", "2EV", "3EV"]; }
 function autoPeriod() { let i = 0; acts().forEach(a => { i = Math.max(i, PERIODS.indexOf(a.ev)); }); return PERIODS[Math.max(0, i)]; }
-function curPeriod() { return PERIODS.includes(S.ui.period) ? S.ui.period : autoPeriod(); }
+function curPeriod() { return periodsFor().includes(S.ui.period) ? S.ui.period : autoPeriod(); }
 function calcFor(sid, period = curPeriod(), c = cfg(), as = acts()) {
   const gm = gradeMap();
   return engCalc(c, as, aid => (gm[aid] || {})[sid], period);
@@ -1568,10 +1578,11 @@ function renderSelectors() {
 }
 function renderFilters() {
   const p = curPeriod();
-  $("selPeriod").innerHTML = PERIODS.map(x => `<option value="${x}"${x === p ? " selected" : ""}>${esc(t("pv_" + x))}</option>`).join("");
+  $("selPeriod").innerHTML = periodsFor().map(x => `<option value="${x}"${x === p ? " selected" : ""}>${esc(t("pv_" + x))}</option>`).join("");
   $("filterStatus").innerHTML = [["all", t("fAll")], ["ok", statusLabel("ok", p)], ["prog", statusLabel("prog", p)], ["ko", statusLabel("ko", p)], ["none", t("st_none")]]
     .map(([v, l]) => `<option value="${v}"${v === statusFilter ? " selected" : ""}>${esc(l)}</option>`).join("");
-  $("filterEval").innerHTML = [["ALL", t("allEvals")]].concat(PERIODS.map(x => [x, t("p_" + x)]))
+  if (S.ui.evalFilter !== "ALL" && !periodsFor().includes(S.ui.evalFilter)) S.ui.evalFilter = "ALL";
+  $("filterEval").innerHTML = [["ALL", t("allEvals")]].concat(periodsFor().map(x => [x, t("p_" + x)]))
     .map(([v, l]) => `<option value="${v}"${v === S.ui.evalFilter ? " selected" : ""}>${esc(l)}</option>`).join("");
 }
 function renderNotices() {
@@ -1628,7 +1639,7 @@ function gradeNoteHtml(r) {
   return "";
 }
 function evGradesLine(r) {
-  return EVALS.filter(ev => r.evGrade[ev] !== undefined && (ev !== "ORD" || r.evCov.ORD != null))
+  return EVALS.filter(ev => r.evGrade[ev] !== undefined && (r.evCov[ev] != null || (ev !== "ORD" && r.evW && r.evW[ev] > 0)))
     .map(ev => `${t("ps_" + ev)} ${fmt(r.evGrade[ev])}`).join(" · ");
 }
 function finalPeriod(all = acts()) { return all.some(a => a.ev === "EXT") ? "EXT" : "ORD"; }
@@ -1714,7 +1725,7 @@ function summaryHtml(sid, p, detail) {
 // Columnas de nota del cuaderno: cada evaluación con actividades y la final
 function gbPeriods(all) {
   const f = S.ui.evalFilter, fp = finalPeriod(all);
-  if (f === "1EV" || f === "2EV") return [f];
+  if (f === "1EV" || f === "2EV" || f === "3EV") return [f];
   if (f === "ORD" || f === "EXT") return [fp];
   return EVALS.filter(ev => normalActs(all, ev).length).concat([fp]);
 }
@@ -1802,14 +1813,14 @@ function openActModal(aid) {
   const c = cfg(), a = aid ? acts().find(x => x.id === aid) : null;
   $("actModalTitle").textContent = t(a ? "actEditTitle" : "actNewTitle");
   $("actTitle").value = a ? a.ti : "";
-  $("actEval").innerHTML = PERIODS.map(x => `<option value="${x}">${esc(t("p_" + x))}</option>`).join("");
+  $("actEval").innerHTML = periodsFor().map(x => `<option value="${x}">${esc(t("p_" + x))}</option>`).join("");
   $("actEval").value = a ? a.ev : (S.ui.evalFilter !== "ALL" ? S.ui.evalFilter : autoPeriod());
   if (a) { $("actWeight").value = fmtIn(engNum(a.w, 1)); $("actWeight").dataset.auto = ""; }
   else { const rest = engR2(100 - evalSum(acts(), $("actEval").value)); $("actWeight").value = rest > 0 ? fmtIn(rest) : ""; $("actWeight").dataset.auto = "1"; }
   const sel = a ? (a.comps || []) : c.comps.filter(x => engNum(x.weight, 0) > 0).map(x => x.id);
   $("actCompPills").innerHTML = c.comps.map(x => `<button type="button" class="ra-pill${sel.includes(x.id) ? " selected" : ""}" data-act="pillToggle" data-cid="${esc(x.id)}">${esc(x.code)} · ${esc(compLabel(x))}</button>`).join("");
   const rec = $("actRec");
-  rec.disabled = false; rec.checked = a ? !!a.rec : false; rec.dataset.prev = rec.checked ? "1" : "";
+  rec.disabled = false; rec.checked = a ? !!a.rec : $("actEval").value === "ORD"; rec.dataset.prev = rec.checked ? "1" : "";
   $("actRub").checked = a ? !!a.rub : false;
   const rv = (a && Array.isArray(a.rv) && a.rv.length === 4) ? a.rv : RUB_DEFAULT;
   [1, 2, 3, 4].forEach(i => { $("rv" + i).value = fmtIn(rv[i - 1]); });
@@ -1852,7 +1863,10 @@ function weightBar(id, total, labelKey, actName) {
   const ok = Math.abs(total - 100) < 0.15;
   $(id).innerHTML = `<span class="badge ${ok ? "b-ok" : "b-prog"}">${esc(t(labelKey, { s: fmt(total) }))} ${ok ? "✓" : esc(t("mustBe100"))}</span><button type="button" class="btn btn-sm" data-act="${actName}">${esc(t("balance"))}</button>`;
 }
-function shownEvals(c, all = acts()) { const ew = engEvalWeights(c); return EVALS.filter(ev => ev !== "ORD" || normalActs(all, "ORD").length || ew.ORD > 0); }
+function shownEvals(c, all = acts()) {
+  const ew = engEvalWeights(c), base = evalsFor(c.course || S.ui.course);
+  return EVALS.filter(ev => base.includes(ev) || normalActs(all, ev).length || ew[ev] > 0);
+}
 function renderConfig() {
   const c = cfg(), ew = engEvalWeights(c), evs = shownEvals(c);
   weightBar("evWeightBar", engR2(evs.reduce((a, ev) => a + ew[ev], 0)), "totalEvs", "balanceEvs");
@@ -2331,7 +2345,7 @@ const ACTIONS = {
     const p = curPeriod(), c = cfg(), as = acts(), gm = gradeMap();
     const cell = v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
     const n = x => (x === null || x === undefined || !isFinite(x)) ? "" : String(engR2(x)).replace(".", ",");
-    const evCols = EVALS.filter(ev => ev !== "ORD" || normalActs(as, "ORD").length), fp = finalPeriod(as);
+    const evCols = EVALS.filter(ev => evalsFor().includes(ev) || normalActs(as, ev).length), fp = finalPeriod(as);
     const head = [t("year"), t("group"), t("module"), t("period"), t("student")]
       .concat(as.map(a => `${a.ti} [${t("ps_" + a.ev)} · ${engIsRec(a) ? t("tagRec") : fmt(engNum(a.w, 0)) + "%"}]`))
       .concat(c.comps.map(x => `${x.code} (${(x.ras || []).join("/")})`))
@@ -2494,7 +2508,7 @@ const ACTIONS = {
 /* ---------- cambios (inputs y selects) ---------- */
 const CHANGES = {
   year: el => { S.ui.year = el.value; S.ui.period = null; fichaSid = null; scheduleSave(); renderAll(); },
-  course: el => { S.ui.course = el.value; S.ui.period = null; scheduleSave(); renderAll(); },
+  course: el => { S.ui.course = el.value; S.ui.period = null; S.ui.evalFilter = "ALL"; scheduleSave(); renderAll(); },
   module: el => { S.ui.module = el.value; S.ui.period = null; scheduleSave(); renderAll(); },
   period: el => { S.ui.period = el.value; scheduleSave(); renderAll(); },
   statusFilter: el => { statusFilter = el.value; renderSemaphore(); },
@@ -2543,6 +2557,7 @@ const CHANGES = {
   actEval: () => {
     const wi = $("actWeight");
     if (wi.dataset.auto) { const rest = engR2(100 - evalSum(acts(), $("actEval").value, editingAid)); wi.value = rest > 0 ? fmtIn(rest) : ""; }
+    if (!editingAid && !$("actRec").disabled) $("actRec").checked = $("actEval").value === "ORD";
     syncActModal();
   },
   actRec: () => updateActHelp(),

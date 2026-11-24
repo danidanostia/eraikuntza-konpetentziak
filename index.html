@@ -63,7 +63,7 @@
 
   .selectors-bar { background: var(--navy-dark); padding: 10px 18px; }
   .selectors-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 175px 40px 245px 1fr; gap: 8px; align-items: center; }
-  select, input[type="text"], input[type="number"], input[type="url"], input[type="password"], textarea {
+  select, input[type="text"], input[type="number"], input[type="url"], input[type="password"], input[type="search"], textarea {
     width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.88rem;
     background: #fff; color: var(--text); min-height: 38px; font-family: inherit;
   }
@@ -156,6 +156,16 @@
   .help summary { cursor: pointer; font-weight: 700; color: var(--navy); }
   .help ol { margin: 8px 0 2px 20px; display: flex; flex-direction: column; gap: 6px; }
   .qr-box { display: flex; justify-content: center; }
+  .view-seg button { padding: 0 14px; min-width: 0; }
+  .tr-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .tr-th { min-width: 150px; }
+  .tr-table { font-size: 0.82rem; }
+  .tr-table th, .tr-table td { min-width: 0; padding: 6px 8px; position: static; }
+  .tr-table td.num { text-align: center; white-space: nowrap; }
+  .inc { display: inline-flex; align-items: center; gap: 6px; }
+  .inc .icon-btn { min-width: 34px; min-height: 34px; font-size: 1rem; }
+  .inc-n { min-width: 22px; text-align: center; font-weight: 700; }
+  .btn.armed { background: var(--red); color: #fff; border-color: var(--red); }
   .secret { -webkit-text-security: disc; text-security: disc; }
   input[type="search"]::-webkit-search-cancel-button { cursor: pointer; }
   .qr-box svg { width: 240px; height: 240px; max-width: 70vw; max-height: 70vw; border: 1px solid var(--border); border-radius: 10px; padding: 6px; background: #fff; }
@@ -249,7 +259,7 @@
     .bottom-nav { display: block; }
     main { padding: 12px 12px 24px; }
     body { padding-bottom: 66px; }
-    .toolbar-semaphore { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto; gap: 6px; align-items: center; margin-bottom: 10px; }
+    .toolbar-semaphore { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto auto; gap: 6px; align-items: center; margin-bottom: 10px; }
     .toolbar-semaphore .toolbar-left, .toolbar-semaphore .toolbar-right { display: contents; }
     .toolbar-semaphore input.search-box { grid-column: 1 / -1; width: 100%; min-width: 0; max-width: none; }
     .toolbar-semaphore select { min-width: 0 !important; width: 100% !important; padding: 6px; font-size: 0.78rem; }
@@ -386,6 +396,7 @@
         <select id="selPeriod" data-ch="period" style="width:auto;min-width:190px;"></select>
       </div>
       <div class="toolbar-right">
+        <button type="button" class="btn" data-act="openTrGroup">👥 <span class="btn-label-desktop" data-i18n="trDeptShort"></span></button>
         <button type="button" class="btn" data-act="exportCsv">📥 <span class="btn-label-desktop" data-i18n="exportCsv"></span></button>
         <button type="button" class="btn btn-primary" data-act="printActa">🖨️ <span class="btn-label-desktop" data-i18n="printActa"></span></button>
       </div>
@@ -398,6 +409,7 @@
   <section id="view-gradebook" hidden>
     <div class="toolbar">
       <div class="toolbar-left">
+        <div class="seg view-seg" role="group"><button type="button" data-act="bookView" data-v="acts" data-i18n="bookActs"></button><button type="button" data-act="bookView" data-v="tr" data-i18n="bookTr"></button></div>
         <select id="filterEval" data-ch="evalFilter" style="width:auto;min-width:180px;"></select>
         <button type="button" class="btn btn-primary" data-act="newAct" data-i18n="newAct"></button>
       </div>
@@ -619,6 +631,15 @@
       <button type="button" class="btn" data-act="closeModal" data-modal="inviteModal" data-i18n="close"></button>
       <button type="button" class="btn btn-primary" data-act="shareInvite" id="btnShareInvite" data-i18n="invShare"></button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL: TRANSVERSALES DEL GRUPO EN EL DEPARTAMENTO -->
+<div class="modal-backdrop" id="trGroupModal">
+  <div class="modal" style="max-width:820px;">
+    <div class="modal-header"><strong data-i18n="trDeptTitle"></strong><button type="button" class="btn-hdr" data-act="closeModal" data-modal="trGroupModal">✕</button></div>
+    <div class="modal-body" id="trGroupBody"></div>
+    <div class="modal-footer"><button type="button" class="btn btn-primary" data-act="closeModal" data-modal="trGroupModal" data-i18n="close"></button></div>
   </div>
 </div>
 
@@ -854,6 +875,29 @@ const CURRICULUM = {
 };
 
 /* =====================================================================
+   COMPETENCIAS TRANSVERSALES DEL DEPARTAMENTO (iguales en todos los
+   módulos). Rúbrica 1–4 con indicadores medibles. lv = umbral de los
+   niveles 1, 2, 3 y 4.
+   ===================================================================== */
+const TRANSVERSALS = [
+  { code: "CT1", es: "Autonomía y organización", eu: "Autonomia eta antolaketa",
+    indEs: "% de entregas en plazo y completas según la lista de entrega", indEu: "Epean eta entrega-zerrendaren arabera osorik egindako entregen %",
+    lv: ["< 60 %", "≥ 60 %", "≥ 80 %", "100 %"] },
+  { code: "CT2", es: "Trabajo en equipo", eu: "Talde-lana",
+    indEs: "% de tareas asignadas en el reparto del equipo cumplidas en plazo y con los estándares comunes (nomenclatura, plantilla, capas)", indEu: "Taldeko banaketan esleitutako zereginen %, epean eta estandar komunekin (nomenklatura, txantiloia, geruzak) beteta",
+    lv: ["< 60 %", "≥ 60 %", "≥ 80 %", "100 %"] },
+  { code: "CT3", es: "Comunicación técnica", eu: "Komunikazio teknikoa",
+    indEs: "% de puntos cumplidos de la lista de comprobación de la documentación (cajetín, escalas, cotas, ortografía, tiempo de presentación)", indEu: "Dokumentazioaren egiaztapen-zerrendako puntuen % (kartela, eskalak, kotak, ortografia, aurkezpen-denbora)",
+    lv: ["< 50 %", "≥ 50 %", "≥ 75 %", "≥ 90 %"] },
+  { code: "CT4", es: "Responsabilidad y seguridad", eu: "Erantzukizuna eta segurtasuna",
+    indEs: "Nº de incidencias registradas en la evaluación (retrasos, faltas sin justificar, incumplimientos de PRL, material mal devuelto)", indEu: "Ebaluazioan erregistratutako gorabehera kopurua (berandutzeak, justifikatu gabeko hutsegiteak, LAPen ez-betetzeak, gaizki itzulitako materiala)",
+    lv: ["≥ 5", "3–4", "1–2", "0"] },
+  { code: "CT5", es: "Resolución de problemas", eu: "Arazoen ebazpena",
+    indEs: "% de correcciones de la revisión anterior aplicadas y archivos entregados en el formato pedido (DWG, IFC, PDF) que abren sin errores", indEu: "Aurreko berrikuspeneko zuzenketen % aplikatuta, eta eskatutako formatuan (DWG, IFC, PDF) erroririk gabe irekitzen diren fitxategiak",
+    lv: ["< 50 %", "≥ 50 %", "≥ 75 %", "100 %"] }
+];
+
+/* =====================================================================
    MOTOR DE CÁLCULO — idéntico en la app (index.html) y en Code.gs
    NOTA:
    - Nota de cada evaluación (1ª, 2ª, 3ª en 1º y, si tiene actividades
@@ -1068,6 +1112,21 @@ const I18N = {
     invPasted: "✓ Invitación reconocida: URL y clave rellenadas.",
     noMatchSearch: "Ningún alumno/a coincide con «{q}».", clearSearch: "✕ Borrar búsqueda", noMatchFilter: "Ningún alumno/a con el estado «{s}» en este periodo.", showAll: "Ver todos",
     p_3EV: "3ª evaluación", ps_3EV: "3ª ev.", pv_3EV: "Ver: 3ª evaluación",
+    bookActs: "Actividades", bookTr: "Transversales", trDeptShort: "Transversales",
+    trTitle: "Competencias transversales",
+    trIntro: "Las cinco competencias transversales del departamento, con indicadores medibles. Cada profesor las evalúa en su módulo con una rúbrica 1–4, una vez por evaluación. Cuentan en la nota de la evaluación con el peso que indiques (repartido a partes iguales) y no bloquean el aprobado.",
+    trWeightLbl: "Peso en cada evaluación", trActivate: "Activar en este módulo", trActivated: "✓ Transversales activadas",
+    trScaleQ: "Las actividades técnicas de alguna evaluación ya suman 100 %. ¿Reducirlas proporcionalmente para que sumen {r} % y quede {w} % para las transversales?",
+    trDeact: "Desactivar", trDeactQ: "¿Quitar las competencias transversales de este módulo? Podrás recuperarlas con «Deshacer».", trDeactDone: "Transversales desactivadas",
+    trInc: "Incidencias (CT4)", trIncHint: "Cada incidencia ajusta CT4 sola: 0 → 4 · 1–2 → 3 · 3–4 → 2 · 5 o más → 1.",
+    trGrade: "Nota transversal", trIndicators: "Indicadores y niveles (comunes al departamento)", trMeasure: "Qué se mide",
+    trWNote: "{w} % de la nota de cada evaluación ({e} % cada competencia). No bloquean el aprobado.",
+    trDeptTitle: "Transversales del grupo en el departamento",
+    trDeptDesc: "Nivel medio (1–4) de cada alumno/a en todos los módulos del grupo que evalúan transversales. Es solo informativo: no cambia ninguna nota. Periodo: {p}.",
+    trNoData: "Todavía ningún módulo del grupo ha evaluado transversales.",
+    fichaSec4: "4. Competencias transversales en el departamento (informativo, nivel 1–4)",
+    trMean: "Media", trModules: "Módulos", trWBad: "El peso debe estar entre 1 y 50 %", trWSaved: "✓ Peso de las transversales actualizado",
+    trSumNote: "Incluye transversales: {w} %", confirmDrop: "¿Seguro? Pulsa otra vez",
     actIntro: "Rellena por orden: título → evaluación → peso (% dentro de esa evaluación; entre todas deben sumar 100 %) → competencias que evalúa.",
     weightPct: "{w} %", weightRec: "peso {w}",
     realShort: "cuenta ≈ {n} %", realTitle: "Peso real en la nota de la evaluación: depende de las competencias que evalúa la actividad y del peso de cada competencia (Ajustes).",
@@ -1221,6 +1280,21 @@ const I18N = {
     invPasted: "✓ Gonbidapena ezagututa: URLa eta gakoa beteta.",
     noMatchSearch: "Bilaketa honekin ez dago ikaslerik: «{q}».", clearSearch: "✕ Bilaketa garbitu", noMatchFilter: "Ez dago ikaslerik egoera honekin aldi honetan: «{s}».", showAll: "Guztiak ikusi",
     p_3EV: "3. ebaluazioa", ps_3EV: "3. eb.", pv_3EV: "Ikusi: 3. ebaluazioa",
+    bookActs: "Jarduerak", bookTr: "Zeharkakoak", trDeptShort: "Zeharkakoak",
+    trTitle: "Zeharkako konpetentziak",
+    trIntro: "Sailaren bost zeharkako konpetentziak, adierazle neurgarriekin. Irakasle bakoitzak bere moduluan ebaluatzen ditu 1–4 errubrikarekin, ebaluazio bakoitzean behin. Ebaluazioaren notan kontatzen dira adierazten duzun pisuarekin (zati berdinetan banatuta) eta ez dute gainditzea blokeatzen.",
+    trWeightLbl: "Pisua ebaluazio bakoitzean", trActivate: "Modulu honetan aktibatu", trActivated: "✓ Zeharkakoak aktibatuta",
+    trScaleQ: "Ebaluazioren bateko jarduera teknikoek % 100 egiten dute dagoeneko. Proportzionalki murriztu % {r} egin dezaten eta % {w} geratu dadin zeharkakoentzat?",
+    trDeact: "Desaktibatu", trDeactQ: "Modulu honetatik zeharkako konpetentziak kendu? «Desegin» botoiarekin berreskura ditzakezu.", trDeactDone: "Zeharkakoak desaktibatuta",
+    trInc: "Gorabeherak (CT4)", trIncHint: "Gorabehera bakoitzak CT4 bakarrik doitzen du: 0 → 4 · 1–2 → 3 · 3–4 → 2 · 5 edo gehiago → 1.",
+    trGrade: "Zeharkako nota", trIndicators: "Adierazleak eta mailak (sail osorako berdinak)", trMeasure: "Zer neurtzen da",
+    trWNote: "Ebaluazio bakoitzaren notaren % {w} (% {e} konpetentzia bakoitzeko). Ez dute gainditzea blokeatzen.",
+    trDeptTitle: "Taldearen zeharkakoak sailean",
+    trDeptDesc: "Ikasle bakoitzaren batez besteko maila (1–4) zeharkakoak ebaluatzen dituzten taldeko modulu guztietan. Informatiboa da: ez du notarik aldatzen. Aldia: {p}.",
+    trNoData: "Taldeko modulu batek ere ez ditu oraindik zeharkakoak ebaluatu.",
+    fichaSec4: "4. Zeharkako konpetentziak sailean (informatiboa, 1–4 maila)",
+    trMean: "Batez bestekoa", trModules: "Moduluak", trWBad: "Pisuak % 1 eta % 50 artean egon behar du", trWSaved: "✓ Zeharkakoen pisua eguneratuta",
+    trSumNote: "Zeharkakoak barne: % {w}", confirmDrop: "Ziur? Sakatu berriro",
     actIntro: "Bete ordenan: izenburua → ebaluazioa → pisua (% ebaluazio horren barruan; guztiek % 100 egin behar dute) → ebaluatzen dituen konpetentziak.",
     weightPct: "% {w}", weightRec: "pisua {w}",
     realShort: "≈ % {n} kontatzen du", realTitle: "Ebaluazioaren notan duen benetako pisua: jarduerak ebaluatzen dituen konpetentzien eta haien pisuen araberakoa da (Ezarpenak).",
@@ -1332,7 +1406,7 @@ const I18N = {
    actividad, alumno/a y configuración de módulo es un registro, de modo
    que varios profesores pueden sincronizar sin pisarse.
    ===================================================================== */
-const APP_VERSION = "2.2.0";
+const APP_VERSION = "2.3.0";
 const DB_NAME = "easo-competencias";
 const DB_STORE = "kv";
 const LS_FALLBACK = "easo_pe_v2_state";
@@ -1420,7 +1494,7 @@ async function kvSet(k, v) {
 function freshState() {
   return {
     schema: 2, savedAt: 0, records: {}, pending: {}, lastRev: 0, clockOffset: 0,
-    ui: { year: currentAcademicYear(), course: "1", module: "0562", lang: "es", tab: "semaphore", period: null, evalFilter: "ALL" },
+    ui: { year: currentAcademicYear(), course: "1", module: "0562", lang: "es", tab: "semaphore", period: null, evalFilter: "ALL", bookView: "acts", trEv: null },
     conn: { url: "", key: "", teacher: "" }, sync: { lastAt: 0, lastError: "" },
     demoMode: false, demoRecords: null, uiBackup: null, oldHandled: false, snapAt: 0
   };
@@ -1582,6 +1656,10 @@ function renderFilters() {
   $("filterStatus").innerHTML = [["all", t("fAll")], ["ok", statusLabel("ok", p)], ["prog", statusLabel("prog", p)], ["ko", statusLabel("ko", p)], ["none", t("st_none")]]
     .map(([v, l]) => `<option value="${v}"${v === statusFilter ? " selected" : ""}>${esc(l)}</option>`).join("");
   if (S.ui.evalFilter !== "ALL" && !periodsFor().includes(S.ui.evalFilter)) S.ui.evalFilter = "ALL";
+  const tv = S.ui.bookView === "tr";
+  document.querySelectorAll('[data-act="bookView"]').forEach(b => b.classList.toggle("on", (b.dataset.v === "tr") === tv));
+  $("filterEval").hidden = tv;
+  document.querySelector('#view-gradebook [data-act="newAct"]').hidden = tv;
   $("filterEval").innerHTML = [["ALL", t("allEvals")]].concat(periodsFor().map(x => [x, t("p_" + x)]))
     .map(([v, l]) => `<option value="${v}"${v === S.ui.evalFilter ? " selected" : ""}>${esc(l)}</option>`).join("");
 }
@@ -1689,6 +1767,8 @@ function evalBarsHtml(all, filter, c) {
   });
   const unc = all.length ? uncoveredComps(c, all) : [];
   if (unc.length) bars.push(`<span class="badge b-ko" style="white-space:normal">${esc(t("uncoveredWarn", { c: unc.map(x => x.code).join(", ") }))}</span>`);
+  const trW = engR2(all.filter(a => a.tr && a.tr !== "INC" && a.ev === (filter === "ALL" ? evs[0] : filter)).reduce((s, a) => s + engNum(a.w, 0), 0));
+  if (trW > 0 && bars.length) bars.push(`<span class="small muted">${esc(t("trSumNote", { w: fmt(trW) }))}</span>`);
   const hasRec = all.some(a => engIsRec(a) && (filter === "ALL" || a.ev === filter));
   if (!bars.length && !hasRec) return "";
   return `<div class="ev-bars">${bars.join("")}${hasRec ? `<span class="small muted">${esc(t("recNote"))}</span>` : ""}</div>`;
@@ -1698,6 +1778,74 @@ function helpHtml(open) {
   const items = ["help1", "help2", "help3", "help4", "help5", "help6"].map(k => `<li>${esc(t(k))}</li>`).join("");
   return `<details class="help" id="bookHelp"${open ? " open" : ""}><summary>ℹ️ ${esc(t("helpTitle"))}</summary><ol>${items}</ol></details>`;
 }
+
+
+/* ---------- competencias transversales ---------- */
+let trLegendOpen = false;
+function trName(ct) { return lang === "eu" ? ct.eu : ct.es; }
+function trEvsUpTo(p = curPeriod()) { const inc = engPeriodsUpTo(p); return evalsFor().filter(ev => inc.includes(ev)); }
+function lvBadge(x) {
+  if (x === null || x === undefined) return `<span class="badge b-none">—</span>`;
+  return `<span class="badge ${x < 2 ? "b-ko" : (x < 3 ? "b-prog" : "b-ok")}">${esc(fmt(x))}</span>`;
+}
+function scoreBadge(x) { return `<span class="badge ${scoreCls(x)}">${esc(fmt(x))}</span>`; }
+// Nivel medio (1–4) de un alumno/a en cada transversal y en cada módulo del grupo que las evalúa
+function trDeptRows(sid, evs, y = S.ui.year, course = S.ui.course) {
+  const m = model(), out = [];
+  CURRICULUM[course].forEach(mod => {
+    const as = Object.values((m.act[y] || {})[mod.code] || {}).filter(a => a.tr && a.tr !== "INC" && evs.includes(a.ev));
+    if (!as.length) return;
+    const gm = (m.g[y] || {})[mod.code] || {}, v = {};
+    TRANSVERSALS.forEach(ct => {
+      const ls = as.filter(a => a.tr === ct.code).map(a => ((gm[a.id] || {})[sid] || {}).l).filter(l => l >= 1 && l <= 4);
+      v[ct.code] = ls.length ? engR2(ls.reduce((s, x) => s + x, 0) / ls.length) : null;
+    });
+    out.push({ code: mod.code, title: lang === "eu" ? mod.nameEu : mod.nameEs, v });
+  });
+  return out;
+}
+function trMeanRow(rows) {
+  const v = {};
+  TRANSVERSALS.forEach(ct => { const xs = rows.map(r => r.v[ct.code]).filter(x => x !== null); v[ct.code] = xs.length ? engR2(xs.reduce((s, x) => s + x, 0) / xs.length) : null; });
+  return v;
+}
+function trTableHtml(rows, firstHead, withCount, mean) {
+  const th = TRANSVERSALS.map(ct => `<th title="${esc(trName(ct))}">${ct.code}</th>`).join("");
+  const row = r => `<tr><td${r.title ? ` title="${esc(r.title)}"` : ""}>${r.strong ? "<b>" : ""}${esc(r.label)}${r.strong ? "</b>" : ""}</td>${TRANSVERSALS.map(ct => `<td class="num">${lvBadge(r.v[ct.code])}</td>`).join("")}${withCount ? `<td class="num">${r.n}</td>` : ""}</tr>`;
+  return `<div class="table-wrap" style="box-shadow:none"><table class="tr-table"><thead><tr><th>${esc(firstHead)}</th>${th}${withCount ? `<th>${esc(t("trModules"))}</th>` : ""}</tr></thead><tbody>${rows.map(row).join("")}${mean ? row(Object.assign({ strong: true }, mean)) : ""}</tbody></table></div>`
+    + `<p class="small muted" style="margin-top:6px">${TRANSVERSALS.map(ct => `${ct.code}: ${esc(trName(ct))}`).join(" · ")}</p>`;
+}
+function trLegendHtml(open, id = "trLegend") {
+  const rows = TRANSVERSALS.map(ct => `<tr><td><b>${ct.code}</b> · ${esc(trName(ct))}<div class="small muted">${esc(lang === "eu" ? ct.indEu : ct.indEs)}</div></td>${[3, 2, 1, 0].map(i => `<td class="num">${esc(ct.lv[i])}</td>`).join("")}</tr>`).join("");
+  return `<details class="help" id="${id}"${open ? " open" : ""}><summary>ℹ️ ${esc(t("trIndicators"))}</summary><div class="table-wrap" style="margin-top:8px;box-shadow:none"><table class="tr-table"><thead><tr><th>${esc(t("trMeasure"))}</th><th>4</th><th>3</th><th>2</th><th>1</th></tr></thead><tbody>${rows}</tbody></table></div><p class="small muted" style="margin-top:6px">${esc(t("trIncHint"))}</p></details>`;
+}
+function renderTransversal() {
+  const st = students(), all = acts(), box = $("gradebookContainer");
+  if (!st.length) { box.innerHTML = onboardingHtml(); return; }
+  const evs = evalsFor();
+  if (!evs.includes(S.ui.trEv)) { const p = curPeriod(); S.ui.trEv = evs.includes(p) ? p : evs[evs.length - 1]; }
+  const ev = S.ui.trEv, trs = all.filter(a => a.tr && a.ev === ev);
+  if (!all.some(a => a.tr && a.tr !== "INC")) {
+    box.innerHTML = `<div class="panel"><h2>${esc(t("trTitle"))}</h2><p class="desc">${esc(t("trIntro"))}</p><div class="tr-bar"><span class="small" style="font-weight:700">${esc(t("trWeightLbl"))}</span><div class="pct" style="width:110px"><input type="text" inputmode="decimal" id="trWNew" value="20"><span>%</span></div><button type="button" class="btn btn-primary" data-act="trActivate">${esc(t("trActivate"))}</button></div></div>` + trLegendHtml(true, "trLegendIntro");
+    return;
+  }
+  const cts = TRANSVERSALS.map(ct => trs.find(a => a.tr === ct.code));
+  const inc = trs.find(a => a.tr === "INC");
+  const w = engR2(cts.reduce((s, a) => s + (a ? engNum(a.w, 0) : 0), 0));
+  const gm = gradeMap(), G = (a, sid) => a ? (gm[a.id] || {})[sid] : undefined;
+  const incOf = sid => { const g = inc && G(inc, sid); return g && typeof g.v === "number" ? g.v : null; };
+  const avg = sid => { const xs = cts.map(a => a ? engScore(a, G(a, sid)) : null).filter(x => x !== null); return xs.length ? engR2(xs.reduce((s, x) => s + x, 0) / xs.length) : null; };
+  const incHtml = sid => { const n = incOf(sid); return `<div class="inc"><button type="button" class="icon-btn" data-act="incAdj" data-sid="${esc(sid)}" data-d="-1" aria-label="−1">−</button><span class="inc-n">${n === null ? "—" : n}</span><button type="button" class="icon-btn" data-act="incAdj" data-sid="${esc(sid)}" data-d="1" aria-label="+1">+</button></div>`; };
+  const cell = (a, s) => a ? gradeCellHtml(a, s.id, s.n, G(a, s.id)) : "—";
+  const evSel = `<select data-ch="trEv" aria-label="${esc(t("actEvalLbl"))}" style="width:auto">${evs.map(x => `<option value="${x}"${x === ev ? " selected" : ""}>${esc(t("p_" + x))}</option>`).join("")}</select>`;
+  const head = `<div class="panel"><div class="panel-head"><div><h2>${esc(t("trTitle"))}</h2><p class="desc" style="margin:0">${esc(t("trWNote", { w: fmt(w), e: fmt(engR2(w / 5)) }))}</p></div><div class="tr-bar">${evSel}<span class="small" style="font-weight:700">${esc(t("trWeightLbl"))}</span><div class="pct" style="width:100px"><input type="text" inputmode="decimal" value="${esc(fmtIn(w))}" data-ch="trW" data-fk="trw"><span>%</span></div><button type="button" class="btn btn-sm btn-danger" data-act="trDeactivate">${esc(t("trDeact"))}</button></div></div></div>`;
+  const ths = TRANSVERSALS.map(ct => `<th class="tr-th">${ct.code}<div class="small muted" style="font-weight:500">${esc(trName(ct))}</div></th>`).join("");
+  const rows = st.map(s => `<tr><td class="sticky-col"><strong>${esc(s.n)}</strong></td>${cts.map(a => `<td>${cell(a, s)}</td>`).join("")}<td>${incHtml(s.id)}</td><td>${scoreBadge(avg(s.id))}</td></tr>`).join("");
+  const cards = st.map(s => `<div class="gb-mobile-card"><div class="gb-mobile-head"><strong style="font-size:0.96rem;">${esc(s.n)}</strong>${scoreBadge(avg(s.id))}</div>${TRANSVERSALS.map((ct, i) => `<div class="gb-act-row"><div class="gb-act-info"><div class="gb-act-title">${ct.code} · ${esc(trName(ct))}</div></div>${cell(cts[i], s)}</div>`).join("")}<div class="gb-act-row"><div class="gb-act-info"><div class="gb-act-title">${esc(t("trInc"))}</div></div>${incHtml(s.id)}</div></div>`).join("");
+  box.innerHTML = head + trLegendHtml(trLegendOpen) + `<div class="desktop-gradebook table-wrap"><table><thead><tr><th class="sticky-col">${esc(t("student"))}</th>${ths}<th class="tr-th">${esc(t("trInc"))}</th><th class="tr-th">${esc(t("trGrade"))}</th></tr></thead><tbody>${rows}</tbody></table></div><div class="mobile-gradebook">${cards}</div>`;
+}
+function trActData(ev, ct, w, i) { return { ti: `${ct.code} · ${ct.es}`, ev, w: engR2(w / 5), comps: [], rec: false, rub: true, rv: RUB_DEFAULT.slice(), tr: ct.code, o: 9e12 + i }; }
+function incActData(ev) { return { ti: "Incidencias (CT4)", ev, w: 0, comps: [], rec: false, rub: false, rv: RUB_DEFAULT.slice(), tr: "INC", o: 9e12 + 9 }; }
 
 /* ---------- vista 2: cuaderno ---------- */
 function actMetaHtml(a, c) {
@@ -1730,8 +1878,9 @@ function gbPeriods(all) {
   return EVALS.filter(ev => normalActs(all, ev).length).concat([fp]);
 }
 function renderGradebook() {
+  if (S.ui.bookView === "tr") { renderTransversal(); return; }
   const st = students(), c = cfg();
-  const all = acts(), as = all.filter(a => S.ui.evalFilter === "ALL" || a.ev === S.ui.evalFilter);
+  const all = acts(), as = all.filter(a => !a.tr && (S.ui.evalFilter === "ALL" || a.ev === S.ui.evalFilter));
   const box = $("gradebookContainer");
   if (!st.length) { box.innerHTML = onboardingHtml(); return; }
   const help = helpHtml(helpOpen === null ? !all.length : helpOpen);
@@ -1785,13 +1934,14 @@ function renderFicha() {
   const s = students().find(x => x.id === fichaSid);
   if (!s) { closeModal("studentModal"); return; }
   $("fichaTitle").textContent = `${s.n} · ${modName(S.ui.module)}`;
-  const as = acts(), c = cfg(), gm = gradeMap();
+  const as = acts().filter(a => !a.tr), c = cfg(), gm = gradeMap();
   const actsHtml = as.length ? as.map(a => `<div class="act-row"><div class="small"><strong>${esc(a.ti)}</strong><div class="muted" style="font-size:0.74rem">${actMetaHtml(a, c)}</div></div>${gradeCellHtml(a, s.id, s.n, (gm[a.id] || {})[s.id])}</div>`).join("")
     : `<span class="small muted">${esc(t("noActsShort"))}</span>`;
   $("fichaBody").innerHTML = `<p class="small" id="fichaPeriod"></p>
     <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec1"))}</h3><div id="fSec1" class="comp-list"></div></div>
     <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec2"))}</h3><div style="display:flex;flex-direction:column;gap:6px;">${actsHtml}</div></div>
     <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec3"))}</h3><div id="fSec3" class="comp-list"></div></div>
+    <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec4"))}</h3><div id="fSec4"></div></div>
     <div class="field"><label for="fichaNote">${esc(t("fichaNotes"))}</label><textarea id="fichaNote" rows="3" maxlength="2000" data-ch="note" data-sid="${esc(s.id)}" placeholder="${esc(t("notesPh"))}">${esc(noteOf(s.id))}</textarea></div>`;
   renderFichaStatus();
 }
@@ -1805,6 +1955,9 @@ function renderFichaStatus() {
   $("fSec1").innerHTML = r.comps.map(x => compRowHtml(x, true)).join("");
   $("fSec3").innerHTML = r.ras.map(x => `<div class="comp-row"><div class="comp-info"><div class="small" style="white-space:normal"><strong>${esc(x.ra.code)} (${fmt(x.weight)} %)</strong> · ${esc(raLabel(x.ra))}</div></div><span class="comp-score ${scoreCls(x.score)}">${fmt(x.score)}</span></div>`).join("")
     + `<div class="comp-row" style="background:#fff"><div class="comp-info"><strong class="small">${esc(t("raControl"))}</strong></div><span class="comp-score ${scoreCls(r.raGrade)}">${fmt(r.raGrade)}</span></div>`;
+  const dr = trDeptRows(fichaSid, trEvsUpTo(p));
+  $("fSec4").innerHTML = dr.length ? trTableHtml(dr.map(x => ({ label: x.code, title: x.title, v: x.v })), t("module"), false, { label: t("trMean"), v: trMeanRow(dr) })
+    : `<span class="small muted">${esc(t("trNoData"))}</span>`;
 }
 
 /* ---------- actividades ---------- */
@@ -2191,6 +2344,47 @@ const ACTIONS = {
 
   /* actividades y notas */
   newAct: () => openActModal(null),
+  bookView: el => { S.ui.bookView = el.dataset.v === "tr" ? "tr" : "acts"; scheduleSave(); renderFilters(); renderGradebook(); },
+  trActivate: () => {
+    const w = parsePct($("trWNew").value);
+    if (!(w >= 1 && w <= 50)) return showToast(t("trWBad"));
+    ensureCfg();
+    const all = acts(), evs = evalsFor();
+    const full = evs.filter(ev => Math.abs(evalSum(all, ev) - 100) < 0.5);
+    if (full.length && confirm(t("trScaleQ", { r: fmt(100 - w), w: fmt(w) }))) {
+      const f = (100 - w) / 100;
+      full.forEach(ev => normalActs(all, ev).filter(a => !a.tr).forEach(a => { const v = Object.assign({}, a); delete v.id; v.w = engR2(engNum(a.w, 0) * f); put(K.act(a.id), v); }));
+    }
+    evs.forEach((ev, j) => {
+      TRANSVERSALS.forEach((ct, i) => put(K.act(`tr-${ev}-${ct.code}`), trActData(ev, ct, w, j * 10 + i)));
+      put(K.act(`tr-${ev}-INC`), incActData(ev));
+    });
+    renderAll(); showToast(t("trActivated"));
+  },
+  trDeactivate: () => {
+    if (!confirm(t("trDeactQ"))) return;
+    const keys = acts().filter(a => a.tr).map(a => K.act(a.id)), sn = snap(keys);
+    keys.forEach(k => del(k)); renderAll();
+    showToast(t("trDeactDone"), { undo: () => { restore(sn); renderAll(); } });
+  },
+  incAdj: el => {
+    const sid = el.dataset.sid, ev = S.ui.trEv, all = acts();
+    const inc = all.find(a => a.tr === "INC" && a.ev === ev), incId = inc ? inc.id : `tr-${ev}-INC`;
+    if (!inc) put(K.act(incId), incActData(ev));
+    const cur = getRec(K.grade(incId, sid));
+    const n = Math.max(0, (cur && typeof cur.v === "number" ? cur.v : 0) + (+el.dataset.d));
+    put(K.grade(incId, sid), { v: n });
+    const ct4 = all.find(a => a.tr === "CT4" && a.ev === ev);
+    if (ct4) put(K.grade(ct4.id, sid), { l: n === 0 ? 4 : n <= 2 ? 3 : n <= 4 ? 2 : 1 });
+    renderGradebook();
+  },
+  openTrGroup: () => {
+    const evs = trEvsUpTo();
+    const rows = students().map(s => { const r = trDeptRows(s.id, evs); return { label: s.n, v: trMeanRow(r), n: r.filter(x => TRANSVERSALS.some(ct => x.v[ct.code] !== null)).length }; });
+    $("trGroupBody").innerHTML = `<p class="small muted">${esc(t("trDeptDesc", { p: t("p_" + curPeriod()) }))}</p>`
+      + (rows.some(r => r.n > 0) ? trTableHtml(rows, t("student"), true) : `<p class="small">${esc(t("trNoData"))}</p>`);
+    openModal("trGroupModal");
+  },
   editAct: el => openActModal(el.dataset.aid),
   pillToggle: el => { el.classList.toggle("selected"); if (el.closest("#actCompPills")) updateActHelp(); },
   saveAct: () => {
@@ -2225,6 +2419,7 @@ const ACTIONS = {
     const sid = el.dataset.sid, aid = el.dataset.aid, l = +el.dataset.l, k = K.grade(aid, sid), cur = getRec(k);
     if (cur && cur.l === l) del(k); else put(k, { l });
     afterGrade(sid, aid);
+    if (S.ui.bookView === "tr" && !$("view-gradebook").hidden) renderGradebook();
   },
 
   /* competencias y RA */
@@ -2298,6 +2493,11 @@ const ACTIONS = {
     showToast(t("stuImported", { n: added }) + (dup ? t("stuDupSkipped", { n: dup }) : ""));
   },
   delStudent: el => {
+    if (el.dataset.armed !== "1") {   // primer clic: pide confirmación; el segundo (en 4 s) da de baja
+      el.dataset.armed = "1"; el.dataset.label = el.textContent; el.textContent = t("confirmDrop"); el.classList.add("armed");
+      setTimeout(() => { if (el.isConnected && el.dataset.armed === "1") { el.dataset.armed = ""; el.textContent = el.dataset.label; el.classList.remove("armed"); } }, 4000);
+      return;
+    }
     const k = K.stu(el.dataset.sid), sn = snap([k]), name = (getRec(k) || {}).n || "";
     del(k); renderAll();
     showToast(t("stuRemoved", { n: name }), { undo: () => { restore(sn); renderAll(); } });
@@ -2512,6 +2712,13 @@ const CHANGES = {
   module: el => { S.ui.module = el.value; S.ui.period = null; scheduleSave(); renderAll(); },
   period: el => { S.ui.period = el.value; scheduleSave(); renderAll(); },
   statusFilter: el => { statusFilter = el.value; renderSemaphore(); },
+  trEv: el => { S.ui.trEv = el.value; scheduleSave(); renderGradebook(); },
+  trW: el => {
+    const w = parsePct(el.value);
+    if (!(w >= 1 && w <= 50)) { showToast(t("trWBad")); rerender(); return; }
+    acts().filter(a => a.tr && a.tr !== "INC").forEach(a => { const v = Object.assign({}, a); delete v.id; v.w = engR2(w / 5); put(K.act(a.id), v); });
+    showToast(t("trWSaved")); rerender();
+  },
   evalFilter: el => { S.ui.evalFilter = el.value; scheduleSave(); renderGradebook(); },
   evW: el => {
     const n = parsePct(el.value);
@@ -2610,7 +2817,7 @@ function bindGlobal() {
       if (inv) { e.target.value = inv.u; $("connKey").value = inv.k; setConnStatus(t("invPasted")); }
     }
   });
-  document.addEventListener("toggle", e => { if (e.target.id === "bookHelp") helpOpen = e.target.open; }, true);
+  document.addEventListener("toggle", e => { if (e.target.id === "bookHelp") helpOpen = e.target.open; if (e.target.id === "trLegend") trLegendOpen = e.target.open; }, true);
   document.addEventListener("keydown", e => {
     const el = e.target;
     if (el.classList && el.classList.contains("grade-input")) {

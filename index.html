@@ -63,7 +63,7 @@
 
   .selectors-bar { background: var(--navy-dark); padding: 10px 18px; }
   .selectors-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 175px 40px 245px 1fr; gap: 8px; align-items: center; }
-  select, input[type="text"], input[type="number"], input[type="url"], input[type="password"], input[type="search"], textarea {
+  select, input[type="text"], input[type="number"], input[type="url"], input[type="password"], input[type="search"], input[type="date"], textarea {
     width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.88rem;
     background: #fff; color: var(--text); min-height: 38px; font-family: inherit;
   }
@@ -166,6 +166,30 @@
   .inc .icon-btn { min-width: 34px; min-height: 34px; font-size: 1rem; }
   .inc-n { min-width: 22px; text-align: center; font-weight: 700; }
   .btn.armed { background: var(--red); color: #fff; border-color: var(--red); }
+  .badge.b-warn { background: #ffedd5; color: #c2410c; }
+  .att-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .att-head input[type="date"], .tr-bar input[type="date"] { width: auto; }
+  .att-list { padding: 4px 14px; }
+  .att-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .att-row:last-child { border-bottom: 0; }
+  .att-name { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; flex: 1 1 190px; min-width: 0; }
+  .att-ctrl { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .att-ctrl .seg button { min-width: 36px; padding: 0 8px; }
+  .att-ctrl .btn { min-width: 40px; padding: 0 10px; }
+  .btn.on-j { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+  .btn.on-r { background: #fef3c7; border-color: #d97706; color: #b45309; }
+  .att-hist-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .att-hist { border: 1px solid var(--border); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-family: inherit; color: var(--text); }
+  .att-hist.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .inc-types { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .inc-types .btn { justify-content: flex-start; }
+  .inc-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
+  .inc-row:last-child { border-bottom: 0; }
+  .abs-bar { position: relative; height: 10px; background: #e2e8f0; border-radius: 999px; margin: 10px 0 24px; }
+  .abs-fill { height: 100%; border-radius: 999px; background: #16a34a; }
+  .abs-fill.s1 { background: #d97706; } .abs-fill.s2 { background: #ea580c; } .abs-fill.s3 { background: #dc2626; }
+  .abs-bar i { position: absolute; top: -4px; bottom: -4px; width: 2px; background: #475569; }
+  .abs-bar i::after { content: attr(data-l); position: absolute; top: 14px; left: -10px; font-size: 0.66rem; color: var(--muted); font-style: normal; white-space: nowrap; }
   .secret { -webkit-text-security: disc; text-security: disc; }
   input[type="search"]::-webkit-search-cancel-button { cursor: pointer; }
   .qr-box svg { width: 240px; height: 240px; max-width: 70vw; max-height: 70vw; border: 1px solid var(--border); border-radius: 10px; padding: 6px; background: #fff; }
@@ -409,12 +433,12 @@
   <section id="view-gradebook" hidden>
     <div class="toolbar">
       <div class="toolbar-left">
-        <div class="seg view-seg" role="group"><button type="button" data-act="bookView" data-v="acts" data-i18n="bookActs"></button><button type="button" data-act="bookView" data-v="tr" data-i18n="bookTr"></button></div>
+        <div class="seg view-seg" role="group"><button type="button" data-act="bookView" data-v="acts" data-i18n="bookActs"></button><button type="button" data-act="bookView" data-v="tr" data-i18n="bookTr"></button><button type="button" data-act="bookView" data-v="att" data-i18n="bookAtt"></button></div>
         <select id="filterEval" data-ch="evalFilter" style="width:auto;min-width:180px;"></select>
         <button type="button" class="btn btn-primary" data-act="newAct" data-i18n="newAct"></button>
       </div>
       <div class="toolbar-right">
-        <span class="small muted" data-i18n="bookHint"></span>
+        <span class="small muted" id="bookHint" data-i18n="bookHint"></span>
       </div>
     </div>
     <div id="gradebookContainer"></div>
@@ -431,6 +455,7 @@
       </div>
       <div class="weight-bar" id="evWeightBar"></div>
       <div id="evWeightList" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div id="modHoursBox"></div>
     </div>
 
     <div class="panel">
@@ -631,6 +656,20 @@
       <button type="button" class="btn" data-act="closeModal" data-modal="inviteModal" data-i18n="close"></button>
       <button type="button" class="btn btn-primary" data-act="shareInvite" id="btnShareInvite" data-i18n="invShare"></button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL: INCIDENCIAS -->
+<div class="modal-backdrop" id="incModal">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-header"><strong id="incTitle"></strong><button type="button" class="btn-hdr" data-act="closeModal" data-modal="incModal">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><input type="text" id="incNote" maxlength="200" autocomplete="off" data-i18n-ph="incNotePh"></div>
+      <div class="inc-types" id="incTypes"></div>
+      <h3 style="font-size:0.9rem;color:var(--navy);margin:6px 0 0;" data-i18n="incList"></h3>
+      <div id="incListBox"></div>
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-primary" data-act="closeModal" data-modal="incModal" data-i18n="close"></button></div>
   </div>
 </div>
 
@@ -897,6 +936,9 @@ const TRANSVERSALS = [
     lv: ["< 50 %", "≥ 50 %", "≥ 75 %", "100 %"] }
 ];
 
+/* Horas totales de cada módulo (para el % de faltas). 0 = sin control de faltas. Se pueden cambiar en Ajustes. */
+const MOD_HOURS = { "0562": 99, "0563": 330, "0567": 165, "0568": 130, "0569": 66, "1665": 66, "0564": 63, "0565": 84, "0566": 42, "0570": 168, "0571": 105, "0572": 0, "1708": 42 };
+
 /* =====================================================================
    MOTOR DE CÁLCULO — idéntico en la app (index.html) y en Code.gs
    NOTA:
@@ -1057,6 +1099,15 @@ function engCalc(cfg, acts, gradeOf, period) {
   };
 }
 
+/* ---------- asistencia e incidencias (comunes a la app y a Code.gs) ---------- */
+// Escalón de faltas: 0 = < 10 %, 1 = aviso 10 %, 2 = aviso por escrito 15 %, 3 = sin evaluación continua (20 %)
+function engAbsStep(pct) { return pct >= 20 ? 3 : pct >= 15 ? 2 : pct >= 10 ? 1 : 0; }
+// Puntos de CT4: 1 por incidencia + 1 por cada 1 % de horas del módulo faltadas sin justificar
+function engIncPoints(nInc, unjH, H) { return nInc + (H > 0 ? Math.floor(unjH / H * 100 + 1e-9) : 0); }
+function engCt4Level(pts) { return pts <= 0 ? 4 : pts <= 2 ? 3 : pts <= 4 ? 2 : 1; }
+// CT1: −1 nivel desde el 3 % de horas sin justificar en la evaluación, −2 desde el 6 %
+function engCt1Pen(unjH, H) { if (!(H > 0)) return 0; var p = unjH / H * 100 + 1e-9; return p >= 6 ? 2 : p >= 3 ? 1 : 0; }
+
 /* =====================================================================
    TEXTOS DE LA INTERFAZ · CASTELLANO / EUSKARA
    ===================================================================== */
@@ -1118,7 +1169,7 @@ const I18N = {
     trWeightLbl: "Peso en cada evaluación", trActivate: "Activar en este módulo", trActivated: "✓ Transversales activadas",
     trScaleQ: "Las actividades técnicas de alguna evaluación ya suman 100 %. ¿Reducirlas proporcionalmente para que sumen {r} % y quede {w} % para las transversales?",
     trDeact: "Desactivar", trDeactQ: "¿Quitar las competencias transversales de este módulo? Podrás recuperarlas con «Deshacer».", trDeactDone: "Transversales desactivadas",
-    trInc: "Incidencias (CT4)", trIncHint: "Cada incidencia ajusta CT4 sola: 0 → 4 · 1–2 → 3 · 3–4 → 2 · 5 o más → 1.",
+    trInc: "Incidencias (CT4)", trIncHint: "CT4 y la rebaja de CT1 se calculan solas desde Asistencia. CT4: 1 punto por incidencia (móvil, retraso, PRL…) + 1 por cada 1 % de horas del módulo sin justificar → 0 = 4 · 1–2 = 3 · 3–4 = 2 · 5 o más = 1. CT1: −1 nivel desde el 3 % de horas sin justificar en la evaluación y −2 desde el 6 %. Las faltas justificadas no restan.",
     trGrade: "Nota transversal", trIndicators: "Indicadores y niveles (comunes al departamento)", trMeasure: "Qué se mide",
     trWNote: "{w} % de la nota de cada evaluación ({e} % cada competencia). No bloquean el aprobado.",
     trDeptTitle: "Transversales del grupo en el departamento",
@@ -1127,6 +1178,31 @@ const I18N = {
     fichaSec4: "4. Competencias transversales en el departamento (informativo, nivel 1–4)",
     trMean: "Media", trModules: "Módulos", trWBad: "El peso debe estar entre 1 y 50 %", trWSaved: "✓ Peso de las transversales actualizado",
     trSumNote: "Incluye transversales: {w} %", confirmDrop: "¿Seguro? Pulsa otra vez",
+    bookAtt: "Asistencia", attTitle: "Asistencia e incidencias", attClassH: "Horas de clase hoy", attDate: "Fecha",
+    attDone: "Lista guardada", attSaveBtn: "✓ Guardar lista (todos presentes)",
+    attInfo: "Módulo de {H} h. Avisos al 10 % ({a} h) y al 15 % ({b} h); al 20 % ({c} h), justificadas o no, se pierde la evaluación continua.",
+    attNoHours: "Este módulo no lleva control de faltas: aquí solo se registran incidencias.", attNoHoursShort: "Este módulo no lleva control de faltas.",
+    attHint: "Toca las horas que ha faltado cada alumno/a (0 = presente). J = justificada · R = retraso · ⚠️ = otra incidencia. Se guarda solo.",
+    attHintInc: "R = retraso · ⚠️ = otra incidencia. Se guarda solo.",
+    attHist: "Sesiones registradas (toca una para revisarla o justificar)", attHistRow: "{h} h · {n} con faltas", attNone: "Todavía no hay sesiones.",
+    attHoursAria: "Horas que ha faltado {s}", attJustify: "Justificar", attJustified: "✓ Justificada", attLateTitle: "Retraso (incidencia)",
+    absSummary: "{h} h de falta de {H} h del módulo", absPct: "Faltas {p} %", absNoEC: "sin evaluación continua",
+    absStep1: "Aviso: 10 %", absStep2: "Aviso por escrito: 15 %", absStep3: "Sin evaluación continua (20 %)",
+    absAlert: "⚠️ {n} ha llegado al {p} % de faltas en {m} ({h} h de {H} h).",
+    absAlert1: "Conviene hablar con él o ella.", absAlert2: "Toca avisar por escrito.", absAlert3: "Pierde el derecho a evaluación continua (20 %, justificadas o no).",
+    absUnj: "Sin justificar", absJus: "Justificadas", absUnjShort: "sin justif.", absDept: "Faltas e incidencias en todos los módulos del grupo",
+    absCol: "% faltas", incCol: "Incidencias", noEcLegend: "¶ Sin evaluación continua: 20 % o más de faltas (justificadas o no).",
+    incTitle: "Incidencia", incNotePh: "Nota (opcional, antes de elegir el tipo)", incList: "Incidencias en este módulo", incNone: "Sin incidencias.",
+    inc_mov: "📱 Móvil", inc_att: "🗣️ Atención o comportamiento", inc_prl: "⛑️ Seguridad (PRL)", inc_mat: "🧰 Material", inc_ret: "⏰ Retraso", inc_otr: "✏️ Otro",
+    incAdded: "Incidencia registrada: {k}", incDeleted: "Incidencia borrada",
+    trIncPts: "Puntos de CT4 en esta evaluación: incidencias + 1 por cada 1 % de horas sin justificar", trAuto: "auto", trPenNote: "→ {l} por faltas",
+    fichaSec5: "5. Asistencia e incidencias",
+    cfgHours: "Horas totales del módulo (para el % de faltas; 0 = sin control de faltas)", cfgHoursSaved: "Horas del módulo guardadas", badHours: "Escribe un número de horas entre 0 y 2000",
+    prTitle: "Visto bueno para prácticas", prCut: "Fecha de corte", prRecalc: "Recalcular", prNoCut: "sin fijar",
+    prRule: "Llave de 1º: media de CT1 y de CT4 en todos los módulos, 2 o más (equivale a 5). Hasta la fecha de corte ({d}) es provisional; al día siguiente queda fijada.",
+    prOk: "✓ Visto bueno", prKo: "✗ Sin visto bueno", prProv: "✓ De momento, sí", prRisk: "⚠ En riesgo", prFrozen: "fijado el {d}",
+    prRecalcQ: "¿Volver a calcular el visto bueno para prácticas del grupo con los datos actuales?",
+    oldScript: "Actualiza el script de Google (Code.gs).", oldScriptNote: "El de la hoja es antiguo y aún no guarda faltas ni incidencias: de momento se quedan en este dispositivo y se enviarán solas cuando lo actualices.",
     actIntro: "Rellena por orden: título → evaluación → peso (% dentro de esa evaluación; entre todas deben sumar 100 %) → competencias que evalúa.",
     weightPct: "{w} %", weightRec: "peso {w}",
     realShort: "cuenta ≈ {n} %", realTitle: "Peso real en la nota de la evaluación: depende de las competencias que evalúa la actividad y del peso de cada competencia (Ajustes).",
@@ -1286,7 +1362,7 @@ const I18N = {
     trWeightLbl: "Pisua ebaluazio bakoitzean", trActivate: "Modulu honetan aktibatu", trActivated: "✓ Zeharkakoak aktibatuta",
     trScaleQ: "Ebaluazioren bateko jarduera teknikoek % 100 egiten dute dagoeneko. Proportzionalki murriztu % {r} egin dezaten eta % {w} geratu dadin zeharkakoentzat?",
     trDeact: "Desaktibatu", trDeactQ: "Modulu honetatik zeharkako konpetentziak kendu? «Desegin» botoiarekin berreskura ditzakezu.", trDeactDone: "Zeharkakoak desaktibatuta",
-    trInc: "Gorabeherak (CT4)", trIncHint: "Gorabehera bakoitzak CT4 bakarrik doitzen du: 0 → 4 · 1–2 → 3 · 3–4 → 2 · 5 edo gehiago → 1.",
+    trInc: "Gorabeherak (CT4)", trIncHint: "CT4 eta CT1en jaitsiera Asistentziatik kalkulatzen dira. CT4: puntu 1 gorabehera bakoitzeko (mugikorra, berandutzea, LAP…) + 1 justifikatu gabeko moduluko orduen % 1 bakoitzeko → 0 = 4 · 1–2 = 3 · 3–4 = 2 · 5 edo gehiago = 1. CT1: −1 maila ebaluazioan justifikatu gabeko orduen % 3tik aurrera eta −2 % 6tik aurrera. Justifikatutako hutsegiteek ez dute kentzen.",
     trGrade: "Zeharkako nota", trIndicators: "Adierazleak eta mailak (sail osorako berdinak)", trMeasure: "Zer neurtzen da",
     trWNote: "Ebaluazio bakoitzaren notaren % {w} (% {e} konpetentzia bakoitzeko). Ez dute gainditzea blokeatzen.",
     trDeptTitle: "Taldearen zeharkakoak sailean",
@@ -1295,6 +1371,31 @@ const I18N = {
     fichaSec4: "4. Zeharkako konpetentziak sailean (informatiboa, 1–4 maila)",
     trMean: "Batez bestekoa", trModules: "Moduluak", trWBad: "Pisuak % 1 eta % 50 artean egon behar du", trWSaved: "✓ Zeharkakoen pisua eguneratuta",
     trSumNote: "Zeharkakoak barne: % {w}", confirmDrop: "Ziur? Sakatu berriro",
+    bookAtt: "Asistentzia", attTitle: "Asistentzia eta gorabeherak", attClassH: "Gaurko eskola-orduak", attDate: "Data",
+    attDone: "Zerrenda gordeta", attSaveBtn: "✓ Zerrenda gorde (denak bertan)",
+    attInfo: "{H} orduko modulua. Abisuak % 10ean ({a} h) eta % 15ean ({b} h); % 20an ({c} h), justifikatuak izan ala ez, etengabeko ebaluazioa galtzen da.",
+    attNoHours: "Modulu honek ez du hutsegiteen kontrolik: hemen gorabeherak bakarrik erregistratzen dira.", attNoHoursShort: "Modulu honek ez du hutsegiteen kontrolik.",
+    attHint: "Ukitu ikasle bakoitzak huts egindako orduak (0 = bertan). J = justifikatua · R = berandutzea · ⚠️ = beste gorabehera bat. Bakarrik gordetzen da.",
+    attHintInc: "R = berandutzea · ⚠️ = beste gorabehera bat. Bakarrik gordetzen da.",
+    attHist: "Erregistratutako saioak (ukitu bat berrikusteko edo justifikatzeko)", attHistRow: "{h} h · {n} hutsegiterekin", attNone: "Oraindik ez dago saiorik.",
+    attHoursAria: "{s}(e)k huts egindako orduak", attJustify: "Justifikatu", attJustified: "✓ Justifikatua", attLateTitle: "Berandutzea (gorabehera)",
+    absSummary: "Moduluaren {H} orduetatik {h} h hutsegite", absPct: "Hutsegiteak % {p}", absNoEC: "etengabeko ebaluaziorik gabe",
+    absStep1: "Abisua: % 10", absStep2: "Idatzizko abisua: % 15", absStep3: "Etengabeko ebaluaziorik gabe (% 20)",
+    absAlert: "⚠️ {n}: hutsegiteen % {p}ra iritsi da {m} moduluan ({H} orduetatik {h} h).",
+    absAlert1: "Berarekin hitz egitea komeni da.", absAlert2: "Idatziz abisatu behar da.", absAlert3: "Etengabeko ebaluaziorako eskubidea galtzen du (% 20, justifikatuak izan ala ez).",
+    absUnj: "Justifikatu gabe", absJus: "Justifikatuak", absUnjShort: "justif. gabe", absDept: "Hutsegiteak eta gorabeherak taldeko modulu guztietan",
+    absCol: "Hutsegiteen %", incCol: "Gorabeherak", noEcLegend: "¶ Etengabeko ebaluaziorik gabe: hutsegiteen % 20 edo gehiago (justifikatuak izan ala ez).",
+    incTitle: "Gorabehera", incNotePh: "Oharra (aukerakoa, mota aukeratu aurretik)", incList: "Gorabeherak modulu honetan", incNone: "Gorabeherarik ez.",
+    inc_mov: "📱 Mugikorra", inc_att: "🗣️ Arreta edo jokabidea", inc_prl: "⛑️ Segurtasuna (LAP)", inc_mat: "🧰 Materiala", inc_ret: "⏰ Berandutzea", inc_otr: "✏️ Bestelakoa",
+    incAdded: "Gorabehera erregistratuta: {k}", incDeleted: "Gorabehera ezabatuta",
+    trIncPts: "CT4ren puntuak ebaluazio honetan: gorabeherak + 1 justifikatu gabeko orduen % 1 bakoitzeko", trAuto: "auto", trPenNote: "→ {l} hutsegiteengatik",
+    fichaSec5: "5. Asistentzia eta gorabeherak",
+    cfgHours: "Moduluaren ordu guztiak (hutsegiteen %rako; 0 = hutsegiteen kontrolik gabe)", cfgHoursSaved: "Moduluaren orduak gordeta", badHours: "Idatzi 0 eta 2000 arteko ordu kopurua",
+    prTitle: "Praktiketarako oniritzia", prCut: "Ebaki-data", prRecalc: "Berriro kalkulatu", prNoCut: "finkatu gabe",
+    prRule: "1. mailako giltza: CT1 eta CT4ren batez bestekoa modulu guztietan, 2 edo gehiago (5en baliokidea). Ebaki-data arte ({d}) behin-behinekoa da; hurrengo egunean finko geratzen da.",
+    prOk: "✓ Oniritzia", prKo: "✗ Oniritzirik gabe", prProv: "✓ Oraingoz, bai", prRisk: "⚠ Arriskuan", prFrozen: "{d}(e)an finkatua",
+    prRecalcQ: "Taldearen praktiketarako oniritzia egungo datuekin berriro kalkulatu?",
+    oldScript: "Eguneratu Googleren scripta (Code.gs).", oldScriptNote: "Orrikoa zaharra da eta oraindik ez ditu hutsegiteak eta gorabeherak gordetzen: oraingoz gailu honetan geratzen dira eta eguneratzean bakarrik bidaliko dira.",
     actIntro: "Bete ordenan: izenburua → ebaluazioa → pisua (% ebaluazio horren barruan; guztiek % 100 egin behar dute) → ebaluatzen dituen konpetentziak.",
     weightPct: "% {w}", weightRec: "pisua {w}",
     realShort: "≈ % {n} kontatzen du", realTitle: "Ebaluazioaren notan duen benetako pisua: jarduerak ebaluatzen dituen konpetentzien eta haien pisuen araberakoa da (Ezarpenak).",
@@ -1406,7 +1507,7 @@ const I18N = {
    actividad, alumno/a y configuración de módulo es un registro, de modo
    que varios profesores pueden sincronizar sin pisarse.
    ===================================================================== */
-const APP_VERSION = "2.3.0";
+const APP_VERSION = "2.4.0";
 const DB_NAME = "easo-competencias";
 const DB_STORE = "kv";
 const LS_FALLBACK = "easo_pe_v2_state";
@@ -1494,7 +1595,7 @@ async function kvSet(k, v) {
 function freshState() {
   return {
     schema: 2, savedAt: 0, records: {}, pending: {}, lastRev: 0, clockOffset: 0,
-    ui: { year: currentAcademicYear(), course: "1", module: "0562", lang: "es", tab: "semaphore", period: null, evalFilter: "ALL", bookView: "acts", trEv: null },
+    ui: { year: currentAcademicYear(), course: "1", module: "0562", lang: "es", tab: "semaphore", period: null, evalFilter: "ALL", bookView: "acts", trEv: null, attEv: null },
     conn: { url: "", key: "", teacher: "" }, sync: { lastAt: 0, lastError: "" },
     demoMode: false, demoRecords: null, uiBackup: null, oldHandled: false, snapAt: 0
   };
@@ -1571,26 +1672,35 @@ const K = {
   mod: (code = S.ui.module, y = S.ui.year) => `m|${y}|${code}`,
   act: (aid, code = S.ui.module, y = S.ui.year) => `a|${y}|${code}|${aid}`,
   grade: (aid, sid, code = S.ui.module, y = S.ui.year) => `g|${y}|${code}|${aid}|${sid}`,
-  note: (sid, code = S.ui.module, y = S.ui.year) => `n|${y}|${code}|${sid}`
+  note: (sid, code = S.ui.module, y = S.ui.year) => `n|${y}|${code}|${sid}`,
+  abs: (date, sid, code = S.ui.module, y = S.ui.year) => `f|${y}|${code}|${date}|${sid}`,
+  ses: (date, code = S.ui.module, y = S.ui.year) => `x|${y}|${code}|${date}`,
+  inc: (iid, code = S.ui.module, y = S.ui.year) => `i|${y}|${code}|${iid}`,
+  pr: (sid, y = S.ui.year) => `p|${y}|${sid}`
 };
 
 /* ---------- modelo derivado ---------- */
 function dig(o, ...ks) { for (const k of ks) o = o[k] || (o[k] = {}); return o; }
 function model() {
   if (M) return M;
-  const m = { years: new Set(), stu: {}, mod: {}, act: {}, g: {}, notes: {}, def: {} };
+  const m = { years: new Set(), stu: {}, mod: {}, act: {}, g: {}, notes: {}, def: {}, abs: {}, ses: {}, inc: {}, pr: {}, yr: {} };
+  const arr = (o, k) => o[k] || (o[k] = []);
   const recs = R();
   for (const k in recs) {
     const r = recs[k];
     if (!r || r.d) continue;
     const p = k.split("|"), v = r.v || {};
     switch (p[0]) {
-      case "y": m.years.add(p[1]); break;
+      case "y": m.years.add(p[1]); m.yr[p[1]] = v; break;
       case "s": if (p.length === 4) { dig(m.stu, p[1], p[2])[p[3]] = { id: p[3], n: String(v.n || "") }; m.years.add(p[1]); } break;
       case "m": if (p.length === 3 && Array.isArray(v.comps)) { dig(m.mod, p[1])[p[2]] = v; m.years.add(p[1]); } break;
       case "a": if (p.length === 4) { dig(m.act, p[1], p[2])[p[3]] = Object.assign({}, v, { id: p[3] }); m.years.add(p[1]); } break;
       case "g": if (p.length === 5) dig(m.g, p[1], p[2], p[3])[p[4]] = v; break;
       case "n": if (p.length === 4) dig(m.notes, p[1], p[2])[p[3]] = String(v.tx || ""); break;
+      case "f": if (p.length === 5) arr(dig(m.abs, p[1], p[2]), p[4]).push({ d: p[3], h: engNum(v.h, 0), j: v.j ? 1 : 0, e: v.e || "" }); break;
+      case "x": if (p.length === 4) dig(m.ses, p[1], p[2])[p[3]] = { h: engNum(v.h, 0), e: v.e || "" }; break;
+      case "i": if (p.length === 4 && v.s) arr(dig(m.inc, p[1], p[2]), v.s).push({ id: p[3], d: String(v.d || ""), k: INC_TYPES.includes(v.k) ? v.k : "otr", tx: String(v.tx || ""), e: v.e || "", b: r.b || "" }); break;
+      case "p": if (p.length === 3) dig(m.pr, p[1])[p[2]] = v; break;
     }
   }
   return (M = m);
@@ -1624,7 +1734,7 @@ function noteOf(sid) { return ((model().notes[S.ui.year] || {})[S.ui.module] || 
 // Periodos de cada curso: en 1º hay 3ª evaluación; en 2º la final es tras las prácticas
 function periodsFor(course = S.ui.course) { return course === "2" ? ["1EV", "2EV", "ORD", "EXT"] : PERIODS.slice(); }
 function evalsFor(course = S.ui.course) { return course === "2" ? ["1EV", "2EV"] : ["1EV", "2EV", "3EV"]; }
-function autoPeriod() { let i = 0; acts().forEach(a => { i = Math.max(i, PERIODS.indexOf(a.ev)); }); return PERIODS[Math.max(0, i)]; }
+function autoPeriod() { let i = 0; acts().forEach(a => { if (!a.tr) i = Math.max(i, PERIODS.indexOf(a.ev)); }); return PERIODS[Math.max(0, i)]; }
 function curPeriod() { return periodsFor().includes(S.ui.period) ? S.ui.period : autoPeriod(); }
 function calcFor(sid, period = curPeriod(), c = cfg(), as = acts()) {
   const gm = gradeMap();
@@ -1656,9 +1766,10 @@ function renderFilters() {
   $("filterStatus").innerHTML = [["all", t("fAll")], ["ok", statusLabel("ok", p)], ["prog", statusLabel("prog", p)], ["ko", statusLabel("ko", p)], ["none", t("st_none")]]
     .map(([v, l]) => `<option value="${v}"${v === statusFilter ? " selected" : ""}>${esc(l)}</option>`).join("");
   if (S.ui.evalFilter !== "ALL" && !periodsFor().includes(S.ui.evalFilter)) S.ui.evalFilter = "ALL";
-  const tv = S.ui.bookView === "tr";
-  document.querySelectorAll('[data-act="bookView"]').forEach(b => b.classList.toggle("on", (b.dataset.v === "tr") === tv));
+  const bv = S.ui.bookView || "acts", tv = bv !== "acts";
+  document.querySelectorAll('[data-act="bookView"]').forEach(b => b.classList.toggle("on", b.dataset.v === bv));
   $("filterEval").hidden = tv;
+  $("bookHint").hidden = tv;
   document.querySelector('#view-gradebook [data-act="newAct"]').hidden = tv;
   $("filterEval").innerHTML = [["ALL", t("allEvals")]].concat(periodsFor().map(x => [x, t("p_" + x)]))
     .map(([v, l]) => `<option value="${v}"${v === S.ui.evalFilter ? " selected" : ""}>${esc(l)}</option>`).join("");
@@ -1667,6 +1778,8 @@ function renderNotices() {
   const box = $("noticeArea");
   if (!S.oldHandled && !S.demoMode && oldData()) {
     box.innerHTML = `<div class="notice"><span><strong>${esc(t("oldFound"))}</strong> ${esc(t("oldNote"))}</span><span class="data-grid"><button type="button" class="btn btn-sm btn-primary" data-act="importOld">${esc(t("oldImport"))}</button><button type="button" class="btn btn-sm" data-act="discardOld">${esc(t("oldDiscard"))}</button></span></div>`;
+  } else if (S.serverOld && syncConfigured() && !S.demoMode) {
+    box.innerHTML = `<div class="notice"><span><strong>${esc(t("oldScript"))}</strong> ${esc(t("oldScriptNote"))}</span></div>`;
   } else box.innerHTML = "";
 }
 function renderAll() {
@@ -1727,7 +1840,7 @@ function cardHtml(s, r, p) {
   const cv = r.grade === null ? null : covPct(r);
   const evl = isFinal(p) ? evGradesLine(r) : "";
   return `<article class="student-card">
-    <div class="card-head"><div><div class="student-name">${esc(s.n)}</div><div class="student-sub">${esc(t("compsAcquired", { a: r.ok, n: r.activeN }))}${isProv(cv) ? ` · <span class="prov-text">${esc(t("provLong", { n: cv }))}</span>` : ""}${evl ? `<br>${esc(evl)}` : ""}</div></div><span class="sum-cell sum-right"><span class="badge b-${r.status}">${esc(badge)}</span>${r.grade === null ? "" : gradeNoteHtml(r)}</span></div>
+    <div class="card-head"><div><div class="student-name">${esc(s.n)}</div><div class="student-sub">${esc(t("compsAcquired", { a: r.ok, n: r.activeN }))}${isProv(cv) ? ` · <span class="prov-text">${esc(t("provLong", { n: cv }))}</span>` : ""}${evl ? `<br>${esc(evl)}` : ""}${(() => { const a = absStats(s.id); return a.step ? `<br>${absBadge(a)}` : ""; })()}</div></div><span class="sum-cell sum-right"><span class="badge b-${r.status}">${esc(badge)}</span>${r.grade === null ? "" : gradeNoteHtml(r)}</span></div>
     <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><span class="small" style="font-weight:700;color:var(--navy)">${pct}%</span></div>
     <div class="comp-list">${r.comps.map(x => compRowHtml(x, false)).join("")}</div>
     <div style="display:flex;justify-content:flex-end;"><button type="button" class="btn btn-sm" data-act="openStudent" data-sid="${esc(s.id)}">${esc(t("openFicha"))}</button></div>
@@ -1809,10 +1922,10 @@ function trMeanRow(rows) {
   TRANSVERSALS.forEach(ct => { const xs = rows.map(r => r.v[ct.code]).filter(x => x !== null); v[ct.code] = xs.length ? engR2(xs.reduce((s, x) => s + x, 0) / xs.length) : null; });
   return v;
 }
-function trTableHtml(rows, firstHead, withCount, mean) {
+function trTableHtml(rows, firstHead, withCount, mean, extraHead) {
   const th = TRANSVERSALS.map(ct => `<th title="${esc(trName(ct))}">${ct.code}</th>`).join("");
-  const row = r => `<tr><td${r.title ? ` title="${esc(r.title)}"` : ""}>${r.strong ? "<b>" : ""}${esc(r.label)}${r.strong ? "</b>" : ""}</td>${TRANSVERSALS.map(ct => `<td class="num">${lvBadge(r.v[ct.code])}</td>`).join("")}${withCount ? `<td class="num">${r.n}</td>` : ""}</tr>`;
-  return `<div class="table-wrap" style="box-shadow:none"><table class="tr-table"><thead><tr><th>${esc(firstHead)}</th>${th}${withCount ? `<th>${esc(t("trModules"))}</th>` : ""}</tr></thead><tbody>${rows.map(row).join("")}${mean ? row(Object.assign({ strong: true }, mean)) : ""}</tbody></table></div>`
+  const row = r => `<tr><td${r.title ? ` title="${esc(r.title)}"` : ""}>${r.strong ? "<b>" : ""}${esc(r.label)}${r.strong ? "</b>" : ""}</td>${TRANSVERSALS.map(ct => `<td class="num">${lvBadge(r.v[ct.code])}</td>`).join("")}${withCount ? `<td class="num">${r.n}</td>` : ""}${extraHead ? `<td class="num">${r.x || ""}</td>` : ""}</tr>`;
+  return `<div class="table-wrap" style="box-shadow:none"><table class="tr-table"><thead><tr><th>${esc(firstHead)}</th>${th}${withCount ? `<th>${esc(t("trModules"))}</th>` : ""}${extraHead ? `<th>${esc(extraHead)}</th>` : ""}</tr></thead><tbody>${rows.map(row).join("")}${mean ? row(Object.assign({ strong: true }, mean)) : ""}</tbody></table></div>`
     + `<p class="small muted" style="margin-top:6px">${TRANSVERSALS.map(ct => `${ct.code}: ${esc(trName(ct))}`).join(" · ")}</p>`;
 }
 function trLegendHtml(open, id = "trLegend") {
@@ -1835,8 +1948,14 @@ function renderTransversal() {
   const gm = gradeMap(), G = (a, sid) => a ? (gm[a.id] || {})[sid] : undefined;
   const incOf = sid => { const g = inc && G(inc, sid); return g && typeof g.v === "number" ? g.v : null; };
   const avg = sid => { const xs = cts.map(a => a ? engScore(a, G(a, sid)) : null).filter(x => x !== null); return xs.length ? engR2(xs.reduce((s, x) => s + x, 0) / xs.length) : null; };
-  const incHtml = sid => { const n = incOf(sid); return `<div class="inc"><button type="button" class="icon-btn" data-act="incAdj" data-sid="${esc(sid)}" data-d="-1" aria-label="−1">−</button><span class="inc-n">${n === null ? "—" : n}</span><button type="button" class="icon-btn" data-act="incAdj" data-sid="${esc(sid)}" data-d="1" aria-label="+1">+</button></div>`; };
-  const cell = (a, s) => a ? gradeCellHtml(a, s.id, s.n, G(a, s.id)) : "—";
+  const incHtml = sid => { const n = incOf(sid); return `<span class="inc-n" title="${esc(t("trIncPts"))}">${n === null ? "—" : n}</span>`; };
+  const cell = (a, s) => {
+    if (!a) return "—";
+    const g = G(a, s.id);
+    if (a.tr === "CT4") return `${lvBadge(g && g.l)} <span class="small muted">${esc(t("trAuto"))}</span>`;
+    if (a.tr === "CT1" && g && g.b) return gradeCellHtml(a, s.id, s.n, { l: g.b }) + (g.l !== g.b ? `<div class="small" style="color:var(--red);margin-top:2px">${esc(t("trPenNote", { l: g.l }))}</div>` : "");
+    return gradeCellHtml(a, s.id, s.n, g);
+  };
   const evSel = `<select data-ch="trEv" aria-label="${esc(t("actEvalLbl"))}" style="width:auto">${evs.map(x => `<option value="${x}"${x === ev ? " selected" : ""}>${esc(t("p_" + x))}</option>`).join("")}</select>`;
   const head = `<div class="panel"><div class="panel-head"><div><h2>${esc(t("trTitle"))}</h2><p class="desc" style="margin:0">${esc(t("trWNote", { w: fmt(w), e: fmt(engR2(w / 5)) }))}</p></div><div class="tr-bar">${evSel}<span class="small" style="font-weight:700">${esc(t("trWeightLbl"))}</span><div class="pct" style="width:100px"><input type="text" inputmode="decimal" value="${esc(fmtIn(w))}" data-ch="trW" data-fk="trw"><span>%</span></div><button type="button" class="btn btn-sm btn-danger" data-act="trDeactivate">${esc(t("trDeact"))}</button></div></div></div>`;
   const ths = TRANSVERSALS.map(ct => `<th class="tr-th">${ct.code}<div class="small muted" style="font-weight:500">${esc(trName(ct))}</div></th>`).join("");
@@ -1846,6 +1965,153 @@ function renderTransversal() {
 }
 function trActData(ev, ct, w, i) { return { ti: `${ct.code} · ${ct.es}`, ev, w: engR2(w / 5), comps: [], rec: false, rub: true, rv: RUB_DEFAULT.slice(), tr: ct.code, o: 9e12 + i }; }
 function incActData(ev) { return { ti: "Incidencias (CT4)", ev, w: 0, comps: [], rec: false, rub: false, rv: RUB_DEFAULT.slice(), tr: "INC", o: 9e12 + 9 }; }
+
+
+/* ---------- asistencia e incidencias ---------- */
+const INC_TYPES = ["mov", "att", "prl", "mat", "ret", "otr"];
+let attDate = null, incSid = null;
+function todayStr() { const d = new Date(), p = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; }
+function fmtDay(ds) {
+  const q = String(ds || "").split("-").map(Number);
+  if (q.length !== 3) return ds || "";
+  try { return new Date(q[0], q[1] - 1, q[2]).toLocaleDateString(lang === "eu" ? "eu-ES" : "es-ES", { weekday: "short", day: "2-digit", month: "2-digit" }); } catch (e) { return ds; }
+}
+function modHours(code = S.ui.module, y = S.ui.year) {
+  const c = cfg(code, y);
+  if (c.hrs !== undefined && c.hrs !== null && c.hrs !== "") return engNum(c.hrs, 0);
+  return MOD_HOURS[code] || 0;
+}
+function absList(sid, code = S.ui.module, y = S.ui.year) { return ((model().abs[y] || {})[code] || {})[sid] || []; }
+function incList(sid, code = S.ui.module, y = S.ui.year) { return ((model().inc[y] || {})[code] || {})[sid] || []; }
+function sessions(code = S.ui.module, y = S.ui.year) { return (model().ses[y] || {})[code] || {}; }
+function absStats(sid, code = S.ui.module, y = S.ui.year) {
+  const H = modHours(code, y), L = absList(sid, code, y);
+  const tot = engR2(L.reduce((s, a) => s + a.h, 0)), unj = engR2(L.filter(a => !a.j).reduce((s, a) => s + a.h, 0));
+  const pct = H > 0 ? engR2(tot / H * 100) : null;
+  return { H, tot, unj, jus: engR2(tot - unj), pct, step: pct === null ? 0 : engAbsStep(pct), list: L };
+}
+function absBadge(st) {
+  if (st.pct === null || !st.tot) return "";
+  const cls = ["b-ok", "b-prog", "b-warn", "b-ko"][st.step];
+  return `<span class="badge ${cls}" title="${esc(t("absSummary", { h: fmt(st.tot), H: fmt(st.H) }))}">${esc(t("absPct", { p: fmt(st.pct) }))}${st.step === 3 ? " · " + esc(t("absNoEC")) : ""}</span>`;
+}
+function setIf(k, v) { if (JSON.stringify(getRec(k)) !== JSON.stringify(v)) put(k, v); }
+// CT4 (incidencias + horas sin justificar) y la rebaja de CT1 por faltas se calculan solas
+function trAuto(sid, ev, code = S.ui.module, y = S.ui.year) {
+  const as = Object.values((model().act[y] || {})[code] || {}).filter(a => a.tr && a.ev === ev);
+  const ct1 = as.find(a => a.tr === "CT1"), ct4 = as.find(a => a.tr === "CT4"), inc = as.find(a => a.tr === "INC");
+  if (!ct4) return;
+  const L = absList(sid, code, y).filter(a => a.e === ev), I = incList(sid, code, y).filter(x => x.e === ev);
+  if (!L.length && !I.length && !Object.values(sessions(code, y)).some(x => x.e === ev)) return;
+  const H = modHours(code, y), unj = L.filter(a => !a.j).reduce((s, a) => s + a.h, 0);
+  const pts = engIncPoints(I.length, unj, H);
+  setIf(K.grade(ct4.id, sid, code, y), { l: engCt4Level(pts) });
+  if (inc) setIf(K.grade(inc.id, sid, code, y), { v: pts });
+  if (ct1) {
+    const k = K.grade(ct1.id, sid, code, y), g = getRec(k);
+    if (g && (g.b || g.l)) { const b = g.b || g.l; setIf(k, { l: Math.max(1, b - engCt1Pen(unj, H)), b }); }
+  }
+}
+function trAutoEv(ev) { students().forEach(s => trAuto(s.id, ev)); }
+function trAutoAll() { evalsFor().forEach(ev => trAutoEv(ev)); }
+function attEvDefault() { const evs = evalsFor(); if (evs.includes(S.ui.attEv)) return S.ui.attEv; const p = curPeriod(); return evs.includes(p) ? p : evs[0]; }
+function attEv() { const cur = sessions()[attDate]; return cur && cur.e ? cur.e : attEvDefault(); }
+function dayHoursDefault(date) {
+  const ses = sessions(), ds = Object.keys(ses).filter(d => d !== date).sort().reverse(), wd = new Date(date + "T12:00").getDay();
+  const same = ds.find(d => new Date(d + "T12:00").getDay() === wd);
+  return same ? ses[same].h : (ds.length ? ses[ds[0]].h : 2);
+}
+function ensureSession(d, ev) { if (!getRec(K.ses(d))) { put(K.ses(d), { h: dayHoursDefault(d), e: ev }); trAutoEv(ev); } }
+function absAlert(sid, st) {
+  const s = students().find(x => x.id === sid);
+  if (!s || !st.step) return;
+  const msg = t("absAlert", { n: s.n, p: [0, 10, 15, 20][st.step], m: modName(S.ui.module), h: fmt(st.tot), H: fmt(st.H) }) + "\n\n" + t("absAlert" + st.step);
+  setTimeout(() => alert(msg), 60);
+}
+function refreshAtt() {
+  if ($("incModal").classList.contains("open")) renderIncModal();
+  if ($("studentModal").classList.contains("open")) renderFicha();
+  if (!$("view-gradebook").hidden) renderGradebook();
+}
+function renderAttendance() {
+  const st = students(), box = $("gradebookContainer");
+  if (!st.length) { box.innerHTML = onboardingHtml(); return; }
+  if (!attDate) attDate = todayStr();
+  const H = modHours(), ses = sessions(), cur = ses[attDate], ev = attEv(), evs = evalsFor();
+  const dayH = cur ? cur.h : dayHoursDefault(attDate);
+  const evSel = `<select data-ch="attEv" aria-label="${esc(t("actEvalLbl"))}" style="width:auto">${evs.map(x => `<option value="${x}"${x === ev ? " selected" : ""}>${esc(t("p_" + x))}</option>`).join("")}</select>`;
+  const hSel = H > 0 ? `<span class="small" style="font-weight:700">${esc(t("attClassH"))}</span><div class="seg" role="group">${[1, 2, 3, 4, 5, 6].map(n => `<button type="button" class="${n === dayH ? "on" : ""}" data-act="attDayH" data-h="${n}">${n}</button>`).join("")}</div>` : "";
+  const saved = cur ? `<span class="badge b-ok">✓ ${esc(t("attDone"))}</span>` : `<button type="button" class="btn btn-primary" data-act="attSave">${esc(t("attSaveBtn"))}</button>`;
+  const info = H > 0 ? t("attInfo", { H: fmt(H), a: fmt(H * 0.1), b: fmt(H * 0.15), c: fmt(H * 0.2) }) : t("attNoHours");
+  const rows = st.map(s => {
+    const A = absList(s.id).find(a => a.d === attDate), h = A ? A.h : 0;
+    const I = incList(s.id).filter(x => x.d === attDate), late = I.some(x => x.k === "ret"), nOther = I.filter(x => x.k !== "ret").length;
+    const hb = H > 0 ? `<div class="seg" role="group" aria-label="${esc(t("attHoursAria", { s: s.n }))}">${Array.from({ length: Math.max(dayH, h) + 1 }, (_, n) => `<button type="button" class="${n === h ? "on" : ""}" data-act="attSet" data-sid="${esc(s.id)}" data-h="${n}">${n}</button>`).join("")}</div>`
+      + (h > 0 ? `<button type="button" class="btn btn-sm${A.j ? " on-j" : ""}" data-act="absJ" data-sid="${esc(s.id)}" data-d="${attDate}" title="${esc(t(A.j ? "attJustified" : "attJustify"))}">J</button>` : "") : "";
+    return `<div class="att-row"><div class="att-name"><strong>${esc(s.n)}</strong>${absBadge(absStats(s.id))}</div><div class="att-ctrl">${hb}<button type="button" class="btn btn-sm${late ? " on-r" : ""}" data-act="incQuick" data-sid="${esc(s.id)}" title="${esc(t("attLateTitle"))}">R</button><button type="button" class="btn btn-sm" data-act="incOpen" data-sid="${esc(s.id)}" title="${esc(t("incTitle"))}">⚠️${nOther ? " " + nOther : ""}</button></div></div>`;
+  }).join("");
+  const hist = Object.keys(ses).sort().reverse().map(d => {
+    const n = st.filter(s => absList(s.id).some(a => a.d === d)).length;
+    return `<button type="button" class="att-hist${d === attDate ? " on" : ""}" data-act="attGo" data-d="${d}">${esc(fmtDay(d))} · ${esc(t("ps_" + ses[d].e) || "")} · ${esc(t("attHistRow", { h: fmt(ses[d].h), n }))}</button>`;
+  }).join("");
+  box.innerHTML = `<div class="panel"><h2>${esc(t("attTitle"))}</h2><p class="desc">${esc(info)}</p>
+    <div class="att-head"><input type="date" value="${attDate}" data-ch="attDate" aria-label="${esc(t("attDate"))}">${evSel}${hSel}${saved}</div>
+    <p class="small muted" style="margin-top:8px">${esc(t(H > 0 ? "attHint" : "attHintInc"))}</p></div>
+    <div class="panel att-list">${rows}</div>
+    <div class="panel"><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px">${esc(t("attHist"))}</h3><div class="att-hist-list">${hist || `<span class="small muted">${esc(t("attNone"))}</span>`}</div></div>`;
+}
+function incRowHtml(x, withMod) {
+  return `<div class="inc-row"><span>${esc(fmtDay(x.d))} · ${esc(t("inc_" + x.k))}${x.tx ? " — " + esc(x.tx) : ""}${x.b ? ` <span class="muted">(${esc(x.b)})</span>` : ""}</span>${withMod ? "" : `<button type="button" class="icon-btn danger" data-act="incDel" data-iid="${esc(x.id)}" aria-label="${esc(t("del"))}">✕</button>`}</div>`;
+}
+function renderIncModal() {
+  const s = students().find(x => x.id === incSid);
+  if (!s) { closeModal("incModal"); return; }
+  $("incTitle").textContent = `${t("incTitle")} · ${s.n} · ${fmtDay(attDate)}`;
+  $("incTypes").innerHTML = INC_TYPES.map(k => `<button type="button" class="btn" data-act="incAdd" data-k="${k}">${esc(t("inc_" + k))}</button>`).join("");
+  const L = incList(s.id).slice().sort((a, b) => b.d.localeCompare(a.d));
+  $("incListBox").innerHTML = L.length ? L.map(x => incRowHtml(x)).join("") : `<p class="small muted">${esc(t("incNone"))}</p>`;
+}
+function fichaAttHtml(sid) {
+  const st = absStats(sid);
+  let h = "";
+  if (st.H > 0) {
+    const w = Math.min(100, (st.pct || 0) / 25 * 100);
+    const perEv = evalsFor().map(ev => { const L = st.list.filter(a => a.e === ev); if (!L.length) return ""; const tt = L.reduce((s, a) => s + a.h, 0), uj = L.filter(a => !a.j).reduce((s, a) => s + a.h, 0); return `${t("ps_" + ev)}: ${fmt(tt)} h (${fmt(uj)} ${t("absUnjShort")})`; }).filter(Boolean).join(" · ");
+    const dates = st.list.slice().sort((a, b) => b.d.localeCompare(a.d)).map(a => `<div class="inc-row"><span>${esc(fmtDay(a.d))} · ${fmt(a.h)} h</span><button type="button" class="btn btn-sm${a.j ? " on-j" : ""}" data-act="absJ" data-sid="${esc(sid)}" data-d="${a.d}">${esc(t(a.j ? "attJustified" : "attJustify"))}</button></div>`).join("");
+    h += `<div class="small"><strong>${esc(t("absSummary", { h: fmt(st.tot), H: fmt(st.H) }))}</strong> ${absBadge(st)}${st.step ? ` <b style="color:var(--red)">${esc(t("absStep" + st.step))}</b>` : ""}</div>
+      <div class="abs-bar"><div class="abs-fill s${st.step}" style="width:${w}%"></div><i style="left:40%" data-l="10 %"></i><i style="left:60%" data-l="15 %"></i><i style="left:80%" data-l="20 %"></i></div>
+      <div class="small muted">${esc(t("absUnj"))}: ${fmt(st.unj)} h · ${esc(t("absJus"))}: ${fmt(st.jus)} h${perEv ? " · " + esc(perEv) : ""}</div>${dates}`;
+  } else h += `<p class="small muted">${esc(t("attNoHoursShort"))}</p>`;
+  const I = incList(sid).slice().sort((a, b) => b.d.localeCompare(a.d));
+  h += `<div class="small" style="margin-top:10px;font-weight:700">${esc(t("incList"))} (${I.length})</div>` + (I.length ? I.map(x => incRowHtml(x)).join("") : `<p class="small muted">${esc(t("incNone"))}</p>`);
+  const dept = CURRICULUM[S.ui.course].map(m => {
+    const st2 = absStats(sid, m.code), nI = incList(sid, m.code).length;
+    if (!st2.tot && !nI) return "";
+    return `<tr><td title="${esc(modName(m.code))}">${esc(m.code)}</td><td class="num">${st2.pct === null ? "—" : absBadge(st2)}</td><td class="num">${nI}</td></tr>`;
+  }).join("");
+  if (dept) h += `<div class="small" style="margin-top:10px;font-weight:700">${esc(t("absDept"))}</div><div class="table-wrap" style="box-shadow:none"><table class="tr-table"><thead><tr><th>${esc(t("module"))}</th><th>${esc(t("absCol"))}</th><th>${esc(t("incCol"))}</th></tr></thead><tbody>${dept}</tbody></table></div>`;
+  return h;
+}
+
+/* ---------- llave de prácticas (1º): CT1 y CT4 ---------- */
+function prCut(y = S.ui.year) { return (model().yr[y] || {}).cut || ""; }
+function prState(sid, y = S.ui.year) {
+  const fz = (model().pr[y] || {})[sid];
+  if (fz) return Object.assign({ frozen: true }, fz);
+  const mean = trMeanRow(trDeptRows(sid, ["1EV", "2EV", "3EV"], y, "1")), c1 = mean.CT1, c4 = mean.CT4, cut = prCut(y);
+  if (c1 === null || c4 === null) return { st: "none", c1, c4 };
+  const ok = c1 >= 2 && c4 >= 2;
+  if (cut && todayStr() > cut) { const v = { ok: ok ? 1 : 0, c1, c4, cut, at: todayStr() }; put(K.pr(sid, y), v); return Object.assign({ frozen: true }, v); }
+  return { st: ok ? "prov" : "risk", c1, c4 };
+}
+function prBadge(p) {
+  const tip = esc(`CT1 ${fmt(p.c1)} · CT4 ${fmt(p.c4)}` + (p.frozen ? " · " + t("prFrozen", { d: fmtDay(p.at) }) : ""));
+  if (p.frozen) return `<span class="badge ${p.ok ? "b-ok" : "b-ko"}" title="${tip}">${esc(t(p.ok ? "prOk" : "prKo"))}</span>`;
+  if (p.st === "none") return `<span class="badge b-none">—</span>`;
+  return `<span class="badge ${p.st === "prov" ? "b-ok" : "b-ko"}" title="${tip}">${esc(t(p.st === "prov" ? "prProv" : "prRisk"))}</span>`;
+}
+function verGte(a, b) { const x = String(a || "0").split(".").map(Number), y = String(b).split(".").map(Number); for (let i = 0; i < 3; i++) { if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); } return true; }
+const HELD_RE = /^[fxip]\|/;
 
 /* ---------- vista 2: cuaderno ---------- */
 function actMetaHtml(a, c) {
@@ -1879,6 +2145,7 @@ function gbPeriods(all) {
 }
 function renderGradebook() {
   if (S.ui.bookView === "tr") { renderTransversal(); return; }
+  if (S.ui.bookView === "att") { renderAttendance(); return; }
   const st = students(), c = cfg();
   const all = acts(), as = all.filter(a => !a.tr && (S.ui.evalFilter === "ALL" || a.ev === S.ui.evalFilter));
   const box = $("gradebookContainer");
@@ -1942,6 +2209,7 @@ function renderFicha() {
     <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec2"))}</h3><div style="display:flex;flex-direction:column;gap:6px;">${actsHtml}</div></div>
     <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec3"))}</h3><div id="fSec3" class="comp-list"></div></div>
     <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec4"))}</h3><div id="fSec4"></div></div>
+    <div><h3 style="font-size:0.9rem;color:var(--navy);margin-bottom:8px;">${esc(t("fichaSec5"))}</h3><div id="fSec5"></div></div>
     <div class="field"><label for="fichaNote">${esc(t("fichaNotes"))}</label><textarea id="fichaNote" rows="3" maxlength="2000" data-ch="note" data-sid="${esc(s.id)}" placeholder="${esc(t("notesPh"))}">${esc(noteOf(s.id))}</textarea></div>`;
   renderFichaStatus();
 }
@@ -1958,6 +2226,8 @@ function renderFichaStatus() {
   const dr = trDeptRows(fichaSid, trEvsUpTo(p));
   $("fSec4").innerHTML = dr.length ? trTableHtml(dr.map(x => ({ label: x.code, title: x.title, v: x.v })), t("module"), false, { label: t("trMean"), v: trMeanRow(dr) })
     : `<span class="small muted">${esc(t("trNoData"))}</span>`;
+  if (S.ui.course === "1") $("fSec4").innerHTML += `<div class="small" style="margin-top:8px"><b>${esc(t("prTitle"))}:</b> ${prBadge(prState(fichaSid))}</div>`;
+  $("fSec5").innerHTML = fichaAttHtml(fichaSid);
 }
 
 /* ---------- actividades ---------- */
@@ -2024,6 +2294,7 @@ function renderConfig() {
   const c = cfg(), ew = engEvalWeights(c), evs = shownEvals(c);
   weightBar("evWeightBar", engR2(evs.reduce((a, ev) => a + ew[ev], 0)), "totalEvs", "balanceEvs");
   $("evWeightList").innerHTML = evs.map(ev => `<div class="ev-w-row"><span>${esc(t("p_" + ev))}</span><div class="pct"><input type="text" inputmode="decimal" value="${esc(fmtIn(ew[ev]))}" data-ch="evW" data-ev="${ev}" data-fk="ev-${ev}" aria-label="${esc(t("p_" + ev))}"><span>%</span></div></div>`).join("");
+  $("modHoursBox").innerHTML = `<div class="ev-w-row" style="margin-top:10px"><span>${esc(t("cfgHours"))}</span><div class="pct"><input type="text" inputmode="numeric" value="${modHours()}" data-ch="modHours" data-fk="mh" aria-label="${esc(t("cfgHours"))}"><span>h</span></div></div>`;
   const unc = uncoveredComps(c, acts());
   $("compWeightBar").innerHTML = `<span class="small muted">${esc(t("compRule"))}</span>` + (acts().length && unc.length ? `<span class="badge b-ko" style="white-space:normal">${esc(t("uncoveredWarn", { c: unc.map(x => x.code).join(", ") }))}</span>` : "");
   $("compConfigList").innerHTML = c.comps.map(x => `<div class="comp-cfg"><div class="comp-cfg-grid">
@@ -2197,13 +2468,14 @@ async function sync(opts = {}) {
         delete S.pending[rr.k];
         changed++;
       });
-      keys.forEach(k => { const r = S.records[k]; if (r && sent[k] === r.t) delete S.pending[k]; });
+      S.serverOld = !verGte(data.version, "2.4.0");
+      keys.forEach(k => { const r = S.records[k]; if (r && sent[k] === r.t && !(S.serverOld && HELD_RE.test(k))) delete S.pending[k]; });
       if (typeof data.rev === "number") S.lastRev = data.rev;
       S.sync.lastAt = Date.now(); S.sync.lastError = "";
       M = null; scheduleSave(); ok = true;
       if (changed) renderAllSafe();
       if (overwritten) showToast(t("remoteApplied", { n: overwritten }));
-      if (Object.keys(S.pending).length) syncAgain = true;
+      if (Object.keys(S.pending).some(k => !(S.serverOld && HELD_RE.test(k)))) syncAgain = true;
     }
   } catch (e) {
     S.sync.lastError = String((e && e.message) || e);
@@ -2211,7 +2483,7 @@ async function sync(opts = {}) {
     if (opts.manual) showToast(t("syncErr") + ": " + S.sync.lastError);
   } finally {
     syncing = false;
-    updateSyncBadge();
+    updateSyncBadge(); renderNotices();
     if ($("connModal").classList.contains("open")) renderConnInfo();
     if (!$("view-config").hidden) renderDataPanel();
     if (syncAgain && ok) { syncAgain = false; setTimeout(() => sync(), 400); } else syncAgain = false;
@@ -2344,7 +2616,58 @@ const ACTIONS = {
 
   /* actividades y notas */
   newAct: () => openActModal(null),
-  bookView: el => { S.ui.bookView = el.dataset.v === "tr" ? "tr" : "acts"; scheduleSave(); renderFilters(); renderGradebook(); },
+  bookView: el => { S.ui.bookView = ["tr", "att"].includes(el.dataset.v) ? el.dataset.v : "acts"; scheduleSave(); renderFilters(); renderGradebook(); },
+  attSet: el => {
+    const sid = el.dataset.sid, h = +el.dataset.h, d = attDate, ev = attEv();
+    ensureSession(d, ev);
+    const k = K.abs(d, sid), cur = getRec(k), before = absStats(sid).step;
+    if (h === 0) { if (cur) del(k); } else put(k, { h, j: cur && cur.j ? 1 : 0, e: ev });
+    trAuto(sid, ev);
+    const after = absStats(sid);
+    renderGradebook();
+    if (after.step > before) absAlert(sid, after);
+  },
+  attDayH: el => {
+    const d = attDate, ev = attEv(), h = +el.dataset.h;
+    put(K.ses(d), { h, e: ev });
+    students().forEach(s => { const k = K.abs(d, s.id), a = getRec(k); if (a && a.h > h) put(k, Object.assign({}, a, { h })); });
+    trAutoEv(ev); renderGradebook();
+  },
+  attSave: () => { const ev = attEv(); put(K.ses(attDate), { h: dayHoursDefault(attDate), e: ev }); trAutoEv(ev); renderGradebook(); showToast("✓ " + t("attDone")); },
+  attGo: el => { attDate = el.dataset.d; renderGradebook(); },
+  absJ: el => {
+    const sid = el.dataset.sid, k = K.abs(el.dataset.d, sid), cur = getRec(k);
+    if (!cur) return;
+    put(k, Object.assign({}, cur, { j: cur.j ? 0 : 1 }));
+    trAuto(sid, cur.e); refreshAtt();
+  },
+  incQuick: el => {
+    const sid = el.dataset.sid, d = attDate, ev = attEv();
+    ensureSession(d, ev);
+    const ex = incList(sid).find(x => x.d === d && x.k === "ret");
+    if (ex) del(K.inc(ex.id)); else put(K.inc(uid("i")), { s: sid, d, k: "ret", e: ev });
+    trAuto(sid, ev); renderGradebook();
+  },
+  incOpen: el => { incSid = el.dataset.sid; $("incNote").value = ""; renderIncModal(); openModal("incModal"); },
+  incAdd: el => {
+    const sid = incSid, d = attDate, ev = attEv(), k = el.dataset.k;
+    ensureSession(d, ev);
+    put(K.inc(uid("i")), { s: sid, d, k, e: ev, tx: $("incNote").value.trim().slice(0, 200) });
+    $("incNote").value = "";
+    trAuto(sid, ev); refreshAtt();
+    showToast(t("incAdded", { k: t("inc_" + k) }));
+  },
+  incDel: el => {
+    const k = K.inc(el.dataset.iid), cur = getRec(k);
+    if (!cur) return;
+    const sn = snap([k]); del(k); trAuto(cur.s, cur.e); refreshAtt();
+    showToast(t("incDeleted"), { undo: () => { restore(sn); trAuto(cur.s, cur.e); refreshAtt(); } });
+  },
+  prRecalc: () => {
+    if (!confirm(t("prRecalcQ"))) return;
+    students().forEach(s => { if (getRec(K.pr(s.id))) del(K.pr(s.id)); });
+    ACTIONS.openTrGroup();
+  },
   trActivate: () => {
     const w = parsePct($("trWNew").value);
     if (!(w >= 1 && w <= 50)) return showToast(t("trWBad"));
@@ -2359,7 +2682,7 @@ const ACTIONS = {
       TRANSVERSALS.forEach((ct, i) => put(K.act(`tr-${ev}-${ct.code}`), trActData(ev, ct, w, j * 10 + i)));
       put(K.act(`tr-${ev}-INC`), incActData(ev));
     });
-    renderAll(); showToast(t("trActivated"));
+    trAutoAll(); renderAll(); showToast(t("trActivated"));
   },
   trDeactivate: () => {
     if (!confirm(t("trDeactQ"))) return;
@@ -2367,22 +2690,13 @@ const ACTIONS = {
     keys.forEach(k => del(k)); renderAll();
     showToast(t("trDeactDone"), { undo: () => { restore(sn); renderAll(); } });
   },
-  incAdj: el => {
-    const sid = el.dataset.sid, ev = S.ui.trEv, all = acts();
-    const inc = all.find(a => a.tr === "INC" && a.ev === ev), incId = inc ? inc.id : `tr-${ev}-INC`;
-    if (!inc) put(K.act(incId), incActData(ev));
-    const cur = getRec(K.grade(incId, sid));
-    const n = Math.max(0, (cur && typeof cur.v === "number" ? cur.v : 0) + (+el.dataset.d));
-    put(K.grade(incId, sid), { v: n });
-    const ct4 = all.find(a => a.tr === "CT4" && a.ev === ev);
-    if (ct4) put(K.grade(ct4.id, sid), { l: n === 0 ? 4 : n <= 2 ? 3 : n <= 4 ? 2 : 1 });
-    renderGradebook();
-  },
   openTrGroup: () => {
     const evs = trEvsUpTo();
-    const rows = students().map(s => { const r = trDeptRows(s.id, evs); return { label: s.n, v: trMeanRow(r), n: r.filter(x => TRANSVERSALS.some(ct => x.v[ct.code] !== null)).length }; });
+    const one = S.ui.course === "1", cut = prCut();
+    const rows = students().map(s => { const r = trDeptRows(s.id, evs); return { label: s.n, v: trMeanRow(r), n: r.filter(x => TRANSVERSALS.some(ct => x.v[ct.code] !== null)).length, x: one ? prBadge(prState(s.id)) : "" }; });
     $("trGroupBody").innerHTML = `<p class="small muted">${esc(t("trDeptDesc", { p: t("p_" + curPeriod()) }))}</p>`
-      + (rows.some(r => r.n > 0) ? trTableHtml(rows, t("student"), true) : `<p class="small">${esc(t("trNoData"))}</p>`);
+      + (one ? `<div class="panel" style="padding:10px 12px;margin:8px 0;box-shadow:none"><div class="tr-bar"><strong class="small">${esc(t("prTitle"))}</strong><span class="small">${esc(t("prCut"))}</span><input type="date" value="${esc(cut)}" data-ch="prCut" style="width:auto"><button type="button" class="btn btn-sm" data-act="prRecalc">${esc(t("prRecalc"))}</button></div><p class="small muted" style="margin-top:6px">${esc(t("prRule", { d: cut ? fmtDay(cut) : t("prNoCut") }))}</p></div>` : "")
+      + (rows.some(r => r.n > 0) ? trTableHtml(rows, t("student"), true, null, one ? t("prTitle") : null) : `<p class="small">${esc(t("trNoData"))}</p>`);
     openModal("trGroupModal");
   },
   editAct: el => openActModal(el.dataset.aid),
@@ -2417,7 +2731,9 @@ const ACTIONS = {
   },
   rubSet: el => {
     const sid = el.dataset.sid, aid = el.dataset.aid, l = +el.dataset.l, k = K.grade(aid, sid), cur = getRec(k);
-    if (cur && cur.l === l) del(k); else put(k, { l });
+    const a = acts().find(x => x.id === aid);
+    if (a && a.tr === "CT1") { if (cur && (cur.b || cur.l) === l) del(k); else { put(k, { l, b: l }); trAuto(sid, a.ev); } }
+    else if (cur && cur.l === l) del(k); else put(k, { l });
     afterGrade(sid, aid);
     if (S.ui.bookView === "tr" && !$("view-gradebook").hidden) renderGradebook();
   },
@@ -2566,7 +2882,8 @@ const ACTIONS = {
   printActa: () => {
     const p = curPeriod(), c = cfg(), as = acts(), fin = isFinal(p);
     const evCols = fin ? EVALS.filter(ev => normalActs(as, ev).length) : [];
-    let anyRec = false, nProv = 0, anyCap = false, anyLift = false;
+    let anyRec = false, nProv = 0, anyCap = false, anyLift = false, anyNoEC = false;
+    const H = modHours();
     const rows = students().map((s, i) => {
       const r = calcFor(s.id, p, c, as), cv = r.grade === null ? null : covPct(r);
       if (isProv(cv)) nProv++;
@@ -2574,12 +2891,12 @@ const ACTIONS = {
       if (r.lifted) anyLift = true;
       return `<tr><td class="num">${i + 1}</td><td>${esc(s.n)}</td>${r.comps.map(x => { if (x.recovered) anyRec = true; return `<td class="num">${x.active ? fmt(x.fin) + (x.recovered ? "*" : "") : "—"}</td>`; }).join("")}`
         + evCols.map(ev => `<td class="num">${fmt(r.evGrade[ev])}</td>`).join("")
-        + `<td class="num"><b>${fmt(r.grade)}</b>${r.capped ? " ‡" : ""}${r.lifted ? " §" : ""}${isProv(cv) ? " †" : ""}</td><td class="num">${cv === null ? "—" : cv + " %"}</td><td>${esc(statusLabel(r.status, p))}</td></tr>`;
+        + `<td class="num"><b>${fmt(r.grade)}</b>${r.capped ? " ‡" : ""}${r.lifted ? " §" : ""}${isProv(cv) ? " †" : ""}</td><td class="num">${cv === null ? "—" : cv + " %"}</td><td>${esc(statusLabel(r.status, p))}</td>${H > 0 ? (() => { const a = absStats(s.id); if (a.step === 3) anyNoEC = true; return `<td class="num">${a.tot ? fmt(a.pct) + " %" + (a.step === 3 ? " ¶" : "") : "—"}</td>`; })() : ""}</tr>`;
     }).join("");
     const legend = c.comps.map(x => `<div><b>${esc(x.code)}</b> (${esc((x.ras || []).join(", "))})${engNum(x.weight, 0) > 0 ? "" : " · " + esc(t("c_off"))}: ${esc(compLabel(x))}</div>`).join("");
-    const extra = [anyRec ? t("recLegend") : "", anyCap ? t("capLegend") : "", anyLift ? t("liftLegend") : "", nProv ? t("provLegend") : "", fin ? t("compRule") : ""].filter(Boolean).map(x => `<div style="margin-top:4px">${esc(x)}</div>`).join("");
+    const extra = [anyRec ? t("recLegend") : "", anyCap ? t("capLegend") : "", anyLift ? t("liftLegend") : "", nProv ? t("provLegend") : "", anyNoEC ? t("noEcLegend") : "", fin ? t("compRule") : ""].filter(Boolean).map(x => `<div style="margin-top:4px">${esc(x)}</div>`).join("");
     doPrint(printHeader(t("actaTitle")) + (nProv ? `<div class="pr-warn">⚠️ ${esc(t("actaProvWarn", { n: nProv }))}</div>` : "")
-      + `<table class="pr-table"><thead><tr><th>Nº</th><th>${esc(t("student"))}</th>${c.comps.map(x => `<th>${esc(x.code)}</th>`).join("")}${evCols.map(ev => `<th>${esc(t("ps_" + ev))}</th>`).join("")}<th>${esc(t(fin ? "finalGrade" : "evalGrade"))}</th><th>${esc(t("corrected"))}</th><th>${esc(t("status"))}</th></tr></thead><tbody>${rows}</tbody></table>`
+      + `<table class="pr-table"><thead><tr><th>Nº</th><th>${esc(t("student"))}</th>${c.comps.map(x => `<th>${esc(x.code)}</th>`).join("")}${evCols.map(ev => `<th>${esc(t("ps_" + ev))}</th>`).join("")}<th>${esc(t(fin ? "finalGrade" : "evalGrade"))}</th><th>${esc(t("corrected"))}</th><th>${esc(t("status"))}</th>${H > 0 ? `<th>${esc(t("absCol"))}</th>` : ""}</tr></thead><tbody>${rows}</tbody></table>`
       + `<div class="pr-legend">${legend}${extra}</div><div class="pr-sign"><div>${esc(t("signature"))}</div></div>`);
   },
   printFicha: () => {
@@ -2713,6 +3030,30 @@ const CHANGES = {
   period: el => { S.ui.period = el.value; scheduleSave(); renderAll(); },
   statusFilter: el => { statusFilter = el.value; renderSemaphore(); },
   trEv: el => { S.ui.trEv = el.value; scheduleSave(); renderGradebook(); },
+  attDate: el => { if (/^\d{4}-\d{2}-\d{2}$/.test(el.value)) { attDate = el.value; renderGradebook(); } },
+  attEv: el => {
+    const ev = el.value, d = attDate, cur = getRec(K.ses(d)), old = cur && cur.e;
+    S.ui.attEv = ev; scheduleSave();
+    if (cur && old !== ev) {
+      put(K.ses(d), Object.assign({}, cur, { e: ev }));
+      students().forEach(s => {
+        const k = K.abs(d, s.id), a = getRec(k); if (a) put(k, Object.assign({}, a, { e: ev }));
+        incList(s.id).filter(x => x.d === d).forEach(x => { const ki = K.inc(x.id); put(ki, Object.assign({}, getRec(ki), { e: ev })); });
+      });
+      trAutoEv(ev); if (old) trAutoEv(old);
+    }
+    renderGradebook();
+  },
+  modHours: el => {
+    const v = parseNum(el.value);
+    if (!(v >= 0 && v <= 2000)) { showToast(t("badHours")); rerender(); return; }
+    const c = ensureCfg(); c.hrs = Math.round(v); saveCfg(c); trAutoAll(); showToast("✓ " + t("cfgHoursSaved")); rerender();
+  },
+  prCut: el => {
+    const y = S.ui.year;
+    put(K.year(y), Object.assign({ n: y }, getRec(K.year(y)) || {}, { cut: /^\d{4}-\d{2}-\d{2}$/.test(el.value) ? el.value : "" }));
+    ACTIONS.openTrGroup();
+  },
   trW: el => {
     const w = parsePct(el.value);
     if (!(w >= 1 && w <= 50)) { showToast(t("trWBad")); rerender(); return; }

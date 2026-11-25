@@ -2468,7 +2468,8 @@ async function sync(opts = {}) {
         delete S.pending[rr.k];
         changed++;
       });
-      S.serverOld = !verGte(data.version, "2.4.0");
+      // La respuesta rápida «sin cambios» no trae versión: solo se decide con una respuesta completa
+      if (data.version) S.serverOld = !verGte(data.version, "2.4.0"); else if (records.length) S.serverOld = true;
       keys.forEach(k => { const r = S.records[k]; if (r && sent[k] === r.t && !(S.serverOld && HELD_RE.test(k))) delete S.pending[k]; });
       if (typeof data.rev === "number") S.lastRev = data.rev;
       S.sync.lastAt = Date.now(); S.sync.lastError = "";
@@ -3218,6 +3219,7 @@ async function init() {
   registerSW();
   checkInviteInUrl();
   window.addEventListener("hashchange", checkInviteInUrl);
+  S.serverOld = false;
   if (syncConfigured()) sync();
   setInterval(() => { if (document.visibilityState === "visible") sync(); }, 120000);
 }

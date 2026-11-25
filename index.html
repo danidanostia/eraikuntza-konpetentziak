@@ -2040,13 +2040,13 @@ function renderAttendance() {
   const H = modHours(), ses = sessions(), cur = ses[attDate], ev = attEv(), evs = evalsFor();
   const dayH = cur ? cur.h : dayHoursDefault(attDate);
   const evSel = `<select data-ch="attEv" aria-label="${esc(t("actEvalLbl"))}" style="width:auto">${evs.map(x => `<option value="${x}"${x === ev ? " selected" : ""}>${esc(t("p_" + x))}</option>`).join("")}</select>`;
-  const hSel = H > 0 ? `<span class="small" style="font-weight:700">${esc(t("attClassH"))}</span><div class="seg" role="group">${[1, 2, 3, 4, 5, 6].map(n => `<button type="button" class="${n === dayH ? "on" : ""}" data-act="attDayH" data-h="${n}">${n}</button>`).join("")}</div>` : "";
+  const hSel = H > 0 ? `<span class="small" style="font-weight:700">${esc(t("attClassH"))}</span><div class="seg" role="group">${[1, 2, 3, 4].map(n => `<button type="button" class="${n === dayH ? "on" : ""}" data-act="attDayH" data-h="${n}">${n}</button>`).join("")}</div>` : "";
   const saved = cur ? `<span class="badge b-ok">✓ ${esc(t("attDone"))}</span>` : `<button type="button" class="btn btn-primary" data-act="attSave">${esc(t("attSaveBtn"))}</button>`;
   const info = H > 0 ? t("attInfo", { H: fmt(H), a: fmt(H * 0.1), b: fmt(H * 0.15), c: fmt(H * 0.2) }) : t("attNoHours");
   const rows = st.map(s => {
     const A = absList(s.id).find(a => a.d === attDate), h = A ? A.h : 0;
     const I = incList(s.id).filter(x => x.d === attDate), late = I.some(x => x.k === "ret"), nOther = I.filter(x => x.k !== "ret").length;
-    const hb = H > 0 ? `<div class="seg" role="group" aria-label="${esc(t("attHoursAria", { s: s.n }))}">${Array.from({ length: Math.max(dayH, h) + 1 }, (_, n) => `<button type="button" class="${n === h ? "on" : ""}" data-act="attSet" data-sid="${esc(s.id)}" data-h="${n}">${n}</button>`).join("")}</div>`
+    const hb = H > 0 ? `<div class="seg" role="group" aria-label="${esc(t("attHoursAria", { s: s.n }))}">${Array.from({ length: 5 }, (_, n) => `<button type="button" class="${n === h ? "on" : ""}" data-act="attSet" data-sid="${esc(s.id)}" data-h="${n}">${n}</button>`).join("")}</div>`
       + (h > 0 ? `<button type="button" class="btn btn-sm${A.j ? " on-j" : ""}" data-act="absJ" data-sid="${esc(s.id)}" data-d="${attDate}" title="${esc(t(A.j ? "attJustified" : "attJustify"))}">J</button>` : "") : "";
     return `<div class="att-row"><div class="att-name"><strong>${esc(s.n)}</strong>${absBadge(absStats(s.id))}</div><div class="att-ctrl">${hb}<button type="button" class="btn btn-sm${late ? " on-r" : ""}" data-act="incQuick" data-sid="${esc(s.id)}" title="${esc(t("attLateTitle"))}">R</button><button type="button" class="btn btn-sm" data-act="incOpen" data-sid="${esc(s.id)}" title="${esc(t("incTitle"))}">⚠️${nOther ? " " + nOther : ""}</button></div></div>`;
   }).join("");
@@ -2622,6 +2622,8 @@ const ACTIONS = {
     ensureSession(d, ev);
     const k = K.abs(d, sid), cur = getRec(k), before = absStats(sid).step;
     if (h === 0) { if (cur) del(k); } else put(k, { h, j: cur && cur.j ? 1 : 0, e: ev });
+    const ses = getRec(K.ses(d));   // si falta más horas de las marcadas como clase, la sesión sube a esas horas
+    if (ses && ses.h < h) put(K.ses(d), Object.assign({}, ses, { h }));
     trAuto(sid, ev);
     const after = absStats(sid);
     renderGradebook();
